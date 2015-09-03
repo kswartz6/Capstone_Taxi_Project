@@ -1,0 +1,74 @@
+body{
+text-align: center;
+margin: 0;
+padding: 0;
+background: black;
+font-family:"Yanone Kaffeesatz";
+color: white;
+}
+
+
+#titleContainer{
+margin-top: .5em;
+margin-bottom: .5em;
+width: 100%;
+font-size: 6.0em;
+}
+
+#titleContainer #subTitle{
+font-size: .5em;
+}
+
+#MapContainer{
+height: 500px;
+width: 800px;
+margin: 0 auto;
+}
+
+#map{
+height: 500px;
+width: 800px;
+}
+
+#searchContainer form{
+border: 4px;
+border-top:none;
+border-left:none;
+border-right:none;
+border-color: red;
+display: inline-block;
+padding: 2px;
+}
+
+#search{
+font-size: 3.0em;
+background: black;
+color: white;
+border-width: 0px 0px 2px 0px;
+outline:none;
+padding:0 25 0 0;
+font-family:"Yanone Kaffeesatz";
+}
+
+input[type="submit"] {
+font-size: 3.0em;
+color: white;
+border:none;
+z-index: 2;
+cursor: pointer;
+opacity: 0.4;
+cursor: pointer;
+background: black;
+padding: 0px;
+margin-left: -25px;
+focus:none;
+}
+
+input[type="submit"]:hover{
+opacity:0.8;
+}
+
+input[type="submit"]:focus{
+outline:none;
+color:black;
+}

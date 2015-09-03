@@ -1,0 +1,14 @@
+Django==1.4
+Flask==0.10.1
+Jinja2==2.7.3
+MarkupSafe==0.23
+PySocks==1.5.3
+Werkzeug==0.10.4
+httplib2==0.9
+itsdangerous==0.24
+nltk==3.0.0b2
+pytz==2015.2
+six==1.9.0
+sqlparse==0.1.13
+twilio==3.8.0
+virtualenv==12.0.7
