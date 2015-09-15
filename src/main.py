@@ -2,14 +2,14 @@ import os
 import sys
 import logging
 import json
+import pymongo
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, g, session
-from pymongo import MongoClient, Connection
 
-MONGO_DBC = "ds051368.mongolab.com"
-MONGO_PORT = 51368
-connection = MongoClient(MONGO_DBC, MONGO_PORT)
-db = connection["taxitest"]
-db.authenticate("admin","admin")
+MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/taxitest"
+client = pymongo.MongoClient(MONGO_DB_URI)
+db = client.get_default_database()
+
+
 
 webapp = Flask(__name__)
 @webapp.route("/")
