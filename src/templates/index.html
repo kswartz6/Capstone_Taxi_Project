@@ -9,8 +9,7 @@
   <meta name="author" content="Cass Schaufele">
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
 	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/static/dist/leaflet/leaflet.css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" async></script>
+  <link rel="stylesheet" href="/static/dist/leaflet/leaflet.css" />
 	<script src="https://fb.me/react-0.13.3.min.js" async></script>
 	<script src="https://fb.me/JSXTransformer-0.13.3.js" async></script>
 	<script src="/static/dist/leaflet/leaflet-src.js"></script>
@@ -22,25 +21,13 @@
 
 <body>
 	<div class="wrapper" ng-controller="mapView">
-		<div id="titleContainer">
-			<div id="mainTitle">
-				Sample Data Page
-			</div>
-		</div>
-
-		<div id="MapContainer">
-			<div id="map">
-			</div>
-		</div>
-
-		<div id ="searchContainer">
-			<form action="" autocomplete="off">
- 				<input id="search" type="text" placeholder="Search" autofocus>
-				<input id="search_submit" value=">" type="submit">
-  			</form>
-		</div>
-
+    <div id="map-layer">
+      <div id="map">
+      </div>
+    </div>
 	</div>
-    <script src="/static/main.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+  <script src="/static/main.js"></script>
 </body>
 </html>

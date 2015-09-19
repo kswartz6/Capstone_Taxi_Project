@@ -1,6 +1,6 @@
 
 
-var map = L.map('map').setView([0, 0], 2);
+var map = L.map('map').setView([40.727, -73.976], 12);
 
 //Hey, so this is shitty. It'll go away and be replaced with local vars later.
 //For now we'll use this global variable for testing purposes.
@@ -26,6 +26,7 @@ app.controller("mapView", function($scope,$http) {
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 	maxZoom: 18,
+	minZoom: 10,
     	id: 'cschaufe.n9je0n8b',
     	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
 }).addTo(map);
