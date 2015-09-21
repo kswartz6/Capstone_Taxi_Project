@@ -9,20 +9,43 @@ var testRecord = {};
 
 var app = angular.module("app", []);
 
+//Jinja2 and angular don't play well since they have the same syntax.
+//Ergo we change interpolation of ngDirectives to be curly brace, regular brace
+app.config(['$interpolateProvider', function($interpolateProvider) {
+  $interpolateProvider.startSymbol('{[');
+  $interpolateProvider.endSymbol(']}');
+}]);
+
+
 //controller for mapView
 app.controller("mapView", function($scope,$http) {
+	$scope.currentDateTime      = {};
+	$scope.currentDateTime.MM   = 1;
+	$scope.currentDateTime.DD   = 1;
+	$scope.currentDateTime.YYYY = 2013
+
+
+	$scope.dateTimeIncre = function(arg){
+		$scope.currentDateTime[arg] += 1;
+	}
+
+	$scope.dateTimeDecre = function(arg){
+		$scope.currentDateTime[arg] -= 1;
+	}
 
 	//Setting up the test api call here.
+	//This is an async call, so testResponse acts as a promised value.
 	var testResponse = $http.get("/api/test")
 	testResponse.success(function(data, status, headers, config) {
-        console.log(data);
+    console.log(data);
 		testRecord = data;
 		console.log(testRecord);
-    });
+  });
+
+
+
 });
-app.directive("dateState", function($scope){
-	
-})
+
 
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

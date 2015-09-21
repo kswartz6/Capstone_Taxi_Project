@@ -65,9 +65,36 @@
     </div>
 
     <div id="time-dashboard" class="dashboard-window">
-
-      <div id="" class="dashboard-body">
-        Dashboard for changing date/time.
+      <div id="time-body" class="dashboard-body">
+        <div class="time-picker-row">
+          <div class="time-arrow" ng-click="dateTimeIncre('MM')">
+            ^
+          </div>
+          <div class="time-arrow" ng-click="dateTimeIncre('DD')">
+            ^
+          </div>
+          <div class="time-arrow" ng-click="dateTimeIncre('YYYY')">
+            ^
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            {[currentDateTime.MM]}/{[currentDateTime.DD]}/{[currentDateTime.YYYY]}
+          </div>
+          <div class="col-md-9">
+          </div>
+        </div>
+        <div class="time-picker-row">
+          <div class="time-arrow u-flip" ng-click="dateTimeDecre('MM')">
+            ^
+          </div>
+          <div class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
+            ^
+          </div>
+          <div class="time-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
+            ^
+          </div>
+        </div>
       </div>
     </div>
   </div>
