@@ -20,7 +20,7 @@
 </head>
 
 <body>
-	<div class="wrapper" ng-controller="mapView">
+	<div id="wrapper" ng-controller="mapView">
     <div id="map-layer">
       <div id="map">
       </div>
@@ -56,9 +56,6 @@
     </div>
 
     <div id="tools-dashboard" class="dashboard-window">
-      <div id="" class="dashboard-header">
-        Tools
-      </div>
       <div id="" class="dashboard-body">
         Dashboard for drawing tools.
       </div>
@@ -73,7 +70,7 @@
           <div class="time-arrow" ng-click="dateTimeIncre('DD')">
             ^
           </div>
-          <div class="time-arrow" ng-click="dateTimeIncre('YYYY')">
+          <div class="time-arrow last-arrow" ng-click="dateTimeIncre('YYYY')">
             ^
           </div>
         </div>
@@ -91,7 +88,7 @@
           <div class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
             ^
           </div>
-          <div class="time-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
+          <div class="time-arrow last-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
             ^
           </div>
         </div>

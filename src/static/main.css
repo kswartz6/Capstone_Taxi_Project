@@ -16,6 +16,10 @@ font-family:"Yanone Kaffeesatz";
 color: white;
 }
 
+#wrapper{
+  min-height:768;
+  min-width:1366;
+}
 
 #map-layer{
   position: absolute;
@@ -55,7 +59,7 @@ color: white;
 }
 
 #position-dashboard{
-  position: absolute;
+  position: fixed;
   max-height:400px;
   width:200px;
   top: 10px;
@@ -63,7 +67,7 @@ color: white;
 }
 
 #master-dashboard{
-  position: absolute;
+  position: fixed;
   width: 300px;
   height: 25%;
   bottom: 10px;
@@ -71,7 +75,7 @@ color: white;
 }
 
 #visualization-dashboard{
-  position:absolute;
+  position:fixed;
   width: 300px;
   height: 300px;
   top: 80px;
@@ -79,21 +83,25 @@ color: white;
 }
 
 #tools-dashboard{
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  min-width: 100px;
-  text-align:center;
-}
-
-#time-dashboard{
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 50px;
   width: 260px;
   min-height: 52px;
   height: 52px;
+  text-align:center;
+}
+
+#time-dashboard{
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 260px;
+  min-height: 52px;
+  font-size:18px;
   text-align:left;
+  padding:4px;
 }
 
 #time-body{
@@ -106,7 +114,10 @@ color: white;
 .time-arrow{
   display:inline-block;
   width:8px;
-  padding:0 3 0 0px;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color:white;
+  padding:0px 2px 0px 0px;
   margin:0 1px;
   /*No select*/
   -webkit-touch-callout: none;
@@ -116,10 +127,12 @@ color: white;
     -ms-user-select: none;
     user-select: none;
 }
+
 .u-flip{
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
+  padding:0px 0px 0px 2px;
 }
 
 .time-arrow:hover{

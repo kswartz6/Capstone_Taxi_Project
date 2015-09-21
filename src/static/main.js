@@ -1,5 +1,22 @@
 
 
+var daysInMonth ={
+	1:31,
+	2:28,
+	2.5:29,
+	3:31,
+	4:30,
+	5:31,
+	6:30,
+	7:31,
+	8:31,
+	9:30,
+	10:31,
+	11:30,
+	12:31
+}
+
+
 var map = L.map('map').setView([40.727, -73.976], 12);
 
 //Hey, so this is shitty. It'll go away and be replaced with local vars later.
@@ -26,11 +43,58 @@ app.controller("mapView", function($scope,$http) {
 
 
 	$scope.dateTimeIncre = function(arg){
-		$scope.currentDateTime[arg] += 1;
+		var i = $scope.currentDateTime[arg];
+		switch (true) {
+			case (arg == "DD"):
+				j = $scope.currentDateTime.MM;
+				if(j == 2 && ($scope.currentDateTime.YYYY % 4) == 0){
+					j = 2.5;
+				}
+
+				if(i == daysInMonth[j]){
+					i = 1;
+				} else {
+					i += 1;
+				}
+				break;
+			case (arg == "MM"):
+				if(i == 12){
+					i = 1;
+				} else {
+					i += 1;
+				}
+				break;
+			default:
+				i += 1;
+		}
+		$scope.currentDateTime[arg] = i;
 	}
 
 	$scope.dateTimeDecre = function(arg){
-		$scope.currentDateTime[arg] -= 1;
+		var i = $scope.currentDateTime[arg];
+		switch (true) {
+			case (arg == "DD"):
+				if(i == 1){
+					j = $scope.currentDateTime.MM;
+					if(j == 2 && ($scope.currentDateTime.YYYY % 4) == 0){
+						j = 2.5;
+					}
+					i = daysInMonth[j];
+				} else {
+					i -= 1;
+				}
+				break;
+			case (arg == "MM"):
+				if(i == 1){
+					i = 12;
+				} else {
+					i -= 1;
+				}
+				break;
+			default:
+				i -= 1;
+		}
+		$scope.currentDateTime[arg] = i;
 	}
 
 	//Setting up the test api call here.
