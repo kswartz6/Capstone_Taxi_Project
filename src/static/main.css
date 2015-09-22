@@ -108,6 +108,11 @@ color: white;
   padding: 0 10px;
 }
 
+.date-time-month{
+  width: 50px;
+  padding: 3px;
+}
+
 .time-picker-row{
   width:33%;
 }
