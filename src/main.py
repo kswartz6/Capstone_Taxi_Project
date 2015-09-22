@@ -5,11 +5,19 @@ import json
 import pymongo
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 
-MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/taxitest"
+MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
-db = client.get_default_database()
+db = client.csf2015capstone
 
 
+cursor = db.taxitest.find()
+for document in cursor:
+    print(document)
+
+#for keys, values in json.items():
+ #   print(keys)
+  #  print(values)
+#print(json)
 
 webapp = Flask(__name__)
 @webapp.route("/")
@@ -20,8 +28,7 @@ def root():
 
 #API Routes
 #General format is "/api/<endpoint here>"
-
-
+    
 @webapp.route("/api/test")
 def api_test():
 	data = {
