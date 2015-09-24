@@ -13,6 +13,6 @@ def mongoQuery(queryRequest):
 			argsString =  key + ":" + queryRequest[key]
 			firstFlag = False;
 		else:
-			argString += "," + key + ":" + queryRequest[key]
+			argsString += "," + key + ":" + queryRequest[key]
 
 	return argsString;
