@@ -106,6 +106,20 @@ app.controller("mapView", function($scope,$http) {
 		console.log(testRecord);
   });
 
+	var TeeHee = {"pickup_longitude": -73.980072,
+						    "pickup_latitude": 40.743137,
+						    "dropoff_longitude": -73.982712,
+						    "dropoff_latitude": 40.735336}
+
+	var testStructure = $http({
+																url:"/api/structure",
+																method: "GET",
+																params: TeeHee })
+	testStructure.success(function(data, status, headers, config) {
+    console.log(data);
+		testRecord = data;
+		console.log(testRecord);
+  });
 
 
 });
