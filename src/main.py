@@ -38,6 +38,7 @@ def root():
 def api_structure():
     print(request.args)
     retVal = mongoQuery(request.args)
+    print(retVal);
     return retVal
 
 

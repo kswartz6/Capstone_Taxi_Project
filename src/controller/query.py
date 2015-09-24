@@ -11,6 +11,8 @@ def mongoQuery(queryRequest):
 		print(key)
 		if(firstFlag):
 			argsString =  key + ":" + queryRequest[key]
+			firstFlag = False;
 		else:
 			argString += argString + "," + key + ":" + queryRequest[key]
+
 	return argsString;
