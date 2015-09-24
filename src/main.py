@@ -4,6 +4,8 @@ import logging
 import json
 import pymongo
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
+import controller.query
+
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
