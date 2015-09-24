@@ -4,7 +4,7 @@ import logging
 import json
 import pymongo
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
-import controller.query
+from controller.query import *
 
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
@@ -37,8 +37,8 @@ def root():
 @webapp.route("/api/structure")
 def api_structure():
     print(request.args)
-    mongoQuery(request.args)
-    return "hi"
+    retVal = mongoQuery(request.args)
+    return retVal
 
 
 @webapp.route("/api/test")
