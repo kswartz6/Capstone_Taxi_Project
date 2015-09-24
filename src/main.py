@@ -37,6 +37,7 @@ def root():
 @webapp.route("/api/structure")
 def api_structure():
     print(request.args)
+    mongoQuery(request.args)
     return "hi"
 
 
