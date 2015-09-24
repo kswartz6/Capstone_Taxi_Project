@@ -2,19 +2,11 @@ import os
 import sys
 import logging
 import json
-import pymongo
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from controller.query import *
 
 
-MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
-client = pymongo.MongoClient(MONGO_DB_URI)
-db = client.csf2015capstone
 
-
-cursor = db.taxitest.find()
-for document in cursor:
-    print(document)
 
 
 
@@ -36,10 +28,17 @@ def root():
 
 @webapp.route("/api/structure")
 def api_structure():
-    print(request.args)
-    retVal = mongoQuery(request.args)
-    print(retVal);
-    return retVal
+	print(request.args)
+	cursor = mongoQuery(request.args)
+	data = []
+	for document in cursor:
+		#_id is type bson.id, this screws up json serialize
+		#we shouldn't need _id so we just set it to null.
+		document["_id"] = ""
+		data.append(document)
+	js = json.dumps(data)
+	resp = Response(js, status=200, mimetype='application/json')
+	return resp
 
 
 @webapp.route("/api/test")
