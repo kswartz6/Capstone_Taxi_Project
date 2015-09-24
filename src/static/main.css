@@ -119,9 +119,6 @@ color: white;
 .time-arrow{
   display:inline-block;
   width:8px;
-  border-bottom-style: solid;
-  border-width: 1px;
-  border-color:white;
   padding:0px 2px 0px 0px;
   margin:0 1px;
   /*No select*/
