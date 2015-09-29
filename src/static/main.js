@@ -17,7 +17,7 @@ var daysInMonth ={
 }
 
 
-var map = L.map('map').setView([40.727, -73.976], 12);
+var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
 
 //Hey, so this is shitty. It'll go away and be replaced with local vars later.
 //For now we'll use this global variable for testing purposes.
@@ -133,3 +133,30 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     	id: 'cschaufe.n9je0n8b',
     	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
 }).addTo(map);
+
+
+// Initialise the FeatureGroup to store editable layers
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+// Initialise the draw control and pass it the FeatureGroup of editable layers
+var drawControl = new L.Control.Draw({
+    edit: {
+        featureGroup: drawnItems
+    }
+});
+map.addControl(drawControl);
+
+
+//add draw function
+map.on('draw:created', function (e) {
+    var type = e.layerType,
+        layer = e.layer;
+
+    if (type === 'marker') {
+        // Do marker specific actions
+    }
+
+    // Do whatever else you need to. (save to db, add to map etc)
+    map.addLayer(layer);
+});

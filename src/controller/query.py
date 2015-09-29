@@ -9,7 +9,7 @@ db = client.csf2015capstone
 #queryRequest obj and then we concatenate to create the query string
 
 #returns cursor object for now. We do processing of documents in cursor within other
-#functions.
+#functions?
 def mongoQuery(queryRequest):
 	# we need dates and log/ lat of pick-up drop-off
 	# maybe passenger count?

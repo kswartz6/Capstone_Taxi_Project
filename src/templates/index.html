@@ -10,9 +10,12 @@
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
 	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="/static/dist/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/static/dist/leaflet-draw/dist/leaflet.draw.css" />
 	<script src="https://fb.me/react-0.13.3.min.js" async></script>
 	<script src="https://fb.me/JSXTransformer-0.13.3.js" async></script>
 	<script src="/static/dist/leaflet/leaflet-src.js"></script>
+  <script src="/static/dist/leaflet-draw/dist/leaflet.draw-src.js"></script>
+
 
   <!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -25,79 +28,76 @@
       <div id="map">
       </div>
     </div>
-
-    <div id="position-dashboard" class="dashboard-window">
-      <div id="" class="dashboard-header">
-        Collections
-      </div>
-      <div id="" class="dashboard-body">
-        Body containing list of active zones drawn.
-        Users can delete or resize by selecting a zone here.
-      </div>
-    </div>
-
-    <div id="master-dashboard" class="dashboard-window">
-      <div id="" class="dashboard-header">
-        Master
-      </div>
-      <div id="" class="dashboard-body">
-        Dashboard for data display
-      </div>
-    </div>
-
-    <div id="visualization-dashboard" class="dashboard-window">
-      <div id="" class="dashboard-header">
-        Visualization
-      </div>
-      <div id="" class="dashboard-body">
-        Dashboard for data visualization (charts, donuts, etc.)
-        Opens larger view for each in modal.
-      </div>
-    </div>
-
-    <div id="tools-dashboard" class="dashboard-window">
-      <div id="" class="dashboard-body">
-        Dashboard for drawing tools.
-      </div>
-    </div>
-
-    <div id="time-dashboard" class="dashboard-window">
-      <div id="time-body" class="dashboard-body">
-        <div class="time-picker-row">
-          <div class="time-arrow" ng-click="dateTimeIncre('MM')">
-            ^
-          </div>
-          <div class="time-arrow" ng-click="dateTimeIncre('DD')">
-            ^
-          </div>
-          <div class="time-arrow last-arrow" ng-click="dateTimeIncre('YYYY')">
-            ^
-          </div>
+    <div id="sideBar">
+      <div id="position-dashboard" class="dashboard-window">
+        <div id="" class="dashboard-header">
+          Collections
         </div>
-        <div class="row">
-          <div class="col-md-3">
-            <span class="date-time-month">
-              {[currentDateTime.MM]}/
-            </span>
-            <span class="date-time-day">
-              {[currentDateTime.DD]}/
-            </span>
-            <span class="date-time-year">
-              {[currentDateTime.YYYY]}
-            </span>
-          </div>
-          <div class="col-md-9">
-          </div>
+        <div id="" class="dashboard-body">
+          Body containing list of active zones drawn.
+          Users can delete or resize by selecting a zone here.
         </div>
-        <div class="time-picker-row">
-          <div class="time-arrow u-flip" ng-click="dateTimeDecre('MM')">
-            ^
+      </div>
+
+      <div id="master-dashboard" class="dashboard-window">
+        <div id="" class="dashboard-header">
+          Master
+        </div>
+        <div id="" class="dashboard-body">
+          Dashboard for data display
+        </div>
+      </div>
+
+      <div id="visualization-dashboard" class="dashboard-window">
+        <div id="" class="dashboard-header">
+          Visualization
+        </div>
+        <div id="" class="dashboard-body">
+          Dashboard for data visualization (charts, donuts, etc.)
+          Opens larger view for each in modal.
+        </div>
+      </div>
+
+    
+
+      <div id="time-dashboard" class="dashboard-window">
+        <div id="time-body" class="dashboard-body">
+          <div class="time-picker-row">
+            <div class="time-arrow" ng-click="dateTimeIncre('MM')">
+              ^
+            </div>
+            <div class="time-arrow" ng-click="dateTimeIncre('DD')">
+              ^
+            </div>
+            <div class="time-arrow last-arrow" ng-click="dateTimeIncre('YYYY')">
+              ^
+            </div>
           </div>
-          <div class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
-            ^
+          <div class="row">
+            <div class="col-md-3">
+              <span class="date-time-month">
+                {[currentDateTime.MM]}/
+              </span>
+              <span class="date-time-day">
+                {[currentDateTime.DD]}/
+              </span>
+              <span class="date-time-year">
+                {[currentDateTime.YYYY]}
+              </span>
+            </div>
+            <div class="col-md-9">
+            </div>
           </div>
-          <div class="time-arrow last-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
-            ^
+          <div class="time-picker-row">
+            <div class="time-arrow u-flip" ng-click="dateTimeDecre('MM')">
+              ^
+            </div>
+            <div class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
+              ^
+            </div>
+            <div class="time-arrow last-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
+              ^
+            </div>
           </div>
         </div>
       </div>
