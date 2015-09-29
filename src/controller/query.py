@@ -8,21 +8,21 @@ db = client.csf2015capstone
 #queryRequest obj and then we concatenate to create the query string
 
 #returns cursor object for now. We do processing of documents in cursor within other
-#functions.
+#functions?
 def mongoQuery(queryRequest):
 	# we need dates and log/ lat of pick-up drop-off
 	# maybe passenger count?
-	#
-	argsString = ""
+	argString = ""
 	firstFlag = True;
 
 	for key in queryRequest:
 		print(key)
 		if(firstFlag):
-			argsString =  key + ":" + queryRequest[key]
+			argString =  key + ":" + queryRequest[key]
 			firstFlag = False;
 		else:
-			argsString += "," + key + ":" + queryRequest[key]
+			argString += "," + key + ":" + queryRequest[key]
+	print(argString);
 	cursor = db.taxitest.find()
 	return cursor
 
