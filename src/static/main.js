@@ -145,7 +145,6 @@ var drawControl = new L.Control.Draw({
         featureGroup: drawnItems
     }
 });
-map.addControl(drawControl);
 
 
 //add draw function
