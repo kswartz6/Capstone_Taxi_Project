@@ -22,18 +22,18 @@ def root():
 
 
 
-#API Routes
-#General format is "/api/<endpoint here>"
+# API Routes
+# General format is "/api/<endpoint here>"
 
 
 @webapp.route("/api/structure")
 def api_structure():
-	print(request.args)
+	# print(str(request.args))
 	cursor = mongoQuery(request.args)
 	data = []
 	for document in cursor:
-		#_id is type bson.id, this screws up json serialize
-		#we shouldn't need _id so we just set it to null.
+		# _id is type bson.id, this screws up json serialize
+		# we shouldn't need _id so we just set it to null.
 		document["_id"] = ""
 		data.append(document)
 	js = json.dumps(data)
