@@ -16,7 +16,7 @@ var daysInMonth ={
 
 
 var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
-var collections = [];
+
 
 var app = angular.module("app", []);
 
@@ -33,9 +33,46 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime      = {};
 	$scope.currentDateTime.MM   = 1;
 	$scope.currentDateTime.DD   = 1;
-	$scope.currentDateTime.YYYY = 2013
+	$scope.currentDateTime.YYYY = 2013;
+
+	$scope.collectionItems = [];
+
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		maxZoom: 18,
+		minZoom: 10,
+	    	id: 'cschaufe.n9je0n8b',
+	    	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
+	}).addTo(map);
 
 
+	// Initialise the FeatureGroup to store editable layers
+	var drawnItems = new L.FeatureGroup();
+	map.addLayer(drawnItems);
+
+	// Initialise the draw control and pass it the FeatureGroup of editable layers
+	var drawControl = new L.Control.Draw({
+	    edit: {
+	        featureGroup: drawnItems
+	    }
+	});
+
+
+	//add draw function
+	map.on('draw:created', function (e) {
+	    var type = e.layerType,
+	        layer = e.layer;
+
+	    if (type === 'marker') {
+	        // Do marker specific actions
+	    }
+			console.log(layer.getLatLngs());
+
+	    // Do whatever else you need to. (save to db, add to map etc)
+	    map.addLayer(layer);
+			collections.push(layer);
+			console.log(collections);
+	});
 
 	$scope.dateTimeIncre = function(arg){
 		var i = $scope.currentDateTime[arg];
@@ -106,10 +143,10 @@ app.controller("mapView", function($scope,$http) {
 						    "dropoff_longitude": -73.982712,
 						    "dropoff_latitude": 40.735336}
 
-	var testStructure = $http({
-																url:"/api/structure",
+	var testStructure = $http({		url:"/api/structure",
 																method: "GET",
 																params: TeeHee })
+
 	testStructure.success(function(data, status, headers, config) {
     console.log(data);
 		testRecord = data;
@@ -117,43 +154,4 @@ app.controller("mapView", function($scope,$http) {
   });
 
 
-});
-
-
-
-L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-	attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-	maxZoom: 18,
-	minZoom: 10,
-    	id: 'cschaufe.n9je0n8b',
-    	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
-}).addTo(map);
-
-
-// Initialise the FeatureGroup to store editable layers
-var drawnItems = new L.FeatureGroup();
-map.addLayer(drawnItems);
-
-// Initialise the draw control and pass it the FeatureGroup of editable layers
-var drawControl = new L.Control.Draw({
-    edit: {
-        featureGroup: drawnItems
-    }
-});
-
-
-//add draw function
-map.on('draw:created', function (e) {
-    var type = e.layerType,
-        layer = e.layer;
-
-    if (type === 'marker') {
-        // Do marker specific actions
-    }
-		console.log(layer.getLatLngs());
-		console.log(layer.getBounds());
-
-    // Do whatever else you need to. (save to db, add to map etc)
-    map.addLayer(layer);
-		collections.push(layer);
 });
