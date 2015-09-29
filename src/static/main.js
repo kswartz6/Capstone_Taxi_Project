@@ -1,5 +1,3 @@
-
-
 var daysInMonth ={
 	1:31,
 	2:28,
@@ -18,11 +16,7 @@ var daysInMonth ={
 
 
 var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
-
-//Hey, so this is shitty. It'll go away and be replaced with local vars later.
-//For now we'll use this global variable for testing purposes.
-var testRecord = {};
-
+var collections = [];
 
 var app = angular.module("app", []);
 
@@ -40,6 +34,7 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime.MM   = 1;
 	$scope.currentDateTime.DD   = 1;
 	$scope.currentDateTime.YYYY = 2013
+
 
 
 	$scope.dateTimeIncre = function(arg){
@@ -155,7 +150,10 @@ map.on('draw:created', function (e) {
     if (type === 'marker') {
         // Do marker specific actions
     }
+		console.log(layer.getLatLngs());
+		console.log(layer.getBounds());
 
     // Do whatever else you need to. (save to db, add to map etc)
     map.addLayer(layer);
+		collections.push(layer);
 });
