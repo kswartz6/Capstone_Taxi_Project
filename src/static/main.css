@@ -93,20 +93,47 @@ color: white;
   padding: 0 10px;
 }
 
+.date-time-picker{
+  display: inline-block;
+}
+
 #date-picker{
   padding:5px 1px;
   margin:5px;
-  width: 125px;
+  width: 140px;
 }
 
+#time-picker{
+  padding:5px 1px;
+  margin:5px;
+  width: 100px;
+}
+
+
 td{
-  margin:4px;
+  padding:4px;
   border-width: 2px;
   border-style: solid;
   border-color: white;
 }
 
 
+.upper-left{
+  border-top-left-radius: 5px;
+}
+
+.upper-right{
+  border-top-right-radius: 5px;
+}
+
+.bottom-left{
+  border-bottom-left-radius: 5px;
+}
+
+
+.bottom-right{
+  border-bottom-right-radius: 5px;
+}
 
 .time-arrow{
   /*No select*/

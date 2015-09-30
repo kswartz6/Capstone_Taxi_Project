@@ -29,15 +29,16 @@
       </div>
     </div>
     <div id="sideBar">
+      <div class="date-time-picker">
       <table id="date-picker">
         <tr class="time-picker-row">
-          <td class="time-arrow" ng-click="dateTimeIncre('MM')">
+          <td class="time-arrow upper-left bottom-left" ng-click="dateTimeIncre('MM')">
             ^
           </td>
           <td class="time-arrow" ng-click="dateTimeIncre('DD')">
             ^
           </td>
-          <td class="time-arrow last-arrow" ng-click="dateTimeIncre('YYYY')">
+          <td class="time-arrow last-arrow upper-right bottom-right" ng-click="dateTimeIncre('YYYY')">
             ^
           </td>
         </tr>
@@ -53,17 +54,56 @@
             </td>
         </tr>
         <tr class="time-picker-row">
-          <td class="time-arrow u-flip" ng-click="dateTimeDecre('MM')">
+          <td class="time-arrow u-flip upper-right bottom-right" ng-click="dateTimeDecre('MM')">
             ^
           </td>
           <td class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
             ^
           </td>
-          <td class="time-arrow last-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
+          <td class="time-arrow last-arrow u-flip upper-left bottom-left" ng-click="dateTimeDecre('YYYY')">
             ^
           </td>
         </tr>
       </table>
+    </div>
+
+      <div class="date-time-picker">
+      <table id="time-picker">
+        <tr class="time-picker-row">
+          <td class="time-arrow upper-left bottom-left" ng-click="dateTimeIncre('hours')">
+            ^
+          </td>
+          <td class="time-arrow" ng-click="dateTimeIncre('minutes')">
+            ^
+          </td>
+          <td class="time-arrow last-arrow upper-right bottom-right" ng-click="dateTimeIncre('seconds')">
+            ^
+          </td>
+        </tr>
+        <tr class="time-picker-row">
+            <td class="date-time-month">
+              {[currentDateTime.hours]}
+            </td>
+            <td class="date-time-day">
+              {[currentDateTime.minutes]}
+            </td>
+            <td class="date-time-year">
+              {[currentDateTime.seconds]}
+            </td>
+        </tr>
+        <tr class="time-picker-row">
+          <td class="time-arrow u-flip upper-right bottom-right" ng-click="dateTimeDecre('hours')">
+            ^
+          </td>
+          <td class="time-arrow u-flip" ng-click="dateTimeDecre('minutes')">
+            ^
+          </td>
+          <td class="time-arrow last-arrow u-flip upper-left bottom-left" ng-click="dateTimeDecre('seconds')">
+            ^
+          </td>
+        </tr>
+      </table>
+    </div>
     </div>
 
 
