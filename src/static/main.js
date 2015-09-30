@@ -35,7 +35,7 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime.DD   = 1;
 	$scope.currentDateTime.YYYY = 2013;
 
-	$scope.collectionItems = [];
+	$scope.collections = [];
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -70,8 +70,10 @@ app.controller("mapView", function($scope,$http) {
 
 	    // Do whatever else you need to. (save to db, add to map etc)
 	    map.addLayer(layer);
-			collections.push(layer);
-			console.log(collections);
+			$scope.$apply(function() {
+        $scope.collections.push(layer);
+      });
+			console.log($scope.collections);
 	});
 
 	$scope.dateTimeIncre = function(arg){

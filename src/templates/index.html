@@ -29,78 +29,57 @@
       </div>
     </div>
     <div id="sideBar">
-      <div id="position-dashboard" class="dashboard-window">
-        <div id="" class="dashboard-header">
-          Collections
-        </div>
-        <div id="" class="dashboard-body" ng-repeat="n in collectionItems()">
-          {[n]}
-        </div>
-      </div>
-
-      <div id="master-dashboard" class="dashboard-window">
-        <div id="" class="dashboard-header">
-          Master
-        </div>
-        <div id="" class="dashboard-body" >
-
-        </div>
-      </div>
-
-      <div id="visualization-dashboard" class="dashboard-window">
-        <div id="" class="dashboard-header">
-          Visualization
-        </div>
-        <div id="" class="dashboard-body">
-          Dashboard for data visualization (charts, donuts, etc.)
-          Opens larger view for each in modal.
-        </div>
-      </div>
+      <table id="date-picker">
+        <tr class="time-picker-row">
+          <td class="time-arrow" ng-click="dateTimeIncre('MM')">
+            ^
+          </td>
+          <td class="time-arrow" ng-click="dateTimeIncre('DD')">
+            ^
+          </td>
+          <td class="time-arrow last-arrow" ng-click="dateTimeIncre('YYYY')">
+            ^
+          </td>
+        </tr>
+        <tr class="time-picker-row">
+            <td class="date-time-month">
+              {[currentDateTime.MM]}
+            </td>
+            <td class="date-time-day">
+              {[currentDateTime.DD]}
+            </td>
+            <td class="date-time-year">
+              {[currentDateTime.YYYY]}
+            </td>
+        </tr>
+        <tr class="time-picker-row">
+          <td class="time-arrow u-flip" ng-click="dateTimeDecre('MM')">
+            ^
+          </td>
+          <td class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
+            ^
+          </td>
+          <td class="time-arrow last-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
+            ^
+          </td>
+        </tr>
+      </table>
+    </div>
 
 
 
       <div id="time-dashboard" class="dashboard-window">
         <div id="time-body" class="dashboard-body">
-          <div class="time-picker-row">
-            <div class="time-arrow" ng-click="dateTimeIncre('MM')">
-              ^
-            </div>
-            <div class="time-arrow" ng-click="dateTimeIncre('DD')">
-              ^
-            </div>
-            <div class="time-arrow last-arrow" ng-click="dateTimeIncre('YYYY')">
-              ^
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <span class="date-time-month">
-                {[currentDateTime.MM]}/
-              </span>
-              <span class="date-time-day">
-                {[currentDateTime.DD]}/
-              </span>
-              <span class="date-time-year">
-                {[currentDateTime.YYYY]}
-              </span>
-            </div>
-            <div class="col-md-9">
-            </div>
-          </div>
-          <div class="time-picker-row">
-            <div class="time-arrow u-flip" ng-click="dateTimeDecre('MM')">
-              ^
-            </div>
-            <div class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
-              ^
-            </div>
-            <div class="time-arrow last-arrow u-flip" ng-click="dateTimeDecre('YYYY')">
-              ^
-            </div>
-          </div>
         </div>
       </div>
-    </div>
+      <div id="position-dashboard" class="dashboard-window">
+        <div id="" class="dashboard-header">
+          Collections
+        </div>
+        <div id="" class="dashboard-body">
+        </div>
+      </div>
+
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
