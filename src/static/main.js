@@ -98,6 +98,13 @@ app.controller("mapView", function($scope,$http) {
 					i += 1;
 				}
 				break;
+			case (arg == "YYYY"):
+				if(i == 2013){
+					i = 2014
+				} else {
+					i = 2013
+				}
+				break;
 			default:
 				i += 1;
 		}
