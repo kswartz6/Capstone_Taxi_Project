@@ -200,6 +200,25 @@ app.controller("mapView", function($scope,$http) {
     console.log(data);
 		testRecord = data;
 		console.log(testRecord);
+
+		//
+
+
+		console.log(L);
+		console.log(data);
+		testRecord = data;
+		console.log(testRecord);
+
+		var iconSize = [15, 15];
+		var blueIcon = L.icon({
+			iconUrl: '/static/images/circle-blue.png',
+   			iconSize: iconSize
+   		});
+   		/*geoJson not showing on map*/
+		//L.geoJson(geojsonFeature).addTo(map); g
+		L.marker([data.pickup_latitude, data.pickup_longitude], {icon: blueIcon}).addTo(map); //http://leafletjs.com/examples/custom-icons.html
+		// 
+//
   });
 
 	var TeeHee = {"pickup_longitude": -73.980072,
