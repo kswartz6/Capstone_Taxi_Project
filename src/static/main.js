@@ -34,6 +34,9 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime.MM   = 1;
 	$scope.currentDateTime.DD   = 1;
 	$scope.currentDateTime.YYYY = 2013;
+	$scope.currentDateTime.hours = 12;
+	$scope.currentDateTime.minutes = 30;
+	$scope.currentDateTime.seconds = 0;
 
 	$scope.collections = [];
 
@@ -105,6 +108,32 @@ app.controller("mapView", function($scope,$http) {
 					i = 2013
 				}
 				break;
+				case (arg == "hours"):
+					if (i == 12){
+						i = 1;
+					} else if (i == 11){
+						$scope.dateTimeIncre("DD");
+						i += 1;
+					} else {
+						i += 1;
+					}
+					break;
+				case (arg == "minutes"):
+					if (i == 59){
+						i = 0;
+						$scope.dateTimeIncre("hours");
+					} else {
+						i += 1;
+					}
+					break;
+				case (arg == "seconds"):
+					if (i == 59){
+						i = 0;
+						$scope.dateTimeIncre("minutes");
+					} else {
+						i += 1;
+					}
+					break;
 			default:
 				i += 1;
 		}
@@ -128,6 +157,32 @@ app.controller("mapView", function($scope,$http) {
 			case (arg == "MM"):
 				if(i == 1){
 					i = 12;
+				} else {
+					i -= 1;
+				}
+				break;
+			case (arg == "hours"):
+				if (i == 1){
+					i = 12;
+				} else if (i == 12){
+					$scope.dateTimeDecre("DD");
+					i -= 1;
+				} else {
+					i -= 1;
+				}
+				break;
+			case (arg == "minutes"):
+				if (i == 0){
+					i = 59;
+					$scope.dateTimeDecre("hours");
+				} else {
+					i -= 1;
+				}
+				break;
+			case (arg == "seconds"):
+				if (i == 0){
+					i = 59;
+						$scope.dateTimeDecre("minutes");
 				} else {
 					i -= 1;
 				}
