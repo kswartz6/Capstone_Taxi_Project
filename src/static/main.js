@@ -38,7 +38,16 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime.minutes = 30;
 	$scope.currentDateTime.seconds = 0;
 
-	$scope.collections = [];
+	$scope.collections = [
+	
+	{
+		northEast: [{}],
+
+		southWest: [{}]
+
+	}
+
+	];
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -66,17 +75,24 @@ app.controller("mapView", function($scope,$http) {
 	    var type = e.layerType,
 	        layer = e.layer;
 
-	    if (type === 'marker') {
-	        // Do marker specific actions
-	    }
 			console.log(layer.getLatLngs());
 
 	    // Do whatever else you need to. (save to db, add to map etc)
 	    map.addLayer(layer);
-			$scope.$apply(function() {
-        $scope.collections.push(layer);
+
+	    if(type =='rectangle'){
+	    var bounds = layer.getBounds();
+	    
+	    //Northeast corner [Lat, Long]
+	    var NE = [ bounds._northEast.lat,bounds._northEast.lng];
+	    //Southwest corner [Lat,Long]
+	    var SW = [ bounds._southWest.lat,bounds._southWest.lng];
+	 	
+	    $scope.$apply(function() {
+       	$scope.collections.push({northEast: NE, southWest: SW});
       });
-			console.log($scope.collections);
+	}
+		console.log($scope.collections);
 	});
 
 	$scope.dateTimeIncre = function(arg){

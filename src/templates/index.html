@@ -8,12 +8,12 @@
   <meta name="description" content="Taxi Data for NYC">
   <meta name="author" content="Cass Schaufele">
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
-	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="/static/dist/leaflet/leaflet.css" />
   <link rel="stylesheet" href="/static/dist/leaflet-draw/dist/leaflet.draw.css" />
 	<script src="https://fb.me/react-0.13.3.min.js" async></script>
 	<script src="https://fb.me/JSXTransformer-0.13.3.js" async></script>
-	<script src="/static/dist/leaflet/leaflet-src.js"></script>
+  <script src="/static/dist/leaflet/leaflet-src.js"></script>
   <script src="/static/dist/leaflet-draw/dist/leaflet.draw-src.js"></script>
 
 
@@ -112,11 +112,12 @@
         <div id="" class="dashboard-header">
           Collections
         </div>
-        <div id="" class="dashboard-body">
+      <div  ng-repeat="collection in collections"  class="dashboard-body">
+        Bounds
+        <p> NE : {[collection.northEast]} </p>
+        <p> SW : {[collection.southWest]}</p>
         </div>
       </div>
-
-  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
