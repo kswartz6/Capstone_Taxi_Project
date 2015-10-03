@@ -4,6 +4,7 @@ MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 
+
 #mongoQuery is a universal deconstructor - we grab ALL params from
 #queryRequest obj and then we concatenate to create the query string
 
@@ -13,8 +14,7 @@ def mongoQuery(queryRequest):
 	# we need dates and log/ lat of pick-up drop-off
 	# maybe passenger count?
 	argString = ""
-	firstFlag = True;
-
+	firstFlag = True
 	for key in queryRequest:
 		print(key)
 		if(firstFlag):
@@ -22,9 +22,36 @@ def mongoQuery(queryRequest):
 			firstFlag = False;
 		else:
 			argString += "," + key + ":" + queryRequest[key]
-	print(argString);
+	print(argString)
 	cursor = db.taxitest.find()
 	return cursor
+
+#	below is sample query for a given location
+# 	cursor = db.taxitest.find({"pickup_loc" : { "loc" : {"$near": [-73.980072, 40.743137]}}}).limit(3)
+
+
+#bulkQuery grabs 100 records
+def bulkQuery():
+	cursor = db.taxitest.find().limit(100)
+	return cursor
+
+def fixData(data):
+	cursor = db.taxitest.find()
+
+	for document in cursor :
+		document["pickup_loc"] = [document["pickup_longitude"], document["pickup_latitude"]]
+		document["dropoff_loc"] = [document["dropoff_longitude"], document["dropoff_latitude"]]
+		document.pop("pickup_longitude")
+		document.pop("pickup_latitude")
+		document.pop("dropoff_longitude")
+		document.pop("dropoff_latitude")
+		db.taxitest.update({"_id":document["_id"]}, document, True)
+
+
+	test = db.taxitest.find()
+	for document in test:
+		print(document)
+
 
 def processResults(flags):
 	return 0
