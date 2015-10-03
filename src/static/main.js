@@ -40,6 +40,40 @@ app.controller("mapView", function($scope,$http) {
 
 	$scope.collections = [];
 
+
+	var testResponse = $http.get("/api/test")
+	testResponse.success(function(data, status, headers, config) {
+		console.log(data);
+		testRecord = data;
+		console.log(testRecord);
+		 //http://leafletjs.com/examples/custom-icons.html
+		//
+	});
+
+	var TeeHee = {"pickup_longitude": -73.980072,
+								"pickup_latitude": 40.743137,
+								"dropoff_longitude": -73.982712,
+								"dropoff_latitude": 40.735336}
+
+	var testStructure = $http({		url:"/api/structure",
+																method: "GET",
+																params: TeeHee })
+
+	testStructure.success(function(data, status, headers, config) {
+		console.log(data);
+		testRecord = data;
+		console.log(testRecord);
+		var blueIcon = L.icon({
+			iconUrl: '/static/images/circle-blue.png',
+				iconSize: iconSize
+			});
+		var iconSize = [6, 6];   		/*geoJson not showing on map*/
+		//L.geoJson(geojsonFeature).addTo(map); g
+		L.marker([data[0].dropoff_loc.loc[0], data[0].dropoff_loc.loc[1]], {icon: blueIcon}).addTo(map);
+	});
+
+
+
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		maxZoom: 18,
@@ -202,13 +236,6 @@ app.controller("mapView", function($scope,$http) {
 
 	//Setting up the test api call here.
 	//This is an async call, so testResponse acts as a promised value.
-	var testResponse = $http.get("/api/test")
-	testResponse.success(function(data, status, headers, config) {
-    console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-
-		//
 
 
 		console.log(L);
@@ -224,8 +251,6 @@ app.controller("mapView", function($scope,$http) {
    		/*geoJson not showing on map*/
 		//L.geoJson(geojsonFeature).addTo(map); g
 		L.marker([data.pickup_latitude, data.pickup_longitude], {icon: blueIcon}).addTo(map); //http://leafletjs.com/examples/custom-icons.html
-		//
-//
   });
 
 	var TeeHee = {"pickup_longitude": -73.980072,
@@ -242,6 +267,5 @@ app.controller("mapView", function($scope,$http) {
 		testRecord = data;
 		console.log(testRecord);
   });
-
 
 });
