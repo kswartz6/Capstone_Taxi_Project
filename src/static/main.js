@@ -234,24 +234,6 @@ app.controller("mapView", function($scope,$http) {
 		$scope.currentDateTime[arg] = i;
 	}
 
-	//Setting up the test api call here.
-	//This is an async call, so testResponse acts as a promised value.
-
-
-		console.log(L);
-		console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-
-		var iconSize = [15, 15];
-		var blueIcon = L.icon({
-			iconUrl: '/static/images/circle-blue.png',
-   			iconSize: iconSize
-   		});
-   		/*geoJson not showing on map*/
-		//L.geoJson(geojsonFeature).addTo(map); g
-		L.marker([data.pickup_latitude, data.pickup_longitude], {icon: blueIcon}).addTo(map); //http://leafletjs.com/examples/custom-icons.html
-  });
 
 	var TeeHee = {"pickup_longitude": -73.980072,
 						    "pickup_latitude": 40.743137,
