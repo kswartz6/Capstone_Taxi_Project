@@ -38,16 +38,7 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime.minutes = 30;
 	$scope.currentDateTime.seconds = 0;
 
-	$scope.collections = [
-	
-	{
-		northEast: [{}],
-
-		southWest: [{}]
-
-	}
-
-	];
+	$scope.collections = [];
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -80,14 +71,14 @@ app.controller("mapView", function($scope,$http) {
 	    // Do whatever else you need to. (save to db, add to map etc)
 	    map.addLayer(layer);
 
-	    if(type =='rectangle'){
+	    if(type === 'rectangle'){
 	    var bounds = layer.getBounds();
-	    
+
 	    //Northeast corner [Lat, Long]
-	    var NE = [ bounds._northEast.lat,bounds._northEast.lng];
+	    var NE = [bounds._northEast.lat,bounds._northEast.lng];
 	    //Southwest corner [Lat,Long]
 	    var SW = [ bounds._southWest.lat,bounds._southWest.lng];
-	 	
+
 	    $scope.$apply(function() {
        	$scope.collections.push({northEast: NE, southWest: SW});
       });
@@ -233,7 +224,7 @@ app.controller("mapView", function($scope,$http) {
    		/*geoJson not showing on map*/
 		//L.geoJson(geojsonFeature).addTo(map); g
 		L.marker([data.pickup_latitude, data.pickup_longitude], {icon: blueIcon}).addTo(map); //http://leafletjs.com/examples/custom-icons.html
-		// 
+		//
 //
   });
 
