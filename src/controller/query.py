@@ -1,5 +1,6 @@
 import pymongo
 import ast
+from bson.son import SON
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
@@ -41,8 +42,8 @@ def mongoQuery(queryRequest):
 	#for document in zzz :
 	#	print(document)
 
-	#db.taxitest.create_index([("pickup_loc", pymongo.GEO2D)])
-	#db.taxitest.create_index([("dropoff_loc", pymongo.GEO2D)])
+	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
+	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
 
 
 	#argsString = ""
@@ -62,8 +63,8 @@ def mongoQuery(queryRequest):
 	#
 	#print(argsString)
 	#qString = ast.literal_eval({{"pickup_loc": {"$near": [-73.980072, 40.743137]}}})
-	cursor = db.taxitest.find({"pickup_loc" : { "loc" : {"$near": [-73.980072, 40.743137]}}}).limit(3)
-#
+	cursor = db.taxitest.find({ 'dropoff_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
+#	SON([("$near", [-73.980072, 40.743137]), ("$maxDistance", 100)]
 
 	#print("hello")
 	for document in cursor :
@@ -72,22 +73,43 @@ def mongoQuery(queryRequest):
 #
 	#return 1
 
-def fixData(data):
+def fixData():
 	cursor = db.taxitest.find()
-
+	current_doc_number = 1
 	for document in cursor :
-		document["pickup_loc"] = [document["pickup_longitude"], document["pickup_latitude"]]
-		document["dropoff_loc"] = [document["dropoff_longitude"], document["dropoff_latitude"]]
+		print("currently updating: " + current_doc_number)
+		pickup_long = document["pickup_longitude"]
+		pickup_lat = document["pickup_latitude"]
+		dropoff_long = document["dropoff_longitude"]
+		dropoff_lat = document["dropoff_latitude"]
+
+		pickup_coord = [pickup_long, pickup_lat]
+		dropoff_coord = [dropoff_long, dropoff_lat]
+
+		pickup = {
+			'loc' : pickup_coord
+		}
+
+		dropoff = {
+			'loc' : dropoff_coord
+		}
+
+		document["pickup_loc"] =  pickup
+		document["dropoff_loc"] =  dropoff
 		document.pop("pickup_longitude")
 		document.pop("pickup_latitude")
 		document.pop("dropoff_longitude")
 		document.pop("dropoff_latitude")
 		db.taxitest.update({"_id":document["_id"]}, document, True)
+		print("done updating: " + current_doc_number)
+		current_doc_number = current_doc_number + 1
 
+	print("Currently creating geospatial indexing on pickup_loc")
+	db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
+	
+	print("Currently creating geospatial indexing on dropoff_loc")
+	db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
 
-	zzz = db.taxitest.find()
-	for document in zzz :
-		print(document)
 
 def processResults(flags):
 	return 0
