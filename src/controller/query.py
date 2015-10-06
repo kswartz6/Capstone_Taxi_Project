@@ -68,45 +68,38 @@ def bulkQuery():
 	return cursor
 
 
-def doDate():
-	cursor = db.taxitest.find()
-
-	for document in cursor:
-		pickup_date = document["pickup_datetime"]
-		dropoff_date = document["dropoff_datetime"]
-
-		if(pickup_date == None):
-			#do nothing
-			continue
-		else:
-			index_to_replace = pickup_date.find(" ")
-			pickup_date = list(pickup_date)
-			pickup_date[index_to_replace] = "T"
-			pickup_date = "".join(pickup_date)
-			pickup_date = pickup_date + ":000Z"
-			pickup = {
-				'date' : pickup_date
-			}
-			document.pop("pickup_datetime")
-			document["pickup_datetime"] = pickup
-
-		if(dropoff_date == None):
-			#do nothing
-			continue
-		else:
-			index_to_replace = dropoff_date.find(" ")
-			dropoff_date = list(dropoff_date)
-			dropoff_date[index_to_replace] = "T"
-			dropoff_date = "".join(dropoff_date)
-			dropoff_date = dropoff_date + ":000Z"
-			dropoff = {
-			'date' : dropoff_date
-			}
-			document.pop("dropoff_datetime")
-			document["dropoff_datetime"] = dropoff
-
-		db.taxitest.update({"_id":document["_id"]}, document, True)
-		print(document)
+def doDate(document):
+	pickup_date = document["pickup_datetime"]
+	dropoff_date = document["dropoff_datetime"]
+	if(pickup_date == None):
+		#do nothing
+		continue
+	else:
+		index_to_replace = pickup_date.find(" ")
+		pickup_date = list(pickup_date)
+		pickup_date[index_to_replace] = "T"
+		pickup_date = "".join(pickup_date)
+		pickup_date = pickup_date + ":000Z"
+		pickup = {
+			'date' : pickup_date
+		}
+		document.pop("pickup_datetime")
+		document["pickup_datetime"] = pickup
+	if(dropoff_date == None):
+		#do nothing
+		continue
+	else:
+		index_to_replace = dropoff_date.find(" ")
+		dropoff_date = list(dropoff_date)
+		dropoff_date[index_to_replace] = "T"
+		dropoff_date = "".join(dropoff_date)
+		dropoff_date = dropoff_date + ":000Z"
+		dropoff = {
+		'date' : dropoff_date
+		}
+		document.pop("dropoff_datetime")
+		document["dropoff_datetime"] = dropoff
+		return document
 
 
 def fixData():
@@ -136,6 +129,7 @@ def fixData():
 		document.pop("pickup_latitude")
 		document.pop("dropoff_longitude")
 		document.pop("dropoff_latitude")
+		document = doDate(document)
 		db.taxitest.update({"_id":document["_id"]}, document, True)
 		print("done updating: " + current_doc_number)
 		current_doc_number = current_doc_number + 1
