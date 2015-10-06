@@ -29,7 +29,7 @@ def root():
 @webapp.route("/api/structure")
 def api_structure():
 	# print(str(request.args))
-	cursor = mongoQuery(request.args)
+	cursor = bulkQuery()
 	data = []
 	for document in cursor:
 		# _id is type bson.id, this screws up json serialize

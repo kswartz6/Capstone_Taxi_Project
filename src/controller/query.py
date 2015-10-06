@@ -15,32 +15,18 @@ db = client.csf2015capstone
 def mongoQuery(queryRequest):
 	# we need dates and log/ lat of pick-up drop-off
 	# maybe passenger count?
-	#
-
-	#cursor = db.taxitest.find()
-#
-	#for document in cursor :
-#
-	#	pickup_coord = document["pickup_loc"]
-	#	dropoff_coord = document["dropoff_loc"]
-#
-	#	dropoff = {
-	#		'loc' : dropoff_coord
-	#	}
-#
-	#	pickup = {
-	#		'loc' : pickup_coord
-	#	}
-#
-	#	document.update({"pickup_loc" : pickup})
-	#	document.update({"dropoff_loc" : dropoff})
-	#	print(document)
-	#	db.taxitest.update({"_id":document["_id"]}, document, True)
-
-#
-	#zzz = db.taxitest.find()
-	#for document in zzz :
-	#	print(document)
+	argString = ""
+	firstFlag = True
+	for key in queryRequest:
+		print(key)
+		if(firstFlag):
+			argString =  key + ":" + queryRequest[key]
+			firstFlag = False;
+		else:
+			argString += "," + key + ":" + queryRequest[key]
+	print(argString)
+	cursor = db.taxitest.find()
+	return cursor
 
 	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
 	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
@@ -63,15 +49,23 @@ def mongoQuery(queryRequest):
 	#
 	#print(argsString)
 	#qString = ast.literal_eval({{"pickup_loc": {"$near": [-73.980072, 40.743137]}}})
-	cursor = db.taxitest.find({ 'dropoff_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
+	#cursor = db.taxitest.find({ 'dropoff_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 #	SON([("$near", [-73.980072, 40.743137]), ("$maxDistance", 100)]
 
 	#print("hello")
-	for document in cursor :
-		print(document)
+	#for document in cursor :
+	#	print(document)
 		#db.taxitest.
 #
 	#return 1
+#	below is sample query for a given location
+# 	cursor = db.taxitest.find({"pickup_loc" : { "loc" : {"$near": [-73.980072, 40.743137]}}}).limit(3)
+
+
+#bulkQuery grabs 100 records
+def bulkQuery():
+	cursor = db.taxitest.find().limit(100)
+	return cursor
 
 def fixData():
 	cursor = db.taxitest.find()
@@ -113,6 +107,3 @@ def fixData():
 
 def processResults(flags):
 	return 0
-
-
-mongoQuery(0)
