@@ -39,7 +39,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime.seconds = 0;
 
 	$scope.collections = [];
-	var playState = false;
+	$scope.play = false;
 	//playState is the state of time playback
 
 	var testResponse = $http.get("/api/test")
@@ -237,12 +237,19 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		$scope.currentDateTime[arg] = i;
 	}
 
-	$scope.playTime = function(play){
-		playState = play;
-		if(playState){
-			console.log("fired")
-			//$timeout($scope.playTime(playState), 1000);
-		}
+
+
+	$scope.startPlay = function(){
+		countdownPlayState();
+	}
+
+	$scope.pausePlay = function(){
+			$timeout.cancel($scope.timeout);
+	}
+
+	function countdownPlayState(){
+		$scope.dateTimeIncre("seconds")
+		$scope.timeout = $timeout(countdownPlayState, 1000);
 	}
 
 	var TeeHee = {"pickup_longitude": -73.980072,

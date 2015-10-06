@@ -82,15 +82,15 @@
             </td>
         </tr>
         <tr class="time-picker-row">
-          <td class="time-arrow u-flip upper-right bottom-right" ng-click="dateTimeDecre('hours')">
-            ^
+          <td class="time-arrow upper-left bottom-left" ng-click="dateTimeDecre('hours')">
+            <i class="fa fa-backward"></i>
           </td>
-          <td class="time-arrow" ng-click="playTime(true)">
-            <i class="fa fa-play-circle"></i>
-            <i class="fa fa-pause"></i>
+          <td class="time-arrow">
+            <i class="fa fa-play-circle" ng-show="!(play)" ng-click="startPlay(); play=true"></i>
+            <i class="fa fa-pause" ng-show="play" ng-click="pausePlay(); play=false"></i>
           </td>
-          <td class="time-arrow last-arrow u-flip upper-left bottom-left" ng-click="dateTimeDecre('seconds')">
-            ^
+          <td class="time-arrow last-arrow upper-right bottom-right" ng-click="dateTimeDecre('seconds')">
+            <i class="fa fa-forward"></i>
           </td>
         </tr>
       </table>
