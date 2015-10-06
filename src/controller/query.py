@@ -68,7 +68,7 @@ def bulkQuery():
 	return cursor
 
 
-def doDate(document):
+def cleanupDate(document):
 	pickup_date = document["pickup_datetime"]
 	dropoff_date = document["dropoff_datetime"]
 	if(pickup_date == None):
@@ -102,7 +102,7 @@ def doDate(document):
 		return document
 
 
-def fixData():
+def cleanupData():
 	cursor = db.taxitest.find()
 	current_doc_number = 1
 	for document in cursor :
@@ -129,7 +129,7 @@ def fixData():
 		document.pop("pickup_latitude")
 		document.pop("dropoff_longitude")
 		document.pop("dropoff_latitude")
-		document = doDate(document)
+		document = cleanupDate(document)
 		db.taxitest.update({"_id":document["_id"]}, document, True)
 		print("done updating: " + current_doc_number)
 		current_doc_number = current_doc_number + 1
