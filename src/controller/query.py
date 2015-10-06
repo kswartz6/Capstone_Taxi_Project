@@ -67,6 +67,48 @@ def bulkQuery():
 	cursor = db.taxitest.find().limit(100)
 	return cursor
 
+
+def doDate():
+	cursor = db.taxitest.find()
+
+	for document in cursor:
+		pickup_date = document["pickup_datetime"]
+		dropoff_date = document["dropoff_datetime"]
+
+		if(pickup_date == None):
+			#do nothing
+			continue
+		else:
+			index_to_replace = pickup_date.find(" ")
+			pickup_date = list(pickup_date)
+			pickup_date[index_to_replace] = "T"
+			pickup_date = "".join(pickup_date)
+			pickup_date = pickup_date + ":000Z"
+			pickup = {
+				'date' : pickup_date
+			}
+			document.pop("pickup_datetime")
+			document["pickup_datetime"] = pickup
+
+		if(dropoff_date == None):
+			#do nothing
+			continue
+		else:
+			index_to_replace = dropoff_date.find(" ")
+			dropoff_date = list(dropoff_date)
+			dropoff_date[index_to_replace] = "T"
+			dropoff_date = "".join(dropoff_date)
+			dropoff_date = dropoff_date + ":000Z"
+			dropoff = {
+			'date' : dropoff_date
+			}
+			document.pop("dropoff_datetime")
+			document["dropoff_datetime"] = dropoff
+
+		db.taxitest.update({"_id":document["_id"]}, document, True)
+		print(document)
+
+
 def fixData():
 	cursor = db.taxitest.find()
 	current_doc_number = 1
@@ -105,5 +147,13 @@ def fixData():
 	db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
 
 
+def printAllDocs():
+	cursor = db.taxitest.find()
+
+	for document in cursor:
+		print(document)
+
 def processResults(flags):
 	return 0
+
+printAllDocs()
