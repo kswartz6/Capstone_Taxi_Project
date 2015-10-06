@@ -238,8 +238,20 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	}
 
 
+	$scope.ff = function(){
+		$timeout.cancel($scope.timeout);
+		fastforward();
+	}
+
+	$scope.rw = function(){
+		$timeout.cancel($scope.timeout);
+		rewind();
+	}
 
 	$scope.startPlay = function(){
+		if ($timeout != undefined){
+			$timeout.cancel($scope.timeout);
+		}
 		countdownPlayState();
 	}
 
@@ -252,19 +264,15 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		$scope.timeout = $timeout(countdownPlayState, 1000);
 	}
 
-	var TeeHee = {"pickup_longitude": -73.980072,
-						    "pickup_latitude": 40.743137,
-						    "dropoff_longitude": -73.982712,
-						    "dropoff_latitude": 40.735336}
+	function fastforward(){
+		$scope.dateTimeIncre("seconds")
+		$scope.timeout = $timeout(fastforward, 100);
+	}
 
-	var testStructure = $http({		url:"/api/structure",
-																method: "GET",
-																params: TeeHee })
+	function rewind(){
+		$scope.dateTimeDecre("seconds")
+		$scope.timeout = $timeout(rewind, 100);
+	}
 
-	testStructure.success(function(data, status, headers, config) {
-    console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-  });
 
 });
