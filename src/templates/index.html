@@ -9,6 +9,7 @@
   <meta name="author" content="Cass Schaufele">
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
   <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/dist/leaflet/leaflet.css" />
   <link rel="stylesheet" href="/static/dist/leaflet-draw/dist/leaflet.draw.css" />
 	<script src="https://fb.me/react-0.13.3.min.js" async></script>
@@ -70,17 +71,6 @@
       <div class="date-time-picker">
       <table id="time-picker">
         <tr class="time-picker-row">
-          <td class="time-arrow upper-left bottom-left" ng-click="dateTimeIncre('hours')">
-            ^
-          </td>
-          <td class="time-arrow" ng-click="dateTimeIncre('minutes')">
-            ^
-          </td>
-          <td class="time-arrow last-arrow upper-right bottom-right" ng-click="dateTimeIncre('seconds')">
-            ^
-          </td>
-        </tr>
-        <tr class="time-picker-row">
             <td class="date-time-month">
               {[currentDateTime.hours]}
             </td>
@@ -95,8 +85,9 @@
           <td class="time-arrow u-flip upper-right bottom-right" ng-click="dateTimeDecre('hours')">
             ^
           </td>
-          <td class="time-arrow u-flip" ng-click="dateTimeDecre('minutes')">
-            ^
+          <td class="time-arrow" ng-click="playTime(true)">
+            <i class="fa fa-play-circle"></i>
+            <i class="fa fa-pause"></i>
           </td>
           <td class="time-arrow last-arrow u-flip upper-left bottom-left" ng-click="dateTimeDecre('seconds')">
             ^

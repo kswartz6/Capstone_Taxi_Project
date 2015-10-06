@@ -29,7 +29,7 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 
 
 //controller for mapView
-app.controller("mapView", function($scope,$http) {
+app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
 	$scope.currentDateTime.MM   = 1;
 	$scope.currentDateTime.DD   = 1;
@@ -39,7 +39,8 @@ app.controller("mapView", function($scope,$http) {
 	$scope.currentDateTime.seconds = 0;
 
 	$scope.collections = [];
-
+	var playState = false;
+	//playState is the state of time playback
 
 	var testResponse = $http.get("/api/test")
 	testResponse.success(function(data, status, headers, config) {
@@ -119,6 +120,8 @@ app.controller("mapView", function($scope,$http) {
 	}
 		console.log($scope.collections);
 	});
+
+
 
 	$scope.dateTimeIncre = function(arg){
 		var i = $scope.currentDateTime[arg];
@@ -234,24 +237,13 @@ app.controller("mapView", function($scope,$http) {
 		$scope.currentDateTime[arg] = i;
 	}
 
-	//Setting up the test api call here.
-	//This is an async call, so testResponse acts as a promised value.
-
-
-		console.log(L);
-		console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-
-		var iconSize = [15, 15];
-		var blueIcon = L.icon({
-			iconUrl: '/static/images/circle-blue.png',
-   			iconSize: iconSize
-   		});
-   		/*geoJson not showing on map*/
-		//L.geoJson(geojsonFeature).addTo(map); g
-		L.marker([data.pickup_latitude, data.pickup_longitude], {icon: blueIcon}).addTo(map); //http://leafletjs.com/examples/custom-icons.html
-  });
+	$scope.playTime = function(play){
+		playState = play;
+		if(playState){
+			console.log("fired")
+			//$timeout($scope.playTime(playState), 1000);
+		}
+	}
 
 	var TeeHee = {"pickup_longitude": -73.980072,
 						    "pickup_latitude": 40.743137,
