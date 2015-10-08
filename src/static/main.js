@@ -64,7 +64,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log(data);
 		testRecord = data;
 		console.log(testRecord);
-		var iconSize = [6, 6]; 
+		var iconSize = [6, 6];
 		var blueIcon = L.icon({
 			iconUrl: '/static/images/circle-blue.png',
 			iconSize: iconSize
@@ -99,47 +99,51 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	//add draw function
 	map.on('draw:created', function (e) {
-	    var type = e.layerType,
-	        layer = e.layer;
+		var type = e.layerType,
+		layer = e.layer;
+		var polygonRefID = $scope.collections.length;
+		console.log(layer.getLatLngs());
 
-			console.log(layer.getLatLngs());
+		// Do whatever else you need to. (save to db, add to map etc)
+		map.addLayer(layer);
 
-	    // Do whatever else you need to. (save to db, add to map etc)
-	    map.addLayer(layer);
+		if(type === 'rectangle'){
+			var bounds = layer.getBounds();
 
-	    if(type === 'rectangle'){
-	    var bounds = layer.getBounds();
+			//Northeast corner [Lat, Long]
+			var NE = [bounds._northEast.lat,bounds._northEast.lng];
+			//Southwest corner [Lat,Long]
+			var SW = [ bounds._southWest.lat,bounds._southWest.lng];
 
-	    //Northeast corner [Lat, Long]
-	    var NE = [bounds._northEast.lat,bounds._northEast.lng];
-	    //Southwest corner [Lat,Long]
-	    var SW = [ bounds._southWest.lat,bounds._southWest.lng];
+			$scope.$apply(function() {
+				$scope.collections.push({obj: layer, northEast: NE, southWest: SW});
 
-	    $scope.$apply(function() {
-       	$scope.collections.push({northEast: NE, southWest: SW});
+				var newtestStructure = $http({		url:"/api/structure",
+				method: "GET",
+				params: TeeHee })
+				newtestStructure.success(function(data, status, headers, config) {
+					console.log(SW[0], NE[0], SW[1], NE[1]);
 
-       	var newtestStructure = $http({		url:"/api/structure",
-										method: "GET",
-										params: TeeHee })
-		newtestStructure.success(function(data, status, headers, config) {
-			console.log(SW[0], NE[0], SW[1], NE[1]);
-
-			for (i = 0; i < data.length; ++i){
-				console.log(data[i].pickup_loc.loc[1] + " " + data[i].pickup_loc.loc[0])
-				if ( ((data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]))
-				 	&& 
-				 	 ((data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1])))
-				{
-					var marker = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]]).addTo(map);
-				}
-			}
-		});
-      });
-	}
+					for (i = 0; i < data.length; ++i){
+						console.log(data[i].pickup_loc.loc[1] + " " + data[i].pickup_loc.loc[0])
+						if ( ((data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]))
+						&&
+						((data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1])))
+						{
+							var marker = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]]).addTo(map);
+						}
+					}
+				});
+			});
+		}
 		console.log($scope.collections);
 	});
 
 
+	//Polygon delete function
+	$scope.deletePolygon = function(e){
+		window.map.removeLayer(e);
+	}
 
 	$scope.dateTimeIncre = function(arg){
 		var i = $scope.currentDateTime[arg];

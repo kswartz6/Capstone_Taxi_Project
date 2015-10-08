@@ -105,6 +105,7 @@
         </div>
       <div  ng-repeat="collection in collections"  class="dashboard-body">
         Bounds
+        <button ng-click="deletePolygon(collection.obj)"> delete </button>
         <p> NE : {[collection.northEast]} </p>
         <p> SW : {[collection.southWest]}</p>
         </div>
