@@ -153,9 +153,9 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				}
 				break;
 				case (arg == "hours"):
-					if (i == 12){
+					if (i == 24){
 						i = 1;
-					} else if (i == 11){
+					} else if (i == 23){
 						$scope.dateTimeIncre("DD");
 						i += 1;
 					} else {
@@ -207,8 +207,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				break;
 			case (arg == "hours"):
 				if (i == 1){
-					i = 12;
-				} else if (i == 12){
+					i = 24;
+				} else if (i == 24){
 					$scope.dateTimeDecre("DD");
 					i -= 1;
 				} else {
@@ -266,12 +266,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	function fastforward(){
 		$scope.dateTimeIncre("seconds")
-		$scope.timeout = $timeout(fastforward, 100);
+		$scope.timeout = $timeout(fastforward, 50);
 	}
 
 	function rewind(){
 		$scope.dateTimeDecre("seconds")
-		$scope.timeout = $timeout(rewind, 100);
+		$scope.timeout = $timeout(rewind, 50);
 	}
 
 
