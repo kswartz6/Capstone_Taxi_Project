@@ -123,14 +123,17 @@ app.controller("mapView", function($scope,$http, $timeout) {
 										params: TeeHee })
 		newtestStructure.success(function(data, status, headers, config) {
 			console.log(SW[0], NE[0], SW[1], NE[1]);
-
+			
 			for (i = 0; i < data.length; ++i){
-				console.log(data[i].pickup_loc.loc[1] + " " + data[i].pickup_loc.loc[0])
-				if ( ((data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]))
-				 	&& 
-				 	 ((data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1])))
+				var insideLat = (data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]);
+				var insideLong = (data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1]);
+				if (insideLat && insideLong)
 				{
-					var marker = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]]).addTo(map);
+					var testIcon = L.icon({
+    					iconUrl: 'static/images/BlueMarker.png',
+    					iconSize: [12, 12],
+					});
+					var marker = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}).addTo(map);
 				}
 			}
 		});
