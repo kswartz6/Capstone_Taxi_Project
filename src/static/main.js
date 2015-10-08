@@ -64,11 +64,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log(data);
 		testRecord = data;
 		console.log(testRecord);
+		var iconSize = [6, 6]; 
 		var blueIcon = L.icon({
 			iconUrl: '/static/images/circle-blue.png',
-				iconSize: iconSize
+			iconSize: iconSize
 			});
-		var iconSize = [6, 6];   		/*geoJson not showing on map*/
+		/*geoJson not showing on map*/
 		//L.geoJson(geojsonFeature).addTo(map); g
 		L.marker([data[0].dropoff_loc.loc[0], data[0].dropoff_loc.loc[1]], {icon: blueIcon}).addTo(map);
 	});
@@ -116,6 +117,23 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	    $scope.$apply(function() {
        	$scope.collections.push({northEast: NE, southWest: SW});
+
+       	var newtestStructure = $http({		url:"/api/structure",
+										method: "GET",
+										params: TeeHee })
+		newtestStructure.success(function(data, status, headers, config) {
+			console.log(SW[0], NE[0], SW[1], NE[1]);
+
+			for (i = 0; i < data.length; ++i){
+				console.log(data[i].pickup_loc.loc[1] + " " + data[i].pickup_loc.loc[0])
+				if ( ((data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]))
+				 	&& 
+				 	 ((data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1])))
+				{
+					var marker = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]]).addTo(map);
+				}
+			}
+		});
       });
 	}
 		console.log($scope.collections);
