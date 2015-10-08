@@ -116,7 +116,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			var SW = [ bounds._southWest.lat,bounds._southWest.lng];
 
 			$scope.$apply(function() {
-				$scope.collections.push({obj: layer, northEast: NE, southWest: SW});
+				$scope.collections.push({obj: layer, index: polygonRefID, northEast: NE, southWest: SW});
 
 				var newtestStructure = $http({		url:"/api/structure",
 				method: "GET",
@@ -125,12 +125,15 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					console.log(SW[0], NE[0], SW[1], NE[1]);
 
 					for (i = 0; i < data.length; ++i){
-						console.log(data[i].pickup_loc.loc[1] + " " + data[i].pickup_loc.loc[0])
-						if ( ((data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]))
-						&&
-						((data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1])))
+						var insideLat = (data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]);
+						var insideLong = (data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1]);
+						if (insideLat && insideLong)
 						{
-							var marker = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]]).addTo(map);
+							var testIcon = L.icon({
+									iconUrl: 'static/images/BlueMarker.png',
+									iconSize: [4, 4],
+							});
+							layer.markers = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}).addTo(map);
 						}
 					}
 				});
@@ -142,6 +145,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	//Polygon delete function
 	$scope.deletePolygon = function(e){
+
 		window.map.removeLayer(e);
 	}
 
