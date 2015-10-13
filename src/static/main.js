@@ -145,8 +145,9 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	//Polygon delete function
 	$scope.deletePolygon = function(e){
-
-		window.map.removeLayer(e);
+		$scope.collections.splice(e.index, 1)
+		console.log($scope.collections);
+		window.map.removeLayer(e.obj);
 	}
 
 	$scope.dateTimeIncre = function(arg){
