@@ -27,7 +27,6 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
   $interpolateProvider.endSymbol(']}');
 }]);
 
-
 //controller for mapView
 app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
@@ -117,13 +116,14 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 			$scope.$apply(function() {
 				$scope.collections.push({obj: layer, index: polygonRefID, northEast: NE, southWest: SW});
-				layer.markers = [];
-				var newtestStructure = $http({		url:"/api/structure",
+
+				var newtestStructure = $http({url:"/api/structure",
 				method: "GET",
-				params: TeeHee })
+				params: {"pickup_loc": [1, 0],
+								 "dropoff_loc": [1,0]}})
 				newtestStructure.success(function(data, status, headers, config) {
 					console.log(SW[0], NE[0], SW[1], NE[1]);
-					var layerColl = [];
+
 					for (i = 0; i < data.length; ++i){
 						var insideLat = (data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]);
 						var insideLong = (data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1]);
@@ -133,13 +133,14 @@ app.controller("mapView", function($scope,$http, $timeout) {
 									iconUrl: 'static/images/BlueMarker.png',
 									iconSize: [4, 4],
 							});
-							layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
-														
+							layer.markers = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}).addTo(map);
 						}
 					}
-					layer.markers = L.layerGroup(layerColl).addTo(map);
 				});
 			});
+		} else if(type === 'polygon'){
+			var bounds = layer.getBounds();
+			console.log(bounds);
 		}
 		console.log($scope.collections);
 	});
@@ -149,10 +150,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.deletePolygon = function(e){
 		$scope.collections.splice(e.index, 1)
 		console.log($scope.collections);
-		console.log(e.obj);
-		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
-
 	}
 
 	$scope.dateTimeIncre = function(arg){
@@ -163,6 +161,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				if(j == 2 && ($scope.currentDateTime.YYYY % 4) == 0){
 					j = 2.5;
 				}
+
 				if(i == daysInMonth[j]){
 					i = 1;
 				} else {
