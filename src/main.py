@@ -34,8 +34,11 @@ def api_structure():
 	bounds = [];
 	for pair in tmp:
 		i = pair.split(",")
-		for j in i:
-			float(j)
+		tmp2 = i;
+		i = [];
+		for j in tmp2:
+			j = float(j)
+			i.append(j)
 		bounds.append(i)
 	q = {}
 	q["bounds"] = bounds;

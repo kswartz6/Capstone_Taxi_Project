@@ -126,7 +126,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		var jankyString = "";
 		for (i in bounds){
 			console.log(i);
-			jankyString += bounds[i].lat + ',' + bounds[i].lng;
+			jankyString += bounds[i].lng + ',' + bounds[i].lat;
 			jankyString += '|'
 		}
 		jankyString = jankyString.substring(0, jankyString.length - 1);
@@ -147,6 +147,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			params: {"bounds": jankyString,
 							 "datetime": $scope.currentDateTime.formatted} })
 			newtestStructure.success(function(data, status, headers, config) {
+				console.log("success!")
+				console.log(data);
 				var layerColl = [];
 				for (i = 0; i < data.length; ++i){
 						var testIcon = L.icon({

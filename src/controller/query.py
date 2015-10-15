@@ -3,8 +3,6 @@ import pymongo
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
-
-
 #returns cursor object for now. We do processing of documents in cursor within other
 #functions?
 #queryRequest should ALWAYS contain p_dt and bounds
@@ -13,10 +11,12 @@ db = client.csf2015capstone
 #bounds MUST be an iterable of iterables such that [ [x1, y1], [x2, y2] ]
 def mongoQuery(queryRequest):
 	print(queryRequest["bounds"])
+	print(type(queryRequest["bounds"]))
+
 	#"pickup_datetime":queryRequest["p_dt"] is the pickup query param
+	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 	cursor = db.taxitest.find({
-	"pickup_loc":{"loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}}}).limit(100)
-	print("!!!!1 FOUND STUFF")
+	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}}).limit(5000)
 	return cursor
 
 #	below is sample query for a given location
@@ -45,6 +45,9 @@ def fixData(data):
 	for document in test:
 		print(document)
 
+
+def indexInit():
+	return 0
 
 def processResults(flags):
 	return 0
