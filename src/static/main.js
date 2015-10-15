@@ -31,16 +31,32 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 //controller for mapView
 app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
-	$scope.currentDateTime.MM   = 1;
+	$scope.currentDateTime.MM   = 3;
 	$scope.currentDateTime.DD   = 1;
 	$scope.currentDateTime.YYYY = 2013;
-	$scope.currentDateTime.hours = 12;
-	$scope.currentDateTime.minutes = 30;
-	$scope.currentDateTime.seconds = 0;
+	$scope.currentDateTime.hours = 0;
+	$scope.currentDateTime.minutes = 21;
+	$scope.currentDateTime.seconds = 53;
+	updateDateTime();
+
+	function updateDateTime(){
+		$scope.currentDateTime.formatted = $scope.currentDateTime.YYYY;
+		$scope.currentDateTime.formatted += '-' + $scope.currentDateTime.MM;
+		$scope.currentDateTime.formatted += '-' + $scope.currentDateTime.DD;
+		$scope.currentDateTime.formatted += 'T' + $scope.currentDateTime.hours;
+		$scope.currentDateTime.formatted += ':' + $scope.currentDateTime.minutes;
+		$scope.currentDateTime.formatted += ':' + $scope.currentDateTime.seconds;
+		$scope.currentDateTime.formatted += ':000Z';
+		console.log($scope.currentDateTime.formatted)
+	}
 
 	$scope.collections = [];
 	$scope.play = false;
 	//playState is the state of time playback
+
+
+
+
 
 	var testResponse = $http.get("/api/test")
 	testResponse.success(function(data, status, headers, config) {
@@ -102,45 +118,46 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		var type = e.layerType,
 		layer = e.layer;
 		var polygonRefID = $scope.collections.length;
-		console.log(layer.getLatLngs());
+		var bounds = (layer.getLatLngs());
+		console.log(bounds);
 
-		// Do whatever else you need to. (save to db, add to map etc)
+		//TODO: GET RID OF THIS SHITTY QUERY method
+		//NO SERIOUSLY THIS IS SHIT AND I FEEL BAD FOR DOING IT LIKE THIS
+		var jankyString = "";
+		for (i in bounds){
+			console.log(i);
+			jankyString += bounds[i].lat + ',' + bounds[i].lng;
+			jankyString += '|'
+		}
+		jankyString = jankyString.substring(0, jankyString.length - 1);
+		//Get rid of the damn last pipe
+		console.log(jankyString);
 		map.addLayer(layer);
 
 		if(type === 'rectangle'){
-			var bounds = layer.getBounds();
-
-			//Northeast corner [Lat, Long]
-			var NE = [bounds._northEast.lat,bounds._northEast.lng];
-			//Southwest corner [Lat,Long]
-			var SW = [ bounds._southWest.lat,bounds._southWest.lng];
-
-			$scope.$apply(function() {
-				$scope.collections.push({obj: layer, index: polygonRefID, northEast: NE, southWest: SW});
-				layer.markers = [];
-				var newtestStructure = $http({		url:"/api/structure",
-				method: "GET",
-				params: TeeHee })
-				newtestStructure.success(function(data, status, headers, config) {
-					console.log(SW[0], NE[0], SW[1], NE[1]);
-					var layerColl = [];
-					for (i = 0; i < data.length; ++i){
-						var insideLat = (data[i].pickup_loc.loc[1] > SW[0]) && (data[i].pickup_loc.loc[1] < NE[0]);
-						var insideLong = (data[i].pickup_loc.loc[0] > SW[1]) && (data[i].pickup_loc.loc[0] < NE[1]);
-						if (insideLat && insideLong)
-						{
-							var testIcon = L.icon({
-									iconUrl: 'static/images/BlueMarker.png',
-									iconSize: [4, 4],
-							});
-							layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
-														
-						}
-					}
-					layer.markers = L.layerGroup(layerColl).addTo(map);
-				});
-			});
+		} else if(type === 'polygon'){
+			console.log(bounds);
 		}
+
+		$scope.$apply(function() {
+			$scope.collections.push({obj: layer, index: polygonRefID});
+			layer.markers = [];
+			var newtestStructure = $http({		url:"/api/structure",
+			method: "GET",
+			params: {"bounds": jankyString,
+							 "datetime": $scope.currentDateTime.formatted} })
+			newtestStructure.success(function(data, status, headers, config) {
+				var layerColl = [];
+				for (i = 0; i < data.length; ++i){
+						var testIcon = L.icon({
+								iconUrl: 'static/images/BlueMarker.png',
+								iconSize: [4, 4],
+						});
+						layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
+				}
+				layer.markers = L.layerGroup(layerColl).addTo(map);
+			});
+		});
 		console.log($scope.collections);
 	});
 
@@ -184,7 +201,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				}
 				break;
 				case (arg == "hours"):
-					if (i == 24){
+					if (i == 00){
 						i = 1;
 					} else if (i == 23){
 						$scope.dateTimeIncre("DD");
@@ -213,6 +230,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				i += 1;
 		}
 		$scope.currentDateTime[arg] = i;
+		updateDateTime();
 	}
 
 	$scope.dateTimeDecre = function(arg){
@@ -238,8 +256,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				break;
 			case (arg == "hours"):
 				if (i == 1){
-					i = 24;
-				} else if (i == 24){
+					i = 0;
+				} else if (i == 0){
 					$scope.dateTimeDecre("DD");
 					i -= 1;
 				} else {
@@ -266,6 +284,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				i -= 1;
 		}
 		$scope.currentDateTime[arg] = i;
+		updateDateTime();
 	}
 
 

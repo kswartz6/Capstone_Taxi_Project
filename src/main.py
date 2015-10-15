@@ -28,12 +28,24 @@ def root():
 
 @webapp.route("/api/structure")
 def api_structure():
-	# print(str(request.args))
-	cursor = bulkQuery()
+	bounds = request.args["bounds"]
+	bounds = bounds.split("|")
+	tmp = bounds;
+	bounds = [];
+	for pair in tmp:
+		i = pair.split(",")
+		for j in i:
+			float(j)
+		bounds.append(i)
+	q = {}
+	q["bounds"] = bounds;
+	q["p_dt"] = request.args["datetime"]
+	cursor = mongoQuery(q)
 	data = []
 	for document in cursor:
 		# _id is type bson.id, this screws up json serialize
 		# we shouldn't need _id so we just set it to null.
+		print("wheeeeee")
 		document["_id"] = ""
 		data.append(document)
 	js = json.dumps(data)

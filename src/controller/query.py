@@ -5,25 +5,18 @@ client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 
 
-#mongoQuery is a universal deconstructor - we grab ALL params from
-#queryRequest obj and then we concatenate to create the query string
-
 #returns cursor object for now. We do processing of documents in cursor within other
 #functions?
+#queryRequest should ALWAYS contain p_dt and bounds
+#pdt = pickup date time
+#bounds = coord points of polygon on leaflet
+#bounds MUST be an iterable of iterables such that [ [x1, y1], [x2, y2] ]
 def mongoQuery(queryRequest):
-	# we need dates and log/ lat of pick-up drop-off
-	# maybe passenger count?
-	argString = ""
-	firstFlag = True
-	for key in queryRequest:
-		print(key)
-		if(firstFlag):
-			argString =  key + ":" + queryRequest[key]
-			firstFlag = False;
-		else:
-			argString += "," + key + ":" + queryRequest[key]
-	print(argString)
-	cursor = db.taxitest.find()
+	print(queryRequest["bounds"])
+	#"pickup_datetime":queryRequest["p_dt"] is the pickup query param
+	cursor = db.taxitest.find({
+	"pickup_loc":{"loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}}}).limit(100)
+	print("!!!!1 FOUND STUFF")
 	return cursor
 
 #	below is sample query for a given location
