@@ -10,6 +10,8 @@ from controller.query import *
 
 
 
+
+
 #for keys, values in json.items():
  #   print(keys)
   #  print(values)
@@ -44,16 +46,10 @@ def api_structure():
 	q["bounds"] = bounds;
 	q["p_dt"] = request.args["datetime"]
 	cursor = mongoQuery(q)
-	data = []
-	for document in cursor:
-		# _id is type bson.id, this screws up json serialize
-		# we shouldn't need _id so we just set it to null.
-		print("wheeeeee")
-		document["_id"] = ""
-		data.append(document)
-	js = json.dumps(data)
-	resp = Response(js, status=200, mimetype='application/json')
-	return resp
+	# js = json.dumps(cursor.collection)
+	# resp = Response(js, status=200, mimetype='application/json')
+	# return resp
+	return cursor
 
 
 @webapp.route("/api/test")

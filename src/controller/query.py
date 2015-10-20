@@ -1,4 +1,5 @@
 import pymongo
+from bson.json_util import dumps
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
@@ -16,8 +17,9 @@ def mongoQuery(queryRequest):
 	#"pickup_datetime":queryRequest["p_dt"] is the pickup query param
 	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 	cursor = db.taxitest.find({
-	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}}).limit(5000)
-	return cursor
+	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}},
+	{"_id":0}, cursor_type=pymongo.CursorType.EXHAUST)
+	return dumps(cursor)
 
 #	below is sample query for a given location
 # 	cursor = db.taxitest.find({"pickup_loc" : { "loc" : {"$near": [-73.980072, 40.743137]}}}).limit(3)

@@ -40,12 +40,34 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	updateDateTime();
 
 	function updateDateTime(){
+		var min = $scope.currentDateTime.minutes.toString();
+		var hrs = $scope.currentDateTime.hours.toString();
+		var sec = $scope.currentDateTime.seconds.toString();
+		var month = $scope.currentDateTime.MM.toString();
+		var days = $scope.currentDateTime.DD.toString();
+
+		if(min.length < 2){
+			min = '0' + min
+		}
+		if(hrs.length < 2){
+			hrs = '0' + hrs
+		}
+		if(sec.length < 2){
+			sec = '0' + sec
+		}
+		if(days.length < 2){
+			days = '0' + days
+		}
+		if(month.length < 2){
+			month = '0' + month
+		}
+
 		$scope.currentDateTime.formatted = $scope.currentDateTime.YYYY;
-		$scope.currentDateTime.formatted += '-' + $scope.currentDateTime.MM;
-		$scope.currentDateTime.formatted += '-' + $scope.currentDateTime.DD;
-		$scope.currentDateTime.formatted += 'T' + $scope.currentDateTime.hours;
-		$scope.currentDateTime.formatted += ':' + $scope.currentDateTime.minutes;
-		$scope.currentDateTime.formatted += ':' + $scope.currentDateTime.seconds;
+		$scope.currentDateTime.formatted += '-' + month;
+		$scope.currentDateTime.formatted += '-' + days;
+		$scope.currentDateTime.formatted += 'T' + hrs;
+		$scope.currentDateTime.formatted += ':' + min;
+		$scope.currentDateTime.formatted += ':' + sec;
 		$scope.currentDateTime.formatted += ':000Z';
 		console.log($scope.currentDateTime.formatted)
 	}
