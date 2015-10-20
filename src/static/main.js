@@ -32,9 +32,9 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
 	$scope.currentDateTime.MM   = 3;
-	$scope.currentDateTime.DD   = 1;
+	$scope.currentDateTime.DD   = 24;
 	$scope.currentDateTime.YYYY = 2013;
-	$scope.currentDateTime.hours = 0;
+	$scope.currentDateTime.hours = 23;
 	$scope.currentDateTime.minutes = 21;
 	$scope.currentDateTime.seconds = 53;
 	updateDateTime();
