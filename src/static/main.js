@@ -46,29 +46,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		var month = $scope.currentDateTime.MM.toString();
 		var days = $scope.currentDateTime.DD.toString();
 
-		if(min.length < 2){
-			min = '0' + min
-		}
-		if(hrs.length < 2){
-			hrs = '0' + hrs
-		}
-		if(sec.length < 2){
-			sec = '0' + sec
-		}
-		if(days.length < 2){
-			days = '0' + days
-		}
-		if(month.length < 2){
-			month = '0' + month
-		}
-
 		$scope.currentDateTime.formatted = $scope.currentDateTime.YYYY;
-		$scope.currentDateTime.formatted += '-' + month;
-		$scope.currentDateTime.formatted += '-' + days;
-		$scope.currentDateTime.formatted += 'T' + hrs;
-		$scope.currentDateTime.formatted += ':' + min;
-		$scope.currentDateTime.formatted += ':' + sec;
-		$scope.currentDateTime.formatted += ':000Z';
+		$scope.currentDateTime.formatted += ',' + month;
+		$scope.currentDateTime.formatted += ',' + days;
+		$scope.currentDateTime.formatted += ',' + hrs;
+		$scope.currentDateTime.formatted += ',' + min;
+		$scope.currentDateTime.formatted += ',' + sec;
 		console.log($scope.currentDateTime.formatted)
 	}
 

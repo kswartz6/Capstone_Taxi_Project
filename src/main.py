@@ -42,9 +42,10 @@ def api_structure():
 			j = float(j)
 			i.append(j)
 		bounds.append(i)
+	formatDT = request.args["datetime"].split(",")
 	q = {}
 	q["bounds"] = bounds;
-	q["p_dt"] = request.args["datetime"]
+	q["p_dt"] = formatDT
 	cursor = mongoQuery(q)
 	# js = json.dumps(cursor.collection)
 	# resp = Response(js, status=200, mimetype='application/json')

@@ -1,5 +1,6 @@
 import pymongo
 from bson.json_util import dumps
+from datetime import datetime, timedelta
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
@@ -13,11 +14,15 @@ db = client.csf2015capstone
 def mongoQuery(queryRequest):
 	print(queryRequest["bounds"])
 	print(type(queryRequest["bounds"]))
-
-	#"pickup_datetime":queryRequest["p_dt"] is the pickup query param
+	d = queryRequest["p_dt"]
+	d = datetime(int(d[0]), int(d[1]), int(d[2]), int(d[3]), int(d[4]), int(d[5]))
+	ud = d + timedelta(hours=1)
+	ld = d + timedelta(hours= -1)
+	#"pickup_datetime.date":d is the pickup query param
 	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 	cursor = db.taxitest.find({
-	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}},
+	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}},
+	"pickup_datetime.date":{"$gt":ld,"$lt":ld}},
 	{"_id":0}, cursor_type=pymongo.CursorType.EXHAUST)
 	return dumps(cursor)
 
