@@ -47,6 +47,7 @@ def api_structure():
 	q["bounds"] = bounds;
 	q["p_dt"] = formatDT
 	cursor = mongoQuery(q)
+	print("Received cursor")
 	# js = json.dumps(cursor.collection)
 	# resp = Response(js, status=200, mimetype='application/json')
 	# return resp

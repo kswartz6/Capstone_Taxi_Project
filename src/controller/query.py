@@ -20,10 +20,12 @@ def mongoQuery(queryRequest):
 	ld = d + timedelta(hours= -1)
 	#"pickup_datetime.date":d is the pickup query param
 	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
+	print("Launching find")
 	cursor = db.taxitest.find({
-	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}},
-	"pickup_datetime.date":{"$gt":ld,"$lt":ld}},
-	{"_id":0}, cursor_type=pymongo.CursorType.EXHAUST)
+	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
+	# ,"pickup_datetime.date":{"$gt":ld,"$lt":ld}
+	},{"_id":0}, cursor_type=pymongo.CursorType.EXHAUST)
+	print("Dumping Cursor")
 	return dumps(cursor)
 
 #	below is sample query for a given location

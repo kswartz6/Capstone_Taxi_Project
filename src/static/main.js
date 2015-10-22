@@ -155,7 +155,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				console.log("success!")
 				console.log(data);
 				var layerColl = [];
-				for (i = 0; i < data.length; ++i){
+				for (i = 0, l = data.length; i < l; ++i){
 						var testIcon = L.icon({
 								iconUrl: 'static/images/BlueMarker.png',
 								iconSize: [4, 4],
