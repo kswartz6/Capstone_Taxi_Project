@@ -103,11 +103,14 @@
         <div id="" class="dashboard-header">
           Collections
         </div>
-      <div  ng-repeat="collection in collections"  class="dashboard-body">
-        Bounds
-        <button ng-click="deletePolygon(collection)"> delete </button>
-        <p> NE : {[collection.northEast]} </p>
-        <p> SW : {[collection.southWest]}</p>
+        <div ng-repeat="collection in collections"  class="dashboard-body">
+          <button class="delete-button" ng-click="deletePolygon(collection)"> delete </button>
+          <div>
+            <span>Name: </span>
+            <span class="collection-name" contenteditable="true"></span>
+          </div>
+          <p> NE : {[collection.northEast]} </p>
+          <p> SW : {[collection.southWest]}</p>
         </div>
       </div>
 
