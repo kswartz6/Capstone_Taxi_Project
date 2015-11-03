@@ -191,11 +191,15 @@ color:black;
 
 .collection-name{
   width: 95px;
+  height: 1em;
   border-bottom: 2px solid white;
   float: right;
   margin-right: 5px;
+  overflow: hidden;
 }
-
+  .collection-name br{
+    display:none;
+  }
 .delete-button{
   float: right;
 }
