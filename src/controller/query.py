@@ -11,6 +11,18 @@ db = client.csf2015capstone
 #pdt = pickup date time
 #bounds = coord points of polygon on leaflet
 #bounds MUST be an iterable of iterables such that [ [x1, y1], [x2, y2] ]
+
+
+
+def decompose(dt):
+	dt = {}
+	dt["d"] = queryRequest["p_dt"]
+	dt["d"] = datetime(int(d[0]), int(d[1]), int(d[2]), int(d[3]), int(d[4]), int(d[5]))
+	dt["ud"] = d + timedelta(hours=1)
+	dt["ld"] = d + timedelta(hours= -1)
+	return dt
+
+
 def mongoQuery(queryRequest):
 	print(queryRequest["bounds"])
 	print(type(queryRequest["bounds"]))
