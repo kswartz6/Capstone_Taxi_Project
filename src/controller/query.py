@@ -23,8 +23,8 @@ def mongoQuery(queryRequest):
 	print("Launching find")
 	cursor = db.taxitest.find({
 	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
-	# ,"pickup_datetime.date":{"$gt":ld,"$lt":ld}
-	},{"_id":0}, cursor_type=pymongo.CursorType.EXHAUST)
+	,"pickup_datetime.date":{"$gt":ld,"$lt":ud}
+	},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
 	print("Dumping Cursor")
 	return dumps(cursor)
 
