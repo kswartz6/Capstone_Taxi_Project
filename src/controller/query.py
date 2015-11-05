@@ -1,5 +1,6 @@
 import pymongo
 from bson.json_util import dumps
+import ujson
 from datetime import datetime, timedelta
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
@@ -33,9 +34,8 @@ def mongoQuery(queryRequest):
 	#"pickup_datetime.date":d is the pickup query param
 	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 	print("Launching find")
-	cursor = db.taxitest.find({
+	cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
 	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
-	,"pickup_datetime.date":{"$gt":ld,"$lt":ud}
 	},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
 	print("Dumping Cursor")
 	return dumps(cursor)

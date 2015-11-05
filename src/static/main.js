@@ -162,6 +162,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 								iconSize: [4, 4],
 						});
 						layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
+						layerColl.push(L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: testIcon}));
+
 				}
 				layer.markers = L.layerGroup(layerColl).addTo(map);
 			});
@@ -176,7 +178,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		$scope.collections.splice($scope.collections.indexOf(e), 1);
 		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
-		
+
 	}
 
 	$scope.dateTimeIncre = function(arg){
