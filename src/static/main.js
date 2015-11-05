@@ -296,7 +296,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		updateDateTime();
 	}
 
-
 	$scope.ff = function(){
 		$timeout.cancel($scope.timeout);
 		fastforward();
