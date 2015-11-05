@@ -1,6 +1,7 @@
 import pymongo
 import ast
 from bson.son import SON
+from datetime import *
 
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
@@ -71,10 +72,7 @@ def bulkQuery():
 def cleanupDate(document):
 	pickup_date = document["pickup_datetime"]
 	dropoff_date = document["dropoff_datetime"]
-	if(pickup_date == None):
-		#do nothing
-		continue
-	else:
+	if(pickup_date != None):
 		index_to_replace = pickup_date.find(" ")
 		pickup_date = list(pickup_date)
 		pickup_date[index_to_replace] = "T"
@@ -85,10 +83,8 @@ def cleanupDate(document):
 		}
 		document.pop("pickup_datetime")
 		document["pickup_datetime"] = pickup
-	if(dropoff_date == None):
-		#do nothing
-		continue
-	else:
+
+	if(dropoff_date != None):
 		index_to_replace = dropoff_date.find(" ")
 		dropoff_date = list(dropoff_date)
 		dropoff_date[index_to_replace] = "T"
@@ -102,11 +98,17 @@ def cleanupDate(document):
 		return document
 
 
+
 def cleanupData():
 	cursor = db.taxitest.find()
 	current_doc_number = 1
 	for document in cursor :
-		print("currently updating: " + current_doc_number)
+		if(current_doc_number <= 438409):
+			current_doc_number += 1
+			print("Skipping: " + str(current_doc_number))
+			continue
+
+		print("currently updating: " + str(current_doc_number))
 		pickup_long = document["pickup_longitude"]
 		pickup_lat = document["pickup_latitude"]
 		dropoff_long = document["dropoff_longitude"]
@@ -131,23 +133,86 @@ def cleanupData():
 		document.pop("dropoff_latitude")
 		document = cleanupDate(document)
 		db.taxitest.update({"_id":document["_id"]}, document, True)
-		print("done updating: " + current_doc_number)
-		current_doc_number = current_doc_number + 1
+		print("done updating: " + str(current_doc_number))
+		current_doc_number += 1
 
 	print("Currently creating geospatial indexing on pickup_loc")
-	db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
+	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
 	
 	print("Currently creating geospatial indexing on dropoff_loc")
-	db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
+	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
 
+def clearnupOutOfRangePoints() :
+	cursor = db.taxitest.find()
+	current_doc = 1
+	for document in cursor :
+		if(not("pickup_loc" in document.keys()) or not("dropoff_loc" in document.keys())) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+		pickup = list(document["pickup_loc"]["loc"])
+		dropoff = list(document["dropoff_loc"]["loc"])
+		print("Currently looking at document: " + str(current_doc))
+		current_doc += 1
+		if(pickup == None or dropoff == None) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+		if (float(pickup[0]) < -100 or float(pickup[1]) > 100) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+		if (float(dropoff[0]) < -100 or float(dropoff[1]) > 100) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+		if(float(pickup[0]) > 100 or float(pickup[1]) < 25) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+		if(float(dropoff[0]) > 100 or float(dropoff[1]) < 25) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+
+
+def buildIndexes() :
+#	#cursor = db.taxitest.find().limit(5)
+#	#for document in cursor :
+#	#	print(document)
+	print("Currently creating geospatial indexing on pickup_loc")
+	db.taxitest.create_index([("pickup_loc.loc",pymongo.GEO2D),("pickup_datetime.date",pymongo.ASCENDING)])
+	
+	print("Currently creating geospatial indexing on dropoff_loc")
+	db.taxitest.create_index([("dropoff_loc.loc",pymongo.GEO2D),("dropoff_datetime.date",pymongo.ASCENDING)])
 
 def printAllDocs():
+	#cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
+	#db.taxitest.create_index([("dropoff_loc.loc", pymongo.GEO2D)])
 	cursor = db.taxitest.find()
+	index = 1
+	for document in cursor :
+		if(index <= 596299) : 
+			print("skipping document " + str(index))
+			index += 1
+			continue
+		pickup_date = datetime.strptime(document["pickup_datetime"]["date"], "%Y-%m-%dT%H:%M:%S:%fZ")
+		dropoff_date = datetime.strptime(document["dropoff_datetime"]["date"], "%Y-%m-%dT%H:%M:%S:%fZ")
+		#cool = atetime.ISODate(cool)
+		document["pickup_datetime"]["date"] = pickup_date
+		document["dropoff_datetime"]["date"] = dropoff_date
+		db.taxitest.update({"_id":document["_id"]}, document, True)
+		index += 1
+		#print(cool.day)
+		#st = document["pickup_datetime"]["date"]
+		#st = st[:-1]
+		#cool = datetime.datetime.strptime( st, "%Y-%m-%dT%H:%M:%S:%f" )
+		print("updating document: " + str(index))
+	#for document in cursor:
+	#	print(document)
 
-	for document in cursor:
-		print(document)
+#def processResults(flags):
+#	return 0
 
-def processResults(flags):
-	return 0
-
-printAllDocs()
+buildIndexes()
+#printAllDocs()
