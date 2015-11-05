@@ -234,5 +234,5 @@ def processResults(flags):
 	return 0
 
 
-buildIndexes()
+#buildIndexes()
 #printAllDocs()
