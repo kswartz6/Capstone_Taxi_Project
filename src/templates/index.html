@@ -9,12 +9,14 @@
   <meta name="author" content="Cass Schaufele">
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
   <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/static/dist/leaflet/leaflet.css" />
   <link rel="stylesheet" href="/static/dist/leaflet-draw/dist/leaflet.draw.css" />
 	<script src="https://fb.me/react-0.13.3.min.js" async></script>
 	<script src="https://fb.me/JSXTransformer-0.13.3.js" async></script>
   <script src="/static/dist/leaflet/leaflet-src.js"></script>
   <script src="/static/dist/leaflet-draw/dist/leaflet.draw-src.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
 
   <!--[if lt IE 9]>
@@ -32,7 +34,7 @@
       <div class="date-time-picker">
       <table id="date-picker">
         <tr class="time-picker-row">
-          <td class="time-arrow upper-left bottom-left" ng-click="dateTimeIncre('MM')">
+          <td class="time-arrow upper-left" ng-click="dateTimeIncre('MM')">
             ^
           </td>
           <td class="time-arrow" ng-click="dateTimeIncre('DD')">
@@ -54,13 +56,13 @@
             </td>
         </tr>
         <tr class="time-picker-row">
-          <td class="time-arrow u-flip upper-right bottom-right" ng-click="dateTimeDecre('MM')">
+          <td class="time-arrow u-flip upper-right" ng-click="dateTimeDecre('MM')">
             ^
           </td>
           <td class="time-arrow u-flip" ng-click="dateTimeDecre('DD')">
             ^
           </td>
-          <td class="time-arrow last-arrow u-flip upper-left bottom-left" ng-click="dateTimeDecre('YYYY')">
+          <td class="time-arrow last-arrow u-flip upper-left" ng-click="dateTimeDecre('YYYY')">
             ^
           </td>
         </tr>
@@ -70,36 +72,26 @@
       <div class="date-time-picker">
       <table id="time-picker">
         <tr class="time-picker-row">
-          <td class="time-arrow upper-left bottom-left" ng-click="dateTimeIncre('hours')">
-            ^
-          </td>
-          <td class="time-arrow" ng-click="dateTimeIncre('minutes')">
-            ^
-          </td>
-          <td class="time-arrow last-arrow upper-right bottom-right" ng-click="dateTimeIncre('seconds')">
-            ^
-          </td>
-        </tr>
-        <tr class="time-picker-row">
-            <td class="date-time-month">
+            <td class="date-time-month upper-left">
               {[currentDateTime.hours]}
             </td>
             <td class="date-time-day">
               {[currentDateTime.minutes]}
             </td>
-            <td class="date-time-year">
+            <td class="date-time-year upper-right">
               {[currentDateTime.seconds]}
             </td>
         </tr>
         <tr class="time-picker-row">
-          <td class="time-arrow u-flip upper-right bottom-right" ng-click="dateTimeDecre('hours')">
-            ^
+          <td class="time-arrow  bottom-left" ng-click="rw();play=true">
+            <i class="fa fa-backward"></i>
           </td>
-          <td class="time-arrow u-flip" ng-click="dateTimeDecre('minutes')">
-            ^
+          <td class="time-arrow">
+            <i class="fa fa-play-circle" ng-show="!(play)" ng-click="startPlay(); play=true"></i>
+            <i class="fa fa-pause" ng-show="play" ng-click="pausePlay(); play=false"></i>
           </td>
-          <td class="time-arrow last-arrow u-flip upper-left bottom-left" ng-click="dateTimeDecre('seconds')">
-            ^
+          <td class="time-arrow last-arrow bottom-right" ng-click="ff();play=true">
+            <i class="fa fa-forward"></i>
           </td>
         </tr>
       </table>
@@ -112,15 +104,19 @@
         <div id="" class="dashboard-header">
           Collections
         </div>
-      <div  ng-repeat="collection in collections"  class="dashboard-body">
-        Bounds
-        <p> NE : {[collection.northEast]} </p>
-        <p> SW : {[collection.southWest]}</p>
+        <div ng-repeat="collection in collections"  class="dashboard-body">
+          <button class="delete-button" ng-click="deletePolygon(collection)"> delete </button>
+          <div>
+            <span>Name: </span>
+            <span class="collection-name" contenteditable="true"></span>
+          </div>
+          <p> NE : {[collection.northEast]} </p>
+          <p> SW : {[collection.southWest]}</p>
         </div>
       </div>
 
+  <script type="text/javascript" src="js/geojson.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
   <script src="/static/main.js"></script>
 </body>
 </html>

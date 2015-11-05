@@ -29,16 +29,38 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 
 
 //controller for mapView
-app.controller("mapView", function($scope,$http) {
+app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
-	$scope.currentDateTime.MM   = 1;
-	$scope.currentDateTime.DD   = 1;
+	$scope.currentDateTime.MM   = 3;
+	$scope.currentDateTime.DD   = 24;
 	$scope.currentDateTime.YYYY = 2013;
-	$scope.currentDateTime.hours = 12;
-	$scope.currentDateTime.minutes = 30;
-	$scope.currentDateTime.seconds = 0;
+	$scope.currentDateTime.hours = 23;
+	$scope.currentDateTime.minutes = 21;
+	$scope.currentDateTime.seconds = 53;
+	updateDateTime();
+
+	function updateDateTime(){
+		var min = $scope.currentDateTime.minutes.toString();
+		var hrs = $scope.currentDateTime.hours.toString();
+		var sec = $scope.currentDateTime.seconds.toString();
+		var month = $scope.currentDateTime.MM.toString();
+		var days = $scope.currentDateTime.DD.toString();
+
+		$scope.currentDateTime.formatted = $scope.currentDateTime.YYYY;
+		$scope.currentDateTime.formatted += ',' + month;
+		$scope.currentDateTime.formatted += ',' + days;
+		$scope.currentDateTime.formatted += ',' + hrs;
+		$scope.currentDateTime.formatted += ',' + min;
+		$scope.currentDateTime.formatted += ',' + sec;
+		console.log($scope.currentDateTime.formatted)
+	}
 
 	$scope.collections = [];
+	$scope.play = false;
+	//playState is the state of time playback
+
+
+
 
 
 	var testResponse = $http.get("/api/test")
@@ -63,11 +85,12 @@ app.controller("mapView", function($scope,$http) {
 		console.log(data);
 		testRecord = data;
 		console.log(testRecord);
+		var iconSize = [6, 6];
 		var blueIcon = L.icon({
 			iconUrl: '/static/images/circle-blue.png',
-				iconSize: iconSize
+			iconSize: iconSize
 			});
-		var iconSize = [6, 6];   		/*geoJson not showing on map*/
+		/*geoJson not showing on map*/
 		//L.geoJson(geojsonFeature).addTo(map); g
 		L.marker([data[0].dropoff_loc.loc[0], data[0].dropoff_loc.loc[1]], {icon: blueIcon}).addTo(map);
 	});
@@ -97,28 +120,66 @@ app.controller("mapView", function($scope,$http) {
 
 	//add draw function
 	map.on('draw:created', function (e) {
-	    var type = e.layerType,
-	        layer = e.layer;
+		//window.polygon.setStyle({fillColor: '#dddddd'});
+		var type = e.layerType,
+		layer = e.layer;
+		var polygonRefID = $scope.collections.length;
+		var bounds = (layer.getLatLngs());
+		console.log(bounds);
 
-			console.log(layer.getLatLngs());
+		//TODO: GET RID OF THIS SHITTY QUERY method
+		//NO SERIOUSLY THIS IS SHIT AND I FEEL BAD FOR DOING IT LIKE THIS
+		var jankyString = "";
+		for (i in bounds){
+			console.log(i);
+			jankyString += bounds[i].lng + ',' + bounds[i].lat;
+			jankyString += '|'
+		}
+		jankyString = jankyString.substring(0, jankyString.length - 1);
+		//Get rid of the damn last pipe
+		console.log(jankyString);
+		map.addLayer(layer);
 
-	    // Do whatever else you need to. (save to db, add to map etc)
-	    map.addLayer(layer);
+		if(type === 'rectangle'){
+		} else if(type === 'polygon'){
+			console.log(bounds);
+		}
 
-	    if(type === 'rectangle'){
-	    var bounds = layer.getBounds();
+		$scope.$apply(function() {
+			$scope.collections.push({obj: layer, index: polygonRefID});
+			layer.markers = [];
+			var newtestStructure = $http({		url:"/api/structure",
+			method: "GET",
+			params: {"bounds": jankyString,
+							 "datetime": $scope.currentDateTime.formatted} })
+			newtestStructure.success(function(data, status, headers, config) {
+				console.log("success!")
+				console.log(data);
+				var layerColl = [];
+				for (i = 0, l = data.length; i < l; ++i){
+						var testIcon = L.icon({
+								iconUrl: 'static/images/BlueMarker.png',
+								iconSize: [4, 4],
+						});
+						layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
+						layerColl.push(L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: testIcon}));
 
-	    //Northeast corner [Lat, Long]
-	    var NE = [bounds._northEast.lat,bounds._northEast.lng];
-	    //Southwest corner [Lat,Long]
-	    var SW = [ bounds._southWest.lat,bounds._southWest.lng];
-
-	    $scope.$apply(function() {
-       	$scope.collections.push({northEast: NE, southWest: SW});
-      });
-	}
+				}
+				layer.markers = L.layerGroup(layerColl).addTo(map);
+			});
+		});
 		console.log($scope.collections);
 	});
+
+
+	//Polygon delete function
+	$scope.deletePolygon = function(e){
+
+		$scope.collections.splice($scope.collections.indexOf(e), 1);
+		window.map.removeLayer(e.obj.markers);
+		window.map.removeLayer(e.obj);
+
+	}
 
 	$scope.dateTimeIncre = function(arg){
 		var i = $scope.currentDateTime[arg];
@@ -128,7 +189,6 @@ app.controller("mapView", function($scope,$http) {
 				if(j == 2 && ($scope.currentDateTime.YYYY % 4) == 0){
 					j = 2.5;
 				}
-
 				if(i == daysInMonth[j]){
 					i = 1;
 				} else {
@@ -150,9 +210,9 @@ app.controller("mapView", function($scope,$http) {
 				}
 				break;
 				case (arg == "hours"):
-					if (i == 12){
+					if (i == 00){
 						i = 1;
-					} else if (i == 11){
+					} else if (i == 23){
 						$scope.dateTimeIncre("DD");
 						i += 1;
 					} else {
@@ -179,6 +239,7 @@ app.controller("mapView", function($scope,$http) {
 				i += 1;
 		}
 		$scope.currentDateTime[arg] = i;
+		updateDateTime();
 	}
 
 	$scope.dateTimeDecre = function(arg){
@@ -204,8 +265,8 @@ app.controller("mapView", function($scope,$http) {
 				break;
 			case (arg == "hours"):
 				if (i == 1){
-					i = 12;
-				} else if (i == 12){
+					i = 0;
+				} else if (i == 0){
 					$scope.dateTimeDecre("DD");
 					i -= 1;
 				} else {
@@ -232,22 +293,44 @@ app.controller("mapView", function($scope,$http) {
 				i -= 1;
 		}
 		$scope.currentDateTime[arg] = i;
+		updateDateTime();
 	}
 
+	$scope.ff = function(){
+		$timeout.cancel($scope.timeout);
+		fastforward();
+	}
 
-	var TeeHee = {"pickup_longitude": -73.980072,
-						    "pickup_latitude": 40.743137,
-						    "dropoff_longitude": -73.982712,
-						    "dropoff_latitude": 40.735336}
+	$scope.rw = function(){
+		$timeout.cancel($scope.timeout);
+		rewind();
+	}
 
-	var testStructure = $http({		url:"/api/structure",
-																method: "GET",
-																params: TeeHee })
+	$scope.startPlay = function(){
+		if ($timeout != undefined){
+			$timeout.cancel($scope.timeout);
+		}
+		countdownPlayState();
+	}
 
-	testStructure.success(function(data, status, headers, config) {
-    console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-  });
+	$scope.pausePlay = function(){
+			$timeout.cancel($scope.timeout);
+	}
+
+	function countdownPlayState(){
+		$scope.dateTimeIncre("seconds")
+		$scope.timeout = $timeout(countdownPlayState, 1000);
+	}
+
+	function fastforward(){
+		$scope.dateTimeIncre("seconds")
+		$scope.timeout = $timeout(fastforward, 50);
+	}
+
+	function rewind(){
+		$scope.dateTimeDecre("seconds")
+		$scope.timeout = $timeout(rewind, 50);
+	}
+
 
 });

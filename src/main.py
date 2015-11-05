@@ -10,6 +10,8 @@ from controller.query import *
 
 
 
+
+
 #for keys, values in json.items():
  #   print(keys)
   #  print(values)
@@ -28,17 +30,28 @@ def root():
 
 @webapp.route("/api/structure")
 def api_structure():
-	# print(str(request.args))
-	cursor = bulkQuery()
-	data = []
-	for document in cursor:
-		# _id is type bson.id, this screws up json serialize
-		# we shouldn't need _id so we just set it to null.
-		document["_id"] = ""
-		data.append(document)
-	js = json.dumps(data)
-	resp = Response(js, status=200, mimetype='application/json')
-	return resp
+	bounds = request.args["bounds"]
+	bounds = bounds.split("|")
+	tmp = bounds;
+	bounds = [];
+	for pair in tmp:
+		i = pair.split(",")
+		tmp2 = i;
+		i = [];
+		for j in tmp2:
+			j = float(j)
+			i.append(j)
+		bounds.append(i)
+	formatDT = request.args["datetime"].split(",")
+	q = {}
+	q["bounds"] = bounds;
+	q["p_dt"] = formatDT
+	cursor = mongoQuery(q)
+	print("Received cursor")
+	# js = json.dumps(cursor.collection)
+	# resp = Response(js, status=200, mimetype='application/json')
+	# return resp
+	return cursor
 
 
 @webapp.route("/api/test")

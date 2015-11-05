@@ -1,4 +1,6 @@
 import pymongo
+from bson.json_util import dumps
+import ujson
 import ast
 from bson.son import SON
 from datetime import *
@@ -6,28 +8,39 @@ from datetime import *
 MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
-
-
-#mongoQuery is a universal deconstructor - we grab ALL params from
-#queryRequest obj and then we concatenate to create the query string
-
 #returns cursor object for now. We do processing of documents in cursor within other
 #functions?
+#queryRequest should ALWAYS contain p_dt and bounds
+#pdt = pickup date time
+#bounds = coord points of polygon on leaflet
+#bounds MUST be an iterable of iterables such that [ [x1, y1], [x2, y2] ]
+
+
+
+def decompose(dt):
+	dt = {}
+	dt["d"] = queryRequest["p_dt"]
+	dt["d"] = datetime(int(d[0]), int(d[1]), int(d[2]), int(d[3]), int(d[4]), int(d[5]))
+	dt["ud"] = d + timedelta(hours=1)
+	dt["ld"] = d + timedelta(hours= -1)
+	return dt
+
+
 def mongoQuery(queryRequest):
-	# we need dates and log/ lat of pick-up drop-off
-	# maybe passenger count?
-	argString = ""
-	firstFlag = True
-	for key in queryRequest:
-		print(key)
-		if(firstFlag):
-			argString =  key + ":" + queryRequest[key]
-			firstFlag = False;
-		else:
-			argString += "," + key + ":" + queryRequest[key]
-	print(argString)
-	cursor = db.taxitest.find()
-	return cursor
+	print(queryRequest["bounds"])
+	print(type(queryRequest["bounds"]))
+	d = queryRequest["p_dt"]
+	d = datetime(int(d[0]), int(d[1]), int(d[2]), int(d[3]), int(d[4]), int(d[5]))
+	ud = d + timedelta(hours=1)
+	ld = d + timedelta(hours= -1)
+	#"pickup_datetime.date":d is the pickup query param
+	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
+	print("Launching find")
+	cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
+	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
+	},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
+	print("Dumping Cursor")
+	return dumps(cursor)
 
 	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
 	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
@@ -44,7 +57,7 @@ def mongoQuery(queryRequest):
 	##					    "pickup_latitude": 40.743137,
 	#	if(firstFlag):
 	#		argsString = "{'$geometry':{'" + key + "':{'$near' :[" + queryRequest[key] + "]}"
-	#		firstFlag = False;		
+	#		firstFlag = False;
 	#argsString = "{'pickup_loc':{'$near':{'$geometry':{'type':'Point', 'coordinates' : [-73.980072, 40.743137]},"
 	#argsString += "'$maxDistance':100000, '$minDistance':0}}}"
 	#
@@ -138,7 +151,7 @@ def cleanupData():
 
 	print("Currently creating geospatial indexing on pickup_loc")
 	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
-	
+
 	print("Currently creating geospatial indexing on dropoff_loc")
 	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
 
@@ -182,7 +195,7 @@ def buildIndexes() :
 #	#	print(document)
 	print("Currently creating geospatial indexing on pickup_loc")
 	db.taxitest.create_index([("pickup_loc.loc",pymongo.GEO2D),("pickup_datetime.date",pymongo.ASCENDING)])
-	
+
 	print("Currently creating geospatial indexing on dropoff_loc")
 	db.taxitest.create_index([("dropoff_loc.loc",pymongo.GEO2D),("dropoff_datetime.date",pymongo.ASCENDING)])
 
@@ -192,7 +205,7 @@ def printAllDocs():
 	cursor = db.taxitest.find()
 	index = 1
 	for document in cursor :
-		if(index <= 596299) : 
+		if(index <= 596299) :
 			print("skipping document " + str(index))
 			index += 1
 			continue
@@ -211,8 +224,15 @@ def printAllDocs():
 	#for document in cursor:
 	#	print(document)
 
-#def processResults(flags):
-#	return 0
+	for document in cursor:
+		print(document)
 
-buildIndexes()
+def indexInit():
+	return 0
+
+def processResults(flags):
+	return 0
+
+
+#buildIndexes()
 #printAllDocs()
