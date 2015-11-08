@@ -120,6 +120,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	//add draw function
 	map.on('draw:created', function (e) {
+		//window.polygon.setStyle({fillColor: '#dddddd'});
 		var type = e.layerType,
 		layer = e.layer;
 		var polygonRefID = $scope.collections.length;
@@ -161,6 +162,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 								iconSize: [4, 4],
 						});
 						layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
+						layerColl.push(L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: testIcon}));
+
 				}
 				layer.markers = L.layerGroup(layerColl).addTo(map);
 			});
@@ -171,9 +174,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	//Polygon delete function
 	$scope.deletePolygon = function(e){
-		$scope.collections.splice(e.index, 1)
-		console.log($scope.collections);
-		console.log(e.obj);
+
+		$scope.collections.splice($scope.collections.indexOf(e), 1);
 		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
 
@@ -293,7 +295,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		$scope.currentDateTime[arg] = i;
 		updateDateTime();
 	}
-
 
 	$scope.ff = function(){
 		$timeout.cancel($scope.timeout);
