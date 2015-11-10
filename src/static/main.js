@@ -14,8 +14,10 @@ var daysInMonth ={
 	12:31
 }
 
+defautPolyColor = 'blue';
 
-var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
+
+var map = L.map('map', {drawControl: false}).setView([40.727, -73.976], 12);
 
 
 var app = angular.module("app", []);
@@ -116,7 +118,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			draw: {
 				polygon: {
 					shapeOptions: {
-						color: 'purple'
+						color: defautPolyColor
 					},
 					allowIntersection: false,
 					drawError: {
@@ -129,17 +131,17 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				},
 				polyline: {
 					shapeOptions: {
-						color: 'red'
+						color: defautPolyColor
 					},
 				},
 				rectangle: {
 					shapeOptions: {
-						color: 'green'
+						color: defautPolyColor
 					},
 				},
 				circle: {
 					shapeOptions: {
-						color: 'steelblue'
+						color: defautPolyColor
 					},
 				},
 			},
@@ -148,8 +150,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			}
 		});
 
-// working on making a drawcontrol separate from the default
-//map.addControl(drawControl); 
+map.addControl(drawControl); 
 
 console.log(drawControl);
 	//add draw function
