@@ -112,12 +112,46 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	// Initialise the draw control and pass it the FeatureGroup of editable layers
 	var drawControl = new L.Control.Draw({
-	    edit: {
-	        featureGroup: drawnItems
-	    }
-	});
+			position: 'topleft',
+			draw: {
+				polygon: {
+					shapeOptions: {
+						color: 'purple'
+					},
+					allowIntersection: false,
+					drawError: {
+						color: 'orange',
+						timeout: 1000
+					},
+					showArea: true,
+					metric: false,
+					repeatMode: true
+				},
+				polyline: {
+					shapeOptions: {
+						color: 'red'
+					},
+				},
+				rectangle: {
+					shapeOptions: {
+						color: 'green'
+					},
+				},
+				circle: {
+					shapeOptions: {
+						color: 'steelblue'
+					},
+				},
+			},
+			edit: {
+				featureGroup: drawnItems
+			}
+		});
 
+// working on making a drawcontrol separate from the default
+//map.addControl(drawControl); 
 
+console.log(drawControl);
 	//add draw function
 	map.on('draw:created', function (e) {
 		//window.polygon.setStyle({fillColor: '#dddddd'});
@@ -126,7 +160,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		var polygonRefID = $scope.collections.length;
 		var bounds = (layer.getLatLngs());
 		console.log(bounds);
-
+		//e.layer.options.color = 'black';
+		
 		//TODO: GET RID OF THIS SHITTY QUERY method
 		//NO SERIOUSLY THIS IS SHIT AND I FEEL BAD FOR DOING IT LIKE THIS
 		var jankyString = "";
@@ -161,8 +196,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 								iconUrl: 'static/images/BlueMarker.png',
 								iconSize: [4, 4],
 						});
+						var dropOffIcon = L.icon({
+							iconUrl: 'static/images/RedMarker.png',
+							iconSize: [4, 4]
+						});
 						layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
-						layerColl.push(L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: testIcon}));
+						layerColl.push(L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropOffIcon}));
 
 				}
 				layer.markers = L.layerGroup(layerColl).addTo(map);
