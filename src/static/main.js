@@ -16,7 +16,8 @@ var daysInMonth ={
 
 
 var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
-
+var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+    g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 var app = angular.module("app", []);
 
@@ -74,6 +75,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 		for (n in $scope.collections){
 			collection = $scope.collections[n]
+			console.log(collection.obj.markers.toGeoJSON())
 			console.log(collection)
 			if (typeof collection.dropoffs[x] == "undefined"){
 			} else {
@@ -84,7 +86,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						for (j in collection.pickups[tmp.removeTime])
 							pick = collection.pickups[tmp.removeTime][j]
 							if (pick.removeTime == x)
-								
+
 								collection.obj.markers.removeLayer(pick.pickup)
 					}
 				}
@@ -102,50 +104,36 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						collection.obj.markers.addLayer(correspond[j].dropoff)
 				}
 			}
+
+			tweenPoints()
+
 		}
 	}
 
+	function tweenPoints(){
+
+	}
+
+
+
+
+	function projectPoint(x, y) {
+  	var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+  	this.stream.point(point.x, point.y);
+	}
+
+	var transform = d3.geo.transform({point: projectPoint}),
+    path = d3.geo.path().projection(transform);
+
+	// var feature = g.selectAll("path")
+	//      					 .data()
+	//                .enter().append("path");
 
 
 	$scope.collections = [];
 	$scope.play = false;
 	//playState is the state of time playback
 
-
-
-
-
-	var testResponse = $http.get("/api/test")
-	testResponse.success(function(data, status, headers, config) {
-		console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-		 //http://leafletjs.com/examples/custom-icons.html
-		//
-	});
-
-	var TeeHee = {"pickup_longitude": -73.980072,
-								"pickup_latitude": 40.743137,
-								"dropoff_longitude": -73.982712,
-								"dropoff_latitude": 40.735336}
-
-	var testStructure = $http({		url:"/api/structure",
-																method: "GET",
-																params: TeeHee })
-
-	testStructure.success(function(data, status, headers, config) {
-		console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-		var iconSize = [6, 6];
-		var blueIcon = L.icon({
-			iconUrl: '/static/images/circle-blue.png',
-			iconSize: iconSize
-			});
-		/*geoJson not showing on map*/
-		//L.geoJson(geojsonFeature).addTo(map); g
-		L.marker([data[0].dropoff_loc.loc[0], data[0].dropoff_loc.loc[1]], {icon: blueIcon}).addTo(map);
-	});
 
 
 
@@ -239,7 +227,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						}
 						dropColl[dropLocName].push(dropLoc);
 					}
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl});
+				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, svgs:[]});
 				updateDateTime()
 				console.log($scope.collections);
 			});
