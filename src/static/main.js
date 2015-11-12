@@ -39,6 +39,16 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime.hours = 23;
 	$scope.currentDateTime.minutes = 21;
 	$scope.currentDateTime.seconds = 53;
+	$scope.currentDateTime.dateTimer = new Date(
+		$scope.currentDateTime.YYYY,
+		$scope.currentDateTime.MM - 1,
+		$scope.currentDateTime.DD,
+		$scope.currentDateTime.hours - 5,
+		$scope.currentDateTime.minutes,
+		$scope.currentDateTime.seconds
+	).getTime()
+
+
 	updateDateTime();
 
 	function updateDateTime(){
@@ -47,15 +57,57 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		var sec = $scope.currentDateTime.seconds.toString();
 		var month = $scope.currentDateTime.MM.toString();
 		var days = $scope.currentDateTime.DD.toString();
-
+		$scope.currentDateTime.dateTimer = new Date(
+			$scope.currentDateTime.YYYY,
+			$scope.currentDateTime.MM - 1,
+			$scope.currentDateTime.DD,
+			$scope.currentDateTime.hours,
+			$scope.currentDateTime.minutes,
+			$scope.currentDateTime.seconds
+		).getTime()
+		var x = $scope.currentDateTime.dateTimer
+		console.log(x)
 		$scope.currentDateTime.formatted = $scope.currentDateTime.YYYY;
 		$scope.currentDateTime.formatted += ',' + month;
 		$scope.currentDateTime.formatted += ',' + days;
 		$scope.currentDateTime.formatted += ',' + hrs;
 		$scope.currentDateTime.formatted += ',' + min;
 		$scope.currentDateTime.formatted += ',' + sec;
-		console.log($scope.currentDateTime.formatted)
+
+		for (n in $scope.collections){
+			collection = $scope.collections[n]
+			console.log(collection)
+			if (typeof collection.dropoffs[x] == "undefined"){
+			} else {
+				for (i in collection.dropoffs[x]){
+					tmp = collection.dropoffs[x][i]
+					if (collection.obj.markers.hasLayer(tmp.dropoff)){
+						collection.obj.markers.removeLayer(tmp.dropoff)
+						for (j in collection.pickups[tmp.removeTime])
+							pick = collection.pickups[tmp.removeTime][j]
+							if (pick.removeTime == x)
+								
+								collection.obj.markers.removeLayer(pick.pickup)
+					}
+				}
+			}
+
+			if (typeof collection.pickups[x] == "undefined"){
+			} else {
+				console.log(collection.pickups[x])
+				for (i in collection.pickups[x]){
+					console.log(collection.pickups[x][i])
+					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
+					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
+					for (j in correspond)
+						if (correspond[j].removeTime == x)
+						collection.obj.markers.addLayer(correspond[j].dropoff)
+				}
+			}
+		}
 	}
+
+
 
 	$scope.collections = [];
 	$scope.play = false;
@@ -161,19 +213,24 @@ console.log(drawControl);
 		var polygonRefID = $scope.collections.length;
 		var bounds = (layer.getLatLngs());
 		console.log(bounds);
+<<<<<<< HEAD
 		//e.layer.options.color = 'black';
 		
 		//TODO: GET RID OF THIS SHITTY QUERY method
 		//NO SERIOUSLY THIS IS SHIT AND I FEEL BAD FOR DOING IT LIKE THIS
 		var jankyString = "";
+=======
+
+		var pointString = "";
+>>>>>>> master
 		for (i in bounds){
 			console.log(i);
-			jankyString += bounds[i].lng + ',' + bounds[i].lat;
-			jankyString += '|'
+			pointString += bounds[i].lng + ',' + bounds[i].lat;
+			pointString += '|'
 		}
-		jankyString = jankyString.substring(0, jankyString.length - 1);
-		//Get rid of the damn last pipe
-		console.log(jankyString);
+		pointString = pointString.substring(0, pointString.length - 1);
+		//Get rid of the last pipe
+		console.log(pointString);
 		map.addLayer(layer);
 
 		if(type === 'rectangle'){
@@ -182,43 +239,70 @@ console.log(drawControl);
 		}
 
 		$scope.$apply(function() {
-			$scope.collections.push({obj: layer, index: polygonRefID});
 			layer.markers = [];
 			var newtestStructure = $http({		url:"/api/structure",
 			method: "GET",
-			params: {"bounds": jankyString,
+			params: {"bounds": pointString,
 							 "datetime": $scope.currentDateTime.formatted} })
 			newtestStructure.success(function(data, status, headers, config) {
 				console.log("success!")
 				console.log(data);
-				var layerColl = [];
+				var pickColl = {};
+				var dropColl = {};
+				layer.markers = L.layerGroup([]).addTo(map);
 				for (i = 0, l = data.length; i < l; ++i){
-						var testIcon = L.icon({
+						var pickIcon = L.icon({
 								iconUrl: 'static/images/BlueMarker.png',
 								iconSize: [4, 4],
 						});
-						var dropOffIcon = L.icon({
-							iconUrl: 'static/images/RedMarker.png',
-							iconSize: [4, 4]
+						var dropIcon = L.icon({
+								iconUrl: 'static/images/BlueMarker.png',
+								iconSize: [4, 4],
 						});
-						layerColl.push(L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: testIcon}));
-						layerColl.push(L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropOffIcon}));
+						var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
+						var dropoff = L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropIcon})
+						var dropLocName = data[i].dropoff_datetime.date.$date
+						var pickLocName = data[i].pickup_datetime.date.$date
 
-				}
-				layer.markers = L.layerGroup(layerColl).addTo(map);
+						var dropLoc = {};
+						dropLoc.dropoff = dropoff;
+						dropLoc.removeTime = data[i].pickup_datetime.date.$date
+
+						var pickLoc = {}
+						pickLoc.pickup = pickup
+						pickLoc.removeTime = data[i].dropoff_datetime.date.$date
+
+						if (pickColl[pickLocName] === undefined){
+							pickColl[pickLocName] = [];
+						}
+						pickColl[pickLocName].push(pickLoc);
+
+						if (dropColl[dropLocName] === undefined){
+							dropColl[dropLocName] = [];
+						}
+						dropColl[dropLocName].push(dropLoc);
+					}
+				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl});
+				updateDateTime()
+				console.log($scope.collections);
 			});
 		});
-		console.log($scope.collections);
+
+
 	});
 
 
+
+	//marker remove function
+	function removeMarker(e){
+		window.map.removeLayer(e);
+	}
+
 	//Polygon delete function
 	$scope.deletePolygon = function(e){
-
 		$scope.collections.splice($scope.collections.indexOf(e), 1);
 		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
-
 	}
 
 	$scope.dateTimeIncre = function(arg){
@@ -250,11 +334,11 @@ console.log(drawControl);
 				}
 				break;
 				case (arg == "hours"):
-					if (i == 00){
+					if (i == 0){
 						i = 1;
 					} else if (i == 23){
 						$scope.dateTimeIncre("DD");
-						i += 1;
+						i = 0;
 					} else {
 						i += 1;
 					}
@@ -308,7 +392,7 @@ console.log(drawControl);
 					i = 0;
 				} else if (i == 0){
 					$scope.dateTimeDecre("DD");
-					i -= 1;
+					i = 23;
 				} else {
 					i -= 1;
 				}
@@ -359,17 +443,17 @@ console.log(drawControl);
 
 	function countdownPlayState(){
 		$scope.dateTimeIncre("seconds")
-		$scope.timeout = $timeout(countdownPlayState, 1000);
+		$scope.timeout = $timeout(countdownPlayState, 250);
 	}
 
 	function fastforward(){
 		$scope.dateTimeIncre("seconds")
-		$scope.timeout = $timeout(fastforward, 50);
+		$scope.timeout = $timeout(fastforward, 10);
 	}
 
 	function rewind(){
 		$scope.dateTimeDecre("seconds")
-		$scope.timeout = $timeout(rewind, 50);
+		$scope.timeout = $timeout(rewind, 10);
 	}
 
 
