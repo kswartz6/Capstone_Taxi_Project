@@ -14,8 +14,10 @@ var daysInMonth ={
 	12:31
 }
 
+defautPolyColor = 'blue';
 
-var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
+
+var map = L.map('map', {drawControl: false}).setView([40.727, -73.976], 12);
 
 
 var app = angular.module("app", []);
@@ -164,12 +166,45 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	// Initialise the draw control and pass it the FeatureGroup of editable layers
 	var drawControl = new L.Control.Draw({
-	    edit: {
-	        featureGroup: drawnItems
-	    }
-	});
+			position: 'topleft',
+			draw: {
+				polygon: {
+					shapeOptions: {
+						color: defautPolyColor
+					},
+					allowIntersection: false,
+					drawError: {
+						color: 'orange',
+						timeout: 1000
+					},
+					showArea: true,
+					metric: false,
+					repeatMode: true
+				},
+				polyline: {
+					shapeOptions: {
+						color: defautPolyColor
+					},
+				},
+				rectangle: {
+					shapeOptions: {
+						color: defautPolyColor
+					},
+				},
+				circle: {
+					shapeOptions: {
+						color: defautPolyColor
+					},
+				},
+			},
+			edit: {
+				featureGroup: drawnItems
+			}
+		});
 
+map.addControl(drawControl); 
 
+console.log(drawControl);
 	//add draw function
 	map.on('draw:created', function (e) {
 		//window.polygon.setStyle({fillColor: '#dddddd'});
@@ -178,7 +213,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		var polygonRefID = $scope.collections.length;
 		var bounds = (layer.getLatLngs());
 		console.log(bounds);
-
 		var pointString = "";
 		for (i in bounds){
 			console.log(i);
@@ -213,7 +247,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 								iconSize: [4, 4],
 						});
 						var dropIcon = L.icon({
-								iconUrl: 'static/images/BlueMarker.png',
+								iconUrl: 'static/images/RedMarker.png',
 								iconSize: [4, 4],
 						});
 						var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
