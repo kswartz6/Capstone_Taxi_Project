@@ -213,16 +213,7 @@ console.log(drawControl);
 		var polygonRefID = $scope.collections.length;
 		var bounds = (layer.getLatLngs());
 		console.log(bounds);
-<<<<<<< HEAD
-		//e.layer.options.color = 'black';
-		
-		//TODO: GET RID OF THIS SHITTY QUERY method
-		//NO SERIOUSLY THIS IS SHIT AND I FEEL BAD FOR DOING IT LIKE THIS
-		var jankyString = "";
-=======
-
 		var pointString = "";
->>>>>>> master
 		for (i in bounds){
 			console.log(i);
 			pointString += bounds[i].lng + ',' + bounds[i].lat;
@@ -256,7 +247,7 @@ console.log(drawControl);
 								iconSize: [4, 4],
 						});
 						var dropIcon = L.icon({
-								iconUrl: 'static/images/BlueMarker.png',
+								iconUrl: 'static/images/RedMarker.png',
 								iconSize: [4, 4],
 						});
 						var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
