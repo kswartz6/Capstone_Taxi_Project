@@ -79,15 +79,20 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			console.log(collection)
 			if (typeof collection.dropoffs[x] == "undefined"){
 			} else {
-				for (i in collection.dropoffs[x]){
-					tmp = collection.dropoffs[x][i]
+				for (var i = 0; i < collection.dropoffs[x].length; i++){
+					var tmp = collection.dropoffs[x][i]
 					if (collection.obj.markers.hasLayer(tmp.dropoff)){
 						collection.obj.markers.removeLayer(tmp.dropoff)
-						for (j in collection.pickups[tmp.removeTime])
-							pick = collection.pickups[tmp.removeTime][j]
+						console.log(collection.pickups[tmp.removeTime])
+						for (var j = 0; j < collection.pickups[tmp.removeTime].length; j++){
+							var pick = collection.pickups[tmp.removeTime][j]
+							console.log(pick.removeTime, " removeObj")
+							console.log(x)
+							console.log(pick.removeTime == x)
 							if (pick.removeTime == x)
-
 								collection.obj.markers.removeLayer(pick.pickup)
+
+						}
 					}
 				}
 			}
