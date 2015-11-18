@@ -5,7 +5,7 @@ import ast
 from bson.son import SON
 from datetime import *
 
-MONGO_DB_URI = "mongodb://localhost:27017/csf2015capstone"
+MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 #returns cursor object for now. We do processing of documents in cursor within other

@@ -14,11 +14,10 @@ var daysInMonth ={
 	12:31
 }
 
-defautPolyColor = 'blue';
 
-
-var map = L.map('map', {drawControl: false}).setView([40.727, -73.976], 12);
-
+var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
+var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+    g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 var app = angular.module("app", []);
 
@@ -36,7 +35,11 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime.MM   = 3;
 	$scope.currentDateTime.DD   = 25;
 	$scope.currentDateTime.YYYY = 2013;
+<<<<<<< HEAD
 	$scope.currentDateTime.hours = 9;
+=======
+	$scope.currentDateTime.hours = 8;
+>>>>>>> 7c11104199cebdba145f229911fcbebb4d9c8930
 	$scope.currentDateTime.minutes = 21;
 	$scope.currentDateTime.seconds = 53;
 	$scope.currentDateTime.dateTimer = new Date(
@@ -76,18 +79,31 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 		for (n in $scope.collections){
 			collection = $scope.collections[n]
+			console.log(collection.obj.markers.toGeoJSON())
 			console.log(collection)
 			if (typeof collection.dropoffs[x] == "undefined"){
 			} else {
-				for (i in collection.dropoffs[x]){
-					tmp = collection.dropoffs[x][i]
+				for (var i = 0; i < collection.dropoffs[x].length; i++){
+					var tmp = collection.dropoffs[x][i]
 					if (collection.obj.markers.hasLayer(tmp.dropoff)){
 						collection.obj.markers.removeLayer(tmp.dropoff)
+<<<<<<< HEAD
 						for (j in collection.pickups[tmp.removeTime]){
 							pick = collection.pickups[tmp.removeTime][j]
+=======
+						console.log(collection.pickups[tmp.removeTime])
+						for (var j = 0; j < collection.pickups[tmp.removeTime].length; j++){
+							var pick = collection.pickups[tmp.removeTime][j]
+							console.log(pick.removeTime, " removeObj")
+							console.log(x)
+							console.log(pick.removeTime == x)
+>>>>>>> 7c11104199cebdba145f229911fcbebb4d9c8930
 							if (pick.removeTime == x)
-								
 								collection.obj.markers.removeLayer(pick.pickup)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7c11104199cebdba145f229911fcbebb4d9c8930
 						}
 					}
 				}
@@ -105,50 +121,34 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						collection.obj.markers.addLayer(correspond[j].dropoff)
 				}
 			}
+			tweenPoints()
 		}
 	}
 
+	function tweenPoints(){
+
+	}
+
+
+
+
+	function projectPoint(x, y) {
+  	var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+  	this.stream.point(point.x, point.y);
+	}
+
+	var transform = d3.geo.transform({point: projectPoint}),
+    path = d3.geo.path().projection(transform);
+
+	// var feature = g.selectAll("path")
+	//      					 .data()
+	//                .enter().append("path");
 
 
 	$scope.collections = [];
 	$scope.play = false;
 	//playState is the state of time playback
 
-
-
-
-
-	var testResponse = $http.get("/api/test")
-	testResponse.success(function(data, status, headers, config) {
-		console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-		 //http://leafletjs.com/examples/custom-icons.html
-		//
-	});
-
-	var TeeHee = {"pickup_longitude": -73.980072,
-								"pickup_latitude": 40.743137,
-								"dropoff_longitude": -73.982712,
-								"dropoff_latitude": 40.735336}
-
-	var testStructure = $http({		url:"/api/structure",
-																method: "GET",
-																params: TeeHee })
-
-	testStructure.success(function(data, status, headers, config) {
-		console.log(data);
-		testRecord = data;
-		console.log(testRecord);
-		var iconSize = [6, 6];
-		var blueIcon = L.icon({
-			iconUrl: '/static/images/circle-blue.png',
-			iconSize: iconSize
-			});
-		/*geoJson not showing on map*/
-		//L.geoJson(geojsonFeature).addTo(map); g
-		L.marker([data[0].dropoff_loc.loc[0], data[0].dropoff_loc.loc[1]], {icon: blueIcon}).addTo(map);
-	});
 
 
 
@@ -167,45 +167,15 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	// Initialise the draw control and pass it the FeatureGroup of editable layers
 	var drawControl = new L.Control.Draw({
-			position: 'topleft',
-			draw: {
-				polygon: {
-					shapeOptions: {
-						color: defautPolyColor
-					},
-					allowIntersection: false,
-					drawError: {
-						color: 'orange',
-						timeout: 1000
-					},
-					showArea: true,
-					metric: false,
-					repeatMode: true
-				},
-				polyline: {
-					shapeOptions: {
-						color: defautPolyColor
-					},
-				},
-				rectangle: {
-					shapeOptions: {
-						color: defautPolyColor
-					},
-				},
-				circle: {
-					shapeOptions: {
-						color: defautPolyColor
-					},
-				},
-			},
-			edit: {
-				featureGroup: drawnItems
-			}
-		});
+	    edit: {
+	        featureGroup: drawnItems
+	    }
+	});
 
-map.addControl(drawControl); 
 
-console.log(drawControl);
+map.addControl(drawControl);
+
+
 	//add draw function
 	map.on('draw:created', function (e) {
 		//window.polygon.setStyle({fillColor: '#dddddd'});
@@ -214,6 +184,7 @@ console.log(drawControl);
 		var polygonRefID = $scope.collections.length;
 		var bounds = (layer.getLatLngs());
 		console.log(bounds);
+
 		var pointString = "";
 		for (i in bounds){
 			console.log(i);
@@ -239,6 +210,8 @@ console.log(drawControl);
 			newtestStructure.success(function(data, status, headers, config) {
 				console.log("success!")
 				console.log(data);
+				createBar(data);
+				createDonutChart(data);
 				var pickColl = {};
 				var dropColl = {};
 				layer.markers = L.layerGroup([]).addTo(map);
@@ -274,7 +247,7 @@ console.log(drawControl);
 						}
 						dropColl[dropLocName].push(dropLoc);
 					}
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl});
+				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, svgs:[]});
 				updateDateTime()
 				console.log($scope.collections);
 			});
