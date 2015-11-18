@@ -68,7 +68,6 @@ color: white;
   opacity: 0.85;
   z-index:21;
 }
-
 #position-dashboard{
   position: fixed;
   max-height:400px;
@@ -202,4 +201,40 @@ color:black;
   }
 .delete-button{
   float: right;
+}
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.bar text {
+  fill: #fff;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.legend{
+  font-size:12 px;
+}
+rect {
+  stroke-width: 2;
+}
+
+
+.tooltip {
+  background: #eee;
+  box-shadow: 0 0 5px #999999;
+  color: #333;
+  display: none;
+  font-size: 12px;
+  left: 130px;
+  padding: 10px;
+  position: absolute;
+  text-align: center;
+  top: 95px;
+  width: 80px;
+  z-index: 10;
 }

@@ -86,7 +86,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						for (j in collection.pickups[tmp.removeTime])
 							pick = collection.pickups[tmp.removeTime][j]
 							if (pick.removeTime == x)
-								
+
 								collection.obj.markers.removeLayer(pick.pickup)
 					}
 				}
@@ -202,7 +202,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			}
 		});
 
-map.addControl(drawControl); 
+map.addControl(drawControl);
 
 console.log(drawControl);
 	//add draw function
@@ -238,6 +238,8 @@ console.log(drawControl);
 			newtestStructure.success(function(data, status, headers, config) {
 				console.log("success!")
 				console.log(data);
+				createBar(data);
+				createDonutChart(data);
 				var pickColl = {};
 				var dropColl = {};
 				layer.markers = L.layerGroup([]).addTo(map);
