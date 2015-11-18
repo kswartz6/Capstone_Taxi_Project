@@ -34,9 +34,9 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
 	$scope.currentDateTime.MM   = 3;
-	$scope.currentDateTime.DD   = 24;
+	$scope.currentDateTime.DD   = 25;
 	$scope.currentDateTime.YYYY = 2013;
-	$scope.currentDateTime.hours = 23;
+	$scope.currentDateTime.hours = 9;
 	$scope.currentDateTime.minutes = 21;
 	$scope.currentDateTime.seconds = 53;
 	$scope.currentDateTime.dateTimer = new Date(
@@ -83,11 +83,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					tmp = collection.dropoffs[x][i]
 					if (collection.obj.markers.hasLayer(tmp.dropoff)){
 						collection.obj.markers.removeLayer(tmp.dropoff)
-						for (j in collection.pickups[tmp.removeTime])
+						for (j in collection.pickups[tmp.removeTime]){
 							pick = collection.pickups[tmp.removeTime][j]
 							if (pick.removeTime == x)
 								
 								collection.obj.markers.removeLayer(pick.pickup)
+						}
 					}
 				}
 			}
@@ -447,5 +448,24 @@ console.log(drawControl);
 		$scope.timeout = $timeout(rewind, 10);
 	}
 
+	var statenIsland, bronx, queens, brooklyn, manhattan;
+	
 
+	function loadBoroughs() {
+		var boroFile;
+		$.getJSON('/static/boroughs.geojson', function(data) { 
+    		boroFile=data;
+  		}).done(function(){ 
+  			console.log("Loaded Borough JSON")
+  			statenIsland = boroFile["features"][0]["geometry"]["coordinates"];
+  			queens = boroFile["features"][1]["geometry"]["coordinates"];
+  			brooklyn = boroFile["features"][2]["geometry"]["coordinates"];
+  			manhattan = boroFile["features"][3]["geometry"]["coordinates"];
+  			bronx = boroFile["features"][4]["geometry"]["coordinates"];
+  			console.log("Borough Coordinates have been loaded");
+  		}); 
+
+	}
+
+	loadBoroughs();
 });
