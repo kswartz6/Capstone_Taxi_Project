@@ -411,5 +411,24 @@ map.addControl(drawControl);
 		$scope.timeout = $timeout(rewind, 10);
 	}
 
+	var statenIsland, bronx, queens, brooklyn, manhattan;
 
+
+	function loadBoroughs() {
+		var boroFile;
+		$.getJSON('/static/boroughs.geojson', function(data) {
+    		boroFile=data;
+  		}).done(function(){
+  			console.log("Loaded Borough JSON")
+  			statenIsland = boroFile["features"][0]["geometry"]["coordinates"];
+  			queens = boroFile["features"][1]["geometry"]["coordinates"];
+  			brooklyn = boroFile["features"][2]["geometry"]["coordinates"];
+  			manhattan = boroFile["features"][3]["geometry"]["coordinates"];
+  			bronx = boroFile["features"][4]["geometry"]["coordinates"];
+  			console.log("Borough Coordinates have been loaded");
+  		});
+
+	}
+
+	loadBoroughs();
 });
