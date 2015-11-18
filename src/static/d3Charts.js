@@ -2,8 +2,9 @@
 
 function createBar(data){
 	var record = [];
+	console.log(data)
 	var taxiData = data;
-		for (i = 0, l = data.length; i < l; ++i){
+		for (i in data){
 			record[i] = data[i].passenger_count;
 		}
 		console.log("printing record");

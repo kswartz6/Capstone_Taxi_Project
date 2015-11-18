@@ -15,7 +15,7 @@ var daysInMonth ={
 }
 
 
-var map = L.map('map', {drawControl: true}).setView([40.727, -73.976], 12);
+var map = L.map('map', {drawControl: false}).setView([40.727, -73.976], 12);
 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
     g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
@@ -83,15 +83,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					var tmp = collection.dropoffs[x][i]
 					if (collection.obj.markers.hasLayer(tmp.dropoff)){
 						collection.obj.markers.removeLayer(tmp.dropoff)
-						console.log(collection.pickups[tmp.removeTime])
 						for (var j = 0; j < collection.pickups[tmp.removeTime].length; j++){
 							var pick = collection.pickups[tmp.removeTime][j]
-							console.log(pick.removeTime, " removeObj")
-							console.log(x)
-							console.log(pick.removeTime == x)
 							if (pick.removeTime == x)
+								collection.actives[pick.index] = [pick.data]
+								actives[pick.index] = [pick.data]
 								collection.obj.markers.removeLayer(pick.pickup)
-
 						}
 					}
 				}
@@ -99,14 +96,14 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 			if (typeof collection.pickups[x] == "undefined"){
 			} else {
-				console.log(collection.pickups[x])
 				for (i in collection.pickups[x]){
-					console.log(collection.pickups[x][i])
 					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x)
 						collection.obj.markers.addLayer(correspond[j].dropoff)
+						collection.actives[correspond[j].index] = null
+						actives[correspond[j].index] = null
 				}
 			}
 			tweenPoints()
@@ -135,7 +132,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	$scope.collections = [];
 	$scope.play = false;
-	//playState is the state of time playback
+	var actives = []
 
 
 
@@ -198,8 +195,6 @@ map.addControl(drawControl);
 			newtestStructure.success(function(data, status, headers, config) {
 				console.log("success!")
 				console.log(data);
-				createBar(data);
-				createDonutChart(data);
 				var pickColl = {};
 				var dropColl = {};
 				layer.markers = L.layerGroup([]).addTo(map);
@@ -221,9 +216,14 @@ map.addControl(drawControl);
 						dropLoc.dropoff = dropoff;
 						dropLoc.removeTime = data[i].pickup_datetime.date.$date
 
+						//Because pickups are used for determining plotting, we'll
+						//associate data to this object.
 						var pickLoc = {}
 						pickLoc.pickup = pickup
 						pickLoc.removeTime = data[i].dropoff_datetime.date.$date
+						pickLoc.index = i
+						pickLoc.data = data[i]
+
 
 						if (pickColl[pickLocName] === undefined){
 							pickColl[pickLocName] = [];
@@ -235,7 +235,9 @@ map.addControl(drawControl);
 						}
 						dropColl[dropLocName].push(dropLoc);
 					}
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, svgs:[]});
+				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:[]});
+				createBar(actives);
+				createDonutChart(actives);
 				updateDateTime()
 				console.log($scope.collections);
 			});
