@@ -145,17 +145,52 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	    	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
 	}).addTo(map);
 
+	defautPolyColor = '#feffa3';
 
 	// Initialise the FeatureGroup to store editable layers
 	var drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
 
+
 	// Initialise the draw control and pass it the FeatureGroup of editable layers
 	var drawControl = new L.Control.Draw({
-	    edit: {
-	        featureGroup: drawnItems
-	    }
+		position: 'topleft',
+		draw: {
+			polygon: {
+				shapeOptions: {
+					color: defautPolyColor
+				},
+				allowIntersection: false,
+				drawError: {
+					color: 'orange',
+					timeout: 1000
+				},
+				showArea: true,
+				metric: false,
+				repeatMode: true
+			},
+			polyline: {
+				shapeOptions: {
+					color: defautPolyColor
+				},
+			},
+			rectangle: {
+				shapeOptions: {
+					color: defautPolyColor
+				},
+			},
+			circle: {
+				shapeOptions: {
+					color: defautPolyColor
+				},
+			},
+		},
+		edit: {
+			featureGroup: drawnItems
+		}
 	});
+
+
 
 
 map.addControl(drawControl);
