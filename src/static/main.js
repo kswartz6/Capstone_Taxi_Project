@@ -36,8 +36,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime.DD   = 25;
 	$scope.currentDateTime.YYYY = 2013;
 	$scope.currentDateTime.hours = 8;
-	$scope.currentDateTime.minutes = 21;
-	$scope.currentDateTime.seconds = 53;
+	$scope.currentDateTime.minutes = 29;
+	$scope.currentDateTime.seconds = 59;
 	$scope.currentDateTime.dateTimer = new Date(
 		$scope.currentDateTime.YYYY,
 		$scope.currentDateTime.MM - 1,

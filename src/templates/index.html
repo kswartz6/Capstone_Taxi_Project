@@ -123,7 +123,7 @@
             <td class="date-time-month upper-left">
               {[currentDateTime.hours]}
             </td>
-            <td class="date-time-day">
+            <td class="date-time-day" id="time-center">
               {[currentDateTime.minutes]}
             </td>
             <td class="date-time-year upper-right">
@@ -157,8 +157,8 @@
             <span>Name: </span>
             <span class="collection-name" contenteditable="true"></span>
           </div>
-          <p> NE : {[collection.northEast]} </p>
-          <p> SW : {[collection.southWest]}</p>
+          <div class="collection-data-container">
+          </div>
         </div>
       </div>
 
