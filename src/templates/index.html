@@ -158,6 +158,11 @@
             <span class="collection-name" contenteditable="true"></span>
           </div>
           <div class="collection-data-container">
+            <label>Filter Region</label>
+            <select ng-init="filterRegion=collectionFilters[0]"
+                    ng-model="filterRegion"
+                    ng-options="filter for filter in collectionFilters">
+            </select>
           </div>
         </div>
       </div>

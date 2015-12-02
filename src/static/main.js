@@ -85,10 +85,11 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						collection.obj.markers.removeLayer(tmp.dropoff)
 						for (var j = 0; j < collection.pickups[tmp.removeTime].length; j++){
 							var pick = collection.pickups[tmp.removeTime][j]
-							if (pick.removeTime == x)
+							if (pick.removeTime == x){
 								collection.actives[pick.index] = [pick.data]
-								actives[pick.index] = [pick.data]
+								actives[collection.index] = collection.actives
 								collection.obj.markers.removeLayer(pick.pickup)
+							}
 						}
 					}
 				}
@@ -100,12 +101,14 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
-						if (correspond[j].removeTime == x)
-						collection.obj.markers.addLayer(correspond[j].dropoff)
-						collection.actives[correspond[j].index] = null
-						actives[correspond[j].index] = null
-				}
+						if (correspond[j].removeTime == x){
+							collection.obj.markers.addLayer(correspond[j].dropoff)
+							collection.actives[correspond[j].index] = null
+							actives[collection.index] = collection.actives
+						}
+					}
 			}
+			console.log(actives)
 			tweenPoints()
 		}
 	}
@@ -131,6 +134,16 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 
 	$scope.collections = [];
+	$scope.collectionFilters = [
+		"None",
+		"Self",
+		"Manhattan",
+		"Brooklyn",
+		"Queens",
+		"Bronx",
+		"Custom"
+	]
+
 	$scope.play = false;
 	var actives = []
 
@@ -270,7 +283,7 @@ map.addControl(drawControl);
 						}
 						dropColl[dropLocName].push(dropLoc);
 					}
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:[]});
+				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}});
 				createBar(actives);
 				createDonutChart(actives);
 				updateDateTime()
