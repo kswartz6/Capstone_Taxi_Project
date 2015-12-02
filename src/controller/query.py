@@ -15,8 +15,6 @@ db = client.csf2015capstone
 #bounds = coord points of polygon on leaflet
 #bounds MUST be an iterable of iterables such that [ [x1, y1], [x2, y2] ]
 
-
-
 def decompose(dt):
 	dt = {}
 	dt["d"] = queryRequest["p_dt"]
@@ -25,8 +23,7 @@ def decompose(dt):
 	dt["ld"] = d + timedelta(days= -1)
 	return dt
 
-
-def mongoQuery(queryRequest):
+def polygonQuery(queryRequest, pickupDropoff):
 	print(queryRequest["bounds"])
 	print(type(queryRequest["bounds"]))
 	d = queryRequest["p_dt"]
@@ -36,14 +33,41 @@ def mongoQuery(queryRequest):
 	#"pickup_datetime.date":d is the pickup query param
 	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 	print("Launching find")
-	cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
-	"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
-	},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
+	if(pickupDropoff):
+		cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
+		"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
+		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
+	else:
+		cursor = db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
+		"dropoff_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
+		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
 	print("Dumping Cursor")
 	return dumps(cursor)
 
-	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
-	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
+
+# Circle queryRequest "bounds" should be in format [[<x>, <y>], <radius>]
+def circlePickupQuery(queryRequest, pickupDropoff):
+	print(queryRequest["bounds"])
+	print(type(queryRequest["bounds"]))
+	d = queryRequest["p_dt"]
+	d = datetime(int(d[0]), int(d[1]), int(d[2]), int(d[3]), int(d[4]), int(d[5]))
+	ud = d + timedelta(hours=6)
+	ld = d + timedelta(hours= -6)
+	#"pickup_datetime.date":d is the pickup query param
+	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
+	print("Launching find")
+	# true is a pickup query, false is dropoff query
+	if(pickupDropoff):
+		cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
+		"pickup_loc.loc":{"$geoWithin": {"$centerSphere": queryRequest["bounds"]}}
+		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)	
+	else:
+		cursor = db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
+		"dropoff_loc.loc":{"$geoWithin": {"$centerSphere": queryRequest["bounds"]}}
+		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
+	
+	print("Dumping Cursor")
+	return dumps(cursor)
 
 
 	#argsString = ""
@@ -77,9 +101,9 @@ def mongoQuery(queryRequest):
 
 
 #bulkQuery grabs 100 records
-def bulkQuery():
-	cursor = db.taxitest.find().limit(100)
-	return cursor
+#def bulkQuery():
+#	cursor = db.taxitest.find().limit(100)
+#	return cursor
 
 
 
@@ -109,9 +133,6 @@ def bulkQuery():
 	#	print(document)
 
 #		print(document)
-
-def indexInit():
-	return 0
 
 def processResults():
 	cursor = db.taxitest.find().limit(50)

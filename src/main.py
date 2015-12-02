@@ -5,13 +5,6 @@ import json
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from controller.query import *
 
-
-
-
-
-
-
-
 #for keys, values in json.items():
  #   print(keys)
   #  print(values)
@@ -22,12 +15,8 @@ webapp = Flask(__name__)
 def root():
 	return render_template('index.html')
 
-
-
 # API Routes
 # General format is "/api/<endpoint here>"
-
-
 @webapp.route("/api/structure")
 def api_structure():
 	bounds = request.args["bounds"]
@@ -46,13 +35,12 @@ def api_structure():
 	q = {}
 	q["bounds"] = bounds;
 	q["p_dt"] = formatDT
-	cursor = mongoQuery(q)
+	cursor = polygonQuery(q, True)
 	print("Received cursor")
 	# js = json.dumps(cursor.collection)
 	# resp = Response(js, status=200, mimetype='application/json')
 	# return resp
 	return cursor
-
 
 @webapp.route("/api/test")
 def api_test():
