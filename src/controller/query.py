@@ -46,7 +46,7 @@ def polygonQuery(queryRequest, pickupDropoff):
 
 
 # Circle queryRequest "bounds" should be in format [[<x>, <y>], <radius>]
-def circlePickupQuery(queryRequest, pickupDropoff):
+def circleQuery(queryRequest, pickupDropoff):
 	print(queryRequest["bounds"])
 	print(type(queryRequest["bounds"]))
 	d = queryRequest["p_dt"]
@@ -59,11 +59,11 @@ def circlePickupQuery(queryRequest, pickupDropoff):
 	# true is a pickup query, false is dropoff query
 	if(pickupDropoff):
 		cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
-		"pickup_loc.loc":{"$geoWithin": {"$centerSphere": queryRequest["bounds"]}}
+		"pickup_loc.loc":{"$geoWithin": {"$center": queryRequest["bounds"]}}
 		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)	
 	else:
 		cursor = db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
-		"dropoff_loc.loc":{"$geoWithin": {"$centerSphere": queryRequest["bounds"]}}
+		"dropoff_loc.loc":{"$geoWithin": {"$center": queryRequest["bounds"]}}
 		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
 	
 	print("Dumping Cursor")

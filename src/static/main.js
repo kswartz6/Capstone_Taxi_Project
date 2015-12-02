@@ -217,31 +217,32 @@ map.addControl(drawControl);
 		var type = e.layerType,
 		layer = e.layer;
 		var polygonRefID = $scope.collections.length;
-		var bounds = (layer.getLatLngs());
-		console.log(bounds);
-
 		var pointString = "";
-		for (i in bounds){
-			console.log(i);
-			pointString += bounds[i].lng + ',' + bounds[i].lat;
-			pointString += '|'
+		
+		if(type === 'rectangle' || type === 'polygon'){
+			var bounds = (layer.getLatLngs());
+			console.log(bounds);
+			for (i in bounds){
+				console.log(i);
+				pointString += bounds[i].lng + ',' + bounds[i].lat;
+				pointString += '|'
+			}
+			pointString = pointString.substring(0, pointString.length - 1);
+		} else if(type === 'circle') {
+			var latLng = layer.getLatLng();
+			pointString += latLng.lng + ',' + latLng.lat + ',' + layer.getRadius();
 		}
-		pointString = pointString.substring(0, pointString.length - 1);
 		//Get rid of the last pipe
 		console.log(pointString);
 		map.addLayer(layer);
-
-		if(type === 'rectangle'){
-		} else if(type === 'polygon'){
-			console.log(bounds);
-		}
 
 		$scope.$apply(function() {
 			layer.markers = [];
 			var newtestStructure = $http({		url:"/api/structure",
 			method: "GET",
 			params: {"bounds": pointString,
-							 "datetime": $scope.currentDateTime.formatted} })
+							 "datetime": $scope.currentDateTime.formatted,
+							 "type": type} })
 			newtestStructure.success(function(data, status, headers, config) {
 				console.log("success!")
 				console.log(data);

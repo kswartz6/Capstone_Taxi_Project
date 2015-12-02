@@ -19,28 +19,45 @@ def root():
 # General format is "/api/<endpoint here>"
 @webapp.route("/api/structure")
 def api_structure():
+	geometryType = request.args["type"]
 	bounds = request.args["bounds"]
-	bounds = bounds.split("|")
-	tmp = bounds;
-	bounds = [];
-	for pair in tmp:
-		i = pair.split(",")
-		tmp2 = i;
-		i = [];
-		for j in tmp2:
-			j = float(j)
-			i.append(j)
-		bounds.append(i)
 	formatDT = request.args["datetime"].split(",")
+
+	if(geometryType == "rectangle" or geometryType == "polygon"):
+		bounds = bounds.split("|")
+		tmp = bounds;
+		bounds = [];
+		for pair in tmp:
+			i = pair.split(",")
+			tmp2 = i;
+			i = [];
+			for j in tmp2:
+				j = float(j)
+				i.append(j)
+			bounds.append(i)
+		
+	else:
+		bounds = bounds.split(",")
+		tmp = bounds;
+		bounds = [[float(tmp[0]), float(tmp[1])], float(tmp[2])]
+
 	q = {}
 	q["bounds"] = bounds;
 	q["p_dt"] = formatDT
-	cursor = polygonQuery(q, True)
-	print("Received cursor")
+
+	if(geometryType == "rectangle" or geometryType == "polygon"):
+		cursor = polygonQuery(q, True)
+		print("Received cursor")
+		return cursor
+	else:
+		cursor = circleQuery(q, True)
+		print("Received cursor")
+		return cursor
+	
 	# js = json.dumps(cursor.collection)
 	# resp = Response(js, status=200, mimetype='application/json')
 	# return resp
-	return cursor
+	
 
 @webapp.route("/api/test")
 def api_test():
