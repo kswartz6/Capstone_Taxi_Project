@@ -195,7 +195,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 map.addControl(drawControl);
 
-
 	//add draw function
 	map.on('draw:created', function (e) {
 		//window.polygon.setStyle({fillColor: '#dddddd'});
@@ -446,8 +445,48 @@ map.addControl(drawControl);
 		$scope.timeout = $timeout(rewind, 10);
 	}
 
-	var statenIsland, bronx, queens, brooklyn, manhattan;
+	$scope.clearBoroughs = function() {
+		boroughLayer.clearLayers();
+		bron = false;
+		manhatt = false;
+		staten = false;
+		brook = false;
+		queen = false;
+	}
 
+	$scope.mapStaten = function() {
+		if(!staten) {
+			addBoroughToMap(0);
+		}
+		staten = true;
+
+	}
+	$scope.mapQueens = function(){
+		if(!queen) {
+			addBoroughToMap(1);	
+		}
+		queen = true;
+	}
+	$scope.mapBrooklyn = function() {
+		if(!brook) {
+			addBoroughToMap(2);
+		}
+		brook = true;
+	}
+	$scope.mapManhattan = function() {
+		if(!manhatt) {
+			addBoroughToMap(3);
+		}
+		manhatt = true;
+	}
+	$scope.mapBronx = function() {
+		if(!bron) {
+			addBoroughToMap(4);
+		}
+		bron = true;
+	}
+	var statenIsland, bronx, queens, brooklyn, manhattan;
+	var staten = false, bron = false, queen = false, brook = false, manhatt = false;
 
 	function loadBoroughs() {
 		var boroFile;
@@ -455,14 +494,49 @@ map.addControl(drawControl);
     		boroFile=data;
   		}).done(function(){
   			console.log("Loaded Borough JSON")
-  			statenIsland = boroFile["features"][0]["geometry"]["coordinates"];
-  			queens = boroFile["features"][1]["geometry"]["coordinates"];
-  			brooklyn = boroFile["features"][2]["geometry"]["coordinates"];
-  			manhattan = boroFile["features"][3]["geometry"]["coordinates"];
-  			bronx = boroFile["features"][4]["geometry"]["coordinates"];
+  			statenIsland = boroFile["features"][0];
+  			queens = boroFile["features"][1];
+  			brooklyn = boroFile["features"][2];
+  			manhattan = boroFile["features"][3];
+  			bronx = boroFile["features"][4];
   			console.log("Borough Coordinates have been loaded");
   		});
 
+	}
+	var boroughLayer = L.geoJson();//statenIsland);
+	boroughLayer.addTo(map);
+
+	function addBoroughToMap(boroughNumber) {
+		switch(boroughNumber){
+			case 0:
+				boroughLayer.addData(statenIsland);
+				break;
+			case 1:
+				boroughLayer.addData(queens);
+				break;
+			case 2:
+				boroughLayer.addData(brooklyn);
+				break;
+			case 3:
+				boroughLayer.addData(manhattan);
+				break;
+			case 4:
+				boroughLayer.addData(bronx);
+				break;
+		}
+	}
+
+	function reverseBoroughLongLat(borough) {
+		for(var i = 0; i < borough.length; ++i) {
+  			for(var j = 0; j < borough[i].length; ++j) {
+  				for(var k = 0; k < borough[i][j].length; ++k){
+  					var temp = borough[i][j][k][0];
+  					borough[i][j][k][0] = borough[i][j][k][1];
+  					borough[i][j][k][1] = temp;
+  				} 
+  			}
+  		}
+  		return borough;
 	}
 
 	loadBoroughs();
