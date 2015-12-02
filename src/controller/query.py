@@ -5,7 +5,7 @@ import ast
 from bson.son import SON
 from datetime import *
 
-MONGO_DB_URI = "mongodb://localhost:27017/csf2015capstone"
+MONGO_DB_URI = "mongodb://bob:bob@ds051368.mongolab.com:51368/csf2015capstone"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 #returns cursor object for now. We do processing of documents in cursor within other
@@ -65,7 +65,7 @@ def circleQuery(queryRequest, pickupDropoff):
 		cursor = db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
 		"dropoff_loc.loc":{"$geoWithin": {"$center": queryRequest["bounds"]}}
 		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
-	
+
 	print("Dumping Cursor")
 	return dumps(cursor)
 
