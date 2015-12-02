@@ -101,12 +101,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			} else {
 				for (i in collection.pickups[x]){
 					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
+					collection.actives[collection.pickups[x][i].index] = collection.pickups[x][i]
+					actives[collection.index] = collection.actives
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
 							collection.obj.markers.addLayer(correspond[j].dropoff)
-							collection.actives[correspond[j].index] = correspond[j].data
-							actives[collection.index] = collection.actives
 						}
 					}
 			}
@@ -503,7 +503,7 @@ map.addControl(drawControl);
 	}
 	// These are holding all of our borough geoJson data
 	var statenIsland, bronx, queens, brooklyn, manhattan;
-	
+
 	// These are bools that allow us to check for multiple drawing of boroughs in leaflet
 	var staten = false, bron = false, queen = false, brook = false, manhatt = false;
 
