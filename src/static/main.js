@@ -79,6 +79,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			console.log(collection)
 			if (typeof collection.dropoffs[x] == "undefined"){
 			} else {
+				//Removing locations
 				for (var i = 0; i < collection.dropoffs[x].length; i++){
 					var tmp = collection.dropoffs[x][i]
 					if (collection.obj.markers.hasLayer(tmp.dropoff)){
@@ -86,7 +87,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						for (var j = 0; j < collection.pickups[tmp.removeTime].length; j++){
 							var pick = collection.pickups[tmp.removeTime][j]
 							if (pick.removeTime == x){
-								collection.actives[pick.index] = [pick.data]
+								collection.actives[pick.index] = null
 								actives[collection.index] = collection.actives
 								collection.obj.markers.removeLayer(pick.pickup)
 							}
@@ -95,6 +96,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				}
 			}
 
+			//Adding locations
 			if (typeof collection.pickups[x] == "undefined"){
 			} else {
 				for (i in collection.pickups[x]){
@@ -103,7 +105,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
 							collection.obj.markers.addLayer(correspond[j].dropoff)
-							collection.actives[correspond[j].index] = null
+							collection.actives[correspond[j].index] = correspond[j].data
 							actives[collection.index] = collection.actives
 						}
 					}
@@ -477,7 +479,7 @@ map.addControl(drawControl);
 	}
 	$scope.mapQueens = function(){
 		if(!queen) {
-			addBoroughToMap(1);	
+			addBoroughToMap(1);
 		}
 		queen = true;
 	}
@@ -550,7 +552,7 @@ map.addControl(drawControl);
   					var temp = borough[i][j][k][0];
   					borough[i][j][k][0] = borough[i][j][k][1];
   					borough[i][j][k][1] = temp;
-  				} 
+  				}
   			}
   		}
   		return borough;
