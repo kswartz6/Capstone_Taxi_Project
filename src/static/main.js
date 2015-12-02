@@ -499,7 +499,10 @@ map.addControl(drawControl);
 		}
 		bron = true;
 	}
+	// These are holding all of our borough geoJson data
 	var statenIsland, bronx, queens, brooklyn, manhattan;
+	
+	// These are bools that allow us to check for multiple drawing of boroughs in leaflet
 	var staten = false, bron = false, queen = false, brook = false, manhatt = false;
 
 	function loadBoroughs() {
@@ -517,7 +520,7 @@ map.addControl(drawControl);
   		});
 
 	}
-	var boroughLayer = L.geoJson();//statenIsland);
+	var boroughLayer = L.geoJson();
 	boroughLayer.addTo(map);
 
 	function addBoroughToMap(boroughNumber) {
