@@ -305,6 +305,7 @@ map.addControl(drawControl);
 
 	//Polygon delete function
 	$scope.deletePolygon = function(e){
+		actives.splice($scope.collections.indexOf(e), 1);
 		$scope.collections.splice($scope.collections.indexOf(e), 1);
 		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
