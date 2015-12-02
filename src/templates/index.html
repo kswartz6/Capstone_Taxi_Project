@@ -79,7 +79,7 @@
       </div>
     </div>
     <div id="sideBar">
-      <div class="date-time-picker">
+      <span class="date-time-picker">
       <table id="date-picker">
         <tr class="time-picker-row">
           <td class="time-arrow upper-left" ng-click="dateTimeIncre('MM')">
@@ -115,25 +115,20 @@
           </td>
         </tr>
       </table>
-    </div>
+    </span>
 
-      <div class="date-time-picker">
+      <span class="date-time-picker">
       <table id="time-picker">
         <tr class="time-picker-row">
             <td class="date-time-month upper-left">
               {[currentDateTime.hours]}
             </td>
-            <td class="date-time-day">
+            <td class="date-time-day" id="time-center">
               {[currentDateTime.minutes]}
             </td>
             <td class="date-time-year upper-right">
               {[currentDateTime.seconds]}
             </td>
-        </tr>
-        <tr class="time-picker-row">
-          <td class="time-arrow  bottom-left" ng-click="rw();play=true">
-            <i class="fa fa-backward"></i>
-          </td>
           <td class="time-arrow">
             <i class="fa fa-play-circle" ng-show="!(play)" ng-click="startPlay(); play=true"></i>
             <i class="fa fa-pause" ng-show="play" ng-click="pausePlay(); play=false"></i>
@@ -143,20 +138,17 @@
           </td>
         </tr>
       </table>
-    </div>
-    <div>
+    </span>
+    <span>
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#barModal">passenger bar</button>
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#donutModal">passenger donut</button>
-    </div>
-    <br>
-    <div>
       <button type="button" class="btn btn-info btn-sm" ng-click="clearBoroughs();">Clear Boroughs</button><br>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapStaten();">Staten Island</button><br>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapQueens();">Queens</button><br>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapBrooklyn();">Brooklyn</button><br>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapManhattan();">Manhattan</button><br>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapBronx();">Bronx</button>
-    </div>
+    </span>
     </div>
 
 
@@ -171,8 +163,13 @@
             <span>Name: </span>
             <span class="collection-name" contenteditable="true"></span>
           </div>
-          <p> NE : {[collection.northEast]} </p>
-          <p> SW : {[collection.southWest]}</p>
+          <div class="collection-data-container">
+            <label>Filter Region</label>
+            <select ng-init="filterRegion=collectionFilters[0]"
+                    ng-model="filterRegion"
+                    ng-options="filter for filter in collectionFilters">
+            </select>
+          </div>
         </div>
       </div>
 
