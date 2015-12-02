@@ -141,6 +141,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		"Brooklyn",
 		"Queens",
 		"Bronx",
+		"Staten Island",
 		"Custom"
 	]
 
