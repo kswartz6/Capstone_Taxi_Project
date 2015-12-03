@@ -127,19 +127,21 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	function filterforCollection(e){
 		console.log("Fired filter function")
 		for(i in actives[e.index]){
-			if(checkInFilter(e, e.filter, actives[e.index][i])){
-				if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-					e.obj.markers.addLayer(actives[e.index][i].dropoff)
-				}
-				if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-					e.obj.markers.addLayer(actives[e.index][i].pickup)
-				}
-			} else {
-				if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-					e.obj.markers.removeLayer(actives[e.index][i].dropoff)
-				}
-				if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-					e.obj.markers.removeLayer(actives[e.index][i].pickup)
+			if(actives[e.index][i] != null){
+				if(checkInFilter(e, e.filter, actives[e.index][i])){
+					if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+						e.obj.markers.addLayer(actives[e.index][i].dropoff)
+					}
+					if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+						e.obj.markers.addLayer(actives[e.index][i].pickup)
+					}
+				} else {
+					if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+						e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+					}
+					if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+						e.obj.markers.removeLayer(actives[e.index][i].pickup)
+					}
 				}
 			}
 		}
@@ -157,6 +159,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						inFilter = true
 					break
 			case  "Manhattan":
+					console.log(leafletPip.pointInLayer(point, boroughLayer.manhattan, true).length)
 					if(leafletPip.pointInLayer(point, boroughLayer.manhattan, true).length > 0)
 						inFilter = true
 					break
