@@ -312,6 +312,7 @@ map.addControl(drawControl);
 				console.log(data);
 				var pickColl = {};
 				var dropColl = {};
+				layer.setStyle({fillColor: '#0000FF'})
 				layer.markers = L.layerGroup([]).addTo(map);
 				for (i = 0, l = data.length; i < l; ++i){
 						var pickIcon = L.icon({
