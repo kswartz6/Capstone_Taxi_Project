@@ -120,12 +120,27 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	}
 
-	function filterPoints(e){
+	$scope.filterPoints = function(e){
+		filterforCollection(e)
+	}
+
+	function filterforCollection(e){
+		console.log("Fired filter function")
 		for(i in actives[e.index]){
 			if(checkInFilter(e, e.filter, actives[e.index][i])){
-
+				if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+					e.obj.markers.addLayer(actives[e.index][i].dropoff)
+				}
+				if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+					e.obj.markers.addLayer(actives[e.index][i].pickup)
+				}
 			} else {
-
+				if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+					e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+				}
+				if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+					e.obj.markers.removeLayer(actives[e.index][i].pickup)
+				}
 			}
 		}
 	}
@@ -139,17 +154,27 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					break
 			case	"Self":
 					leafletPip.pointInLayer(point, e, true)
+						inFilter = true
 					break
 			case  "Manhattan":
-					leafletPip.pointInLayer(point, statenIsland, true)
+					if(leafletPip.pointInLayer(point, boroughLayer.manhattan, true).length > 0)
+						inFilter = true
 					break
 			case	"Brooklyn":
+					if(leafletPip.pointInLayer(point, boroughLayer.brooklyn, true).length > 0)
+						inFilter = true
 					break;
 			case	"Queens":
+					if(leafletPip.pointInLayer(point, boroughLayer.queens, true).length > 0)
+						inFilter = true
 					break;
 			case	"Bronx":
+					if(leafletPip.pointInLayer(point, boroughLayer.bronx, true).length > 0)
+						inFilter = true
 					break;
 			case	"Staten Island":
+					if(leafletPip.pointInLayer(point, boroughLayer.statenIsland, true).length > 0)
+						inFilter = true
 					break;
 			case  "Custom":
 				break;

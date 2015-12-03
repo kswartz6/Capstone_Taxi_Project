@@ -169,7 +169,7 @@
             <select ng-init="collection.filter=collectionFilters[0]"
                     ng-model="collection.filter"
                     ng-options="filter for filter in collectionFilters"
-                    ng-change="filterPoints(e)">
+                    ng-change="filterPoints(collection)">
             </select>
           </div>
         </div>
