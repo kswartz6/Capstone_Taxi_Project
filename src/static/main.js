@@ -225,7 +225,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	    	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
 	}).addTo(map);
 
-	defautPolyColor = '#feffa3';
+	defautPolyColor = '#FF0000';
 
 	// Initialise the FeatureGroup to store editable layers
 	var drawnItems = new L.FeatureGroup();
@@ -312,7 +312,7 @@ map.addControl(drawControl);
 				console.log(data);
 				var pickColl = {};
 				var dropColl = {};
-				layer.setStyle({fillColor: '#0000FF'})
+				layer.setStyle({color: '#00FF66'})
 				layer.markers = L.layerGroup([]).addTo(map);
 				for (i = 0, l = data.length; i < l; ++i){
 						var pickIcon = L.icon({
