@@ -359,10 +359,11 @@ map.addControl(drawControl);
 				console.log($scope.collections);
 			});
 		});
-
-
 	});
 
+	/*$scope.nameChanged = function(e) {
+		e.obj.label = e.name;
+	}*/
 
 
 	//marker remove function
