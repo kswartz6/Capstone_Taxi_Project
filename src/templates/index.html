@@ -161,8 +161,11 @@
         <div ng-repeat="collection in collections"  class="dashboard-body">
           <button class="delete-button" ng-click="deletePolygon(collection)"> delete </button>
           <div>
-            <span>Name: </span>
-            <span class="collection-name" contenteditable="true">{[collection.name]}</span>
+            <label>Name: </label>
+            <input class="collectionLabel"
+                   ng-model="collection.name"
+                   ng-init="collection.name = 'Collection'"
+                   ng-change="nameChanged(collection)"></input>
           </div>
           <div class="collection-data-container">
             <label>Filter Region</label>

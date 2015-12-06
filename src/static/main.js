@@ -121,6 +121,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	}
 
 	$scope.filterPoints = function(e){
+
 		filterforCollection(e)
 	}
 
@@ -159,27 +160,52 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						inFilter = true
 					break
 			case  "Manhattan":
-					console.log(leafletPip.pointInLayer(point, boroughLayer.manhattan, true).length)
-					if(leafletPip.pointInLayer(point, boroughLayer.manhattan, true).length > 0)
+					if(!manhatt) {
+						addBoroughToMap(3);
+					}
+					manhatt = true;
+					console.log(leafletPip.pointInLayer(point, boroughLayer.manhattan.obj, true).length)
+					if(leafletPip.pointInLayer(point, boroughLayer.manhattan.obj, true).length > 0)
 						inFilter = true
 					break
 			case	"Brooklyn":
-					if(leafletPip.pointInLayer(point, boroughLayer.brooklyn, true).length > 0)
+					if(!brook) {
+						addBoroughToMap(2);
+					}
+					brook = true;
+
+					if(leafletPip.pointInLayer(point, boroughLayer.brooklyn.obj, true).length > 0)
 						inFilter = true
 					break;
 			case	"Queens":
-					if(leafletPip.pointInLayer(point, boroughLayer.queens, true).length > 0)
+					if(!queen) {
+						addBoroughToMap(1);
+					}
+					queen = true;
+					if(leafletPip.pointInLayer(point, boroughLayer.queens.obj, true).length > 0)
 						inFilter = true
 					break;
 			case	"Bronx":
-					if(leafletPip.pointInLayer(point, boroughLayer.bronx, true).length > 0)
+					if(!bron) {
+						addBoroughToMap(4);
+					}
+					bron = true;
+					if(leafletPip.pointInLayer(point, boroughLayer.bronx.obj, true).length > 0)
 						inFilter = true
 					break;
 			case	"Staten Island":
-					if(leafletPip.pointInLayer(point, boroughLayer.statenIsland, true).length > 0)
+					if(!staten) {
+						addBoroughToMap(0);
+					}
+					staten = true;
+					if(leafletPip.pointInLayer(point, boroughLayer.statenIsland.obj, true).length > 0)
 						inFilter = true
 					break;
 			case  "Custom":
+					if(!e.obj.custom) {
+						addCustomToMap();
+					}
+					e.obj.custom = true
 				break;
 			default:
 
@@ -364,9 +390,11 @@ map.addControl(drawControl);
 		});
 	});
 
-	/*$scope.nameChanged = function(e) {
-		e.obj.label = e.name;
-	}*/
+
+
+	$scope.nameChanged = function(e) {
+		e.obj.label= e.name;
+	}
 
 
 	//marker remove function
@@ -533,9 +561,15 @@ map.addControl(drawControl);
 		$scope.timeout = $timeout(rewind, 10);
 	}
 
+	function removeBorough(index){
+	}
+
 	$scope.clearBoroughs = function() {
-		for(x in boroughLayer)
-		boroughLayer[x].clearLayers();
+		for(x in boroughLayer){
+			//if(x.actives.length > 0)
+				boroughLayer[x].obj.clearLayers();
+		}
+
 		bron = false;
 		manhatt = false;
 		staten = false;
@@ -574,6 +608,8 @@ map.addControl(drawControl);
 		}
 		bron = true;
 	}
+
+
 	// These are holding all of our borough geoJson data
 	var statenIsland, bronx, queens, brooklyn, manhattan;
 
@@ -595,32 +631,38 @@ map.addControl(drawControl);
   		});
 
 	}
-	var boroughLayer = {}
-			boroughLayer.statenIsland = L.geoJson();
-			boroughLayer.queens = L.geoJson();
-			boroughLayer.brooklyn = L.geoJson();
-			boroughLayer.manhattan = L.geoJson();
-			boroughLayer.bronx = L.geoJson();
+	var boroughLayer = {};
+			boroughLayer.statenIsland = {}
+			boroughLayer.queens = {}
+			boroughLayer.brooklyn = {}
+			boroughLayer.manhattan = {}
+			boroughLayer.bronx = {}
+			boroughLayer.statenIsland.obj = L.geoJson();
+			boroughLayer.queens.obj = L.geoJson();
+			boroughLayer.brooklyn.obj = L.geoJson();
+			boroughLayer.manhattan.obj = L.geoJson();
+			boroughLayer.bronx.obj = L.geoJson();
+
 	for(x in boroughLayer){
-		boroughLayer[x].addTo(map);
+		boroughLayer[x].obj.addTo(map);
 	}
 
 	function addBoroughToMap(boroughNumber) {
 		switch(boroughNumber){
 			case 0:
-				boroughLayer.statenIsland.addData(statenIsland);
+				boroughLayer.statenIsland.obj.addData(statenIsland);
 				break;
 			case 1:
-				boroughLayer.queens.addData(queens);
+				boroughLayer.queens.obj.addData(queens);
 				break;
 			case 2:
-				boroughLayer.brooklyn.addData(brooklyn);
+				boroughLayer.brooklyn.obj.addData(brooklyn);
 				break;
 			case 3:
-				boroughLayer.manhattan.addData(manhattan);
+				boroughLayer.manhattan.obj.addData(manhattan);
 				break;
 			case 4:
-				boroughLayer.bronx.addData(bronx);
+				boroughLayer.bronx.obj.addData(bronx);
 				break;
 		}
 	}
