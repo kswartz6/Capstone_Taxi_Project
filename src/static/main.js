@@ -134,7 +134,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log("Fired filter function")
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
-				if(checkInFilter(e, e.filter, actives[e.index][i])){
+				if(checkInFilter(e, e.filter, actives[e.index][i].dropoff._latlng)){
 					if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
 						e.obj.markers.addLayer(actives[e.index][i].dropoff)
 					}
