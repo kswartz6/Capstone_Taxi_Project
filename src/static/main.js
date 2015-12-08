@@ -112,6 +112,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					}
 			}
 			console.log(actives)
+			renderBarChart(actives)
+			renderDonutChart(actives);
 			tweenPoints()
 		}
 	}
@@ -121,7 +123,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	}
 
 	$scope.filterPoints = function(e){
-
 		filterforCollection(e)
 	}
 
@@ -382,8 +383,7 @@ map.addControl(drawControl);
 					}
 				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null});
 
-				createBar(actives);
-				createDonutChart(actives);
+
 				updateDateTime()
 				console.log($scope.collections);
 			});

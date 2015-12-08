@@ -1,23 +1,33 @@
 //D3 histogram of region passenger count
+var margin = {top: 10, right: 30, bottom: 30, left: 30},
+		width = 500 - margin.left - margin.right,
+		height = 300 - margin.top - margin.bottom;
 
-function createBar(data){
+var barSvg = d3.select("#barChart").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+function renderBarChart(data){
+	var svg = d3.select("#barChart").selectAll("svg")
 	var record = [];
 	console.log(data)
-	var taxiData = data;
-		for (i in data){
-			record[i] = data[i].passenger_count;
+	for (i in data){
+		for (x in data[i]){
+			if(data[i][x] != undefined)
+				record.push(data[i][x].data.passenger_count);
 		}
-		console.log("printing record");
+	}
+	console.log("printing record");
 	console.log(record);
 	var values = record;
 
+	svg.selectAll("g").remove()
 
 	// A formatter for counts.
 	var formatCount = d3.format(",.0f");
-
-	var margin = {top: 10, right: 30, bottom: 30, left: 30},
-	    width = 500 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
 
 	var x = d3.scale.linear()
 	    .domain([0, 10])
@@ -36,15 +46,10 @@ function createBar(data){
 	    .scale(x)
 	    .orient("bottom");
 
-	var svg = d3.select("#barChart").append("svg")
-	    .attr("width", width + margin.left + margin.right)
-	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	var bar = svg.selectAll(".bar")
 	    .data(data)
-	  .enter().append("g")
+	  	.enter().append("g")
 	    .attr("class", "bar")
 	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
@@ -68,11 +73,16 @@ function createBar(data){
 
 //D3 Donut Chart of passenger_count
 
-function createDonutChart(data){
-	var record = [];
 
-		for (i = 0, l = data.length; i < l; ++i){
-			record[i] = data[i].passenger_count;
+
+
+function renderDonutChart(data){
+	var record = [];
+		for (var i = 0, l = data.length; i < l; ++i){
+			for (var j in data[i]){
+				if(data[i][j] != undefined)
+				record.push(data[i][j].data.passenger_count);
+			}
 		}
 
 		var One = 0;
@@ -104,6 +114,16 @@ function createDonutChart(data){
 			 		break;
 			}
 		}
+
+
+		var svg = d3.select('#donutChart')
+					 			.append('svg')
+					 			.attr('width', width)
+					 			.attr('height', height)
+					 			.append('g')
+					 			.attr('transform', 'translate(' + (width / 2) +
+					  		',' + (height / 2) + ')');
+
 		console.log(One);
         var dataset = [
 					{ label: 'One', count: One },
@@ -124,33 +144,25 @@ function createDonutChart(data){
 
         var color = d3.scale.category20b();
 
-        var svg = d3.select('#donutChart')
-          .append('svg')
-          .attr('width', width)
-          .attr('height', height)
-          .append('g')
-          .attr('transform', 'translate(' + (width / 2) +
-            ',' + (height / 2) + ')');
-
-        var arc = d3.svg.arc()
+				var arc = d3.svg.arc()
 					.innerRadius(radius - donutWidth)
-          .outerRadius(radius);
+					.outerRadius(radius);
 
-        var pie = d3.layout.pie()
-          .value(function(d) { return d.count; })
-          .sort(null);
+				var pie = d3.layout.pie()
+					.value(function(d) { return d.count; })
+					.sort(null);
+
+
+
 
 
         var tooltip = d3.select('#donutChart')
           .append('div')
           .attr('class', 'tooltip');
-
         tooltip.append('div')
           .attr('class', 'label');
-
         tooltip.append('div')
           .attr('class', 'count');
-
         tooltip.append('div')
           .attr('class', 'percent');
 
