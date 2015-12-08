@@ -208,7 +208,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					e.obj.custom = true
 				break;
 			default:
-
+		}
+	}
 
 
 	function projectPoint(x, y) {
