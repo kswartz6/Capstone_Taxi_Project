@@ -23,7 +23,6 @@
 	<script src="https://fb.me/JSXTransformer-0.13.3.js" async></script>
   <script src="/static/dist/leaflet/leaflet-src.js"></script>
   <script src="/static/dist/leaflet-draw/dist/leaflet.draw-src.js"></script>
-  <script src="/static/js/vendor/leaflet-pip.js"></script>
   <script src="/static/js/vendor/jquery-1.11.2.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
@@ -161,18 +160,14 @@
         <div ng-repeat="collection in collections"  class="dashboard-body">
           <button class="delete-button" ng-click="deletePolygon(collection)"> delete </button>
           <div>
-            <label>Name: </label>
-            <input class="collectionLabel"
-                   ng-model="collection.name"
-                   ng-init="collection.name = 'Collection'"
-                   ng-change="nameChanged(collection)"></input>
+            <span>Name: </span>
+            <span class="collection-name" contenteditable="true"></span>
           </div>
           <div class="collection-data-container">
             <label>Filter Region</label>
-            <select ng-init="collection.filter=collectionFilters[0]"
-                    ng-model="collection.filter"
-                    ng-options="filter for filter in collectionFilters"
-                    ng-change="filterPoints(collection)">
+            <select ng-init="filterRegion=collectionFilters[0]"
+                    ng-model="filterRegion"
+                    ng-options="filter for filter in collectionFilters">
             </select>
           </div>
         </div>

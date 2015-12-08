@@ -39,8 +39,7 @@ def api_structure():
 	else:
 		bounds = bounds.split(",")
 		tmp = bounds;
-		bounds = [[float(tmp[0]), float(tmp[1])], float(tmp[2])/6378100]
-		print(bounds);
+		bounds = [[float(tmp[0]), float(tmp[1])], float(tmp[2])]
 
 	q = {}
 	q["bounds"] = bounds;

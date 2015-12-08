@@ -102,22 +102,16 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				for (i in collection.pickups[x]){
 					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
 					collection.actives[collection.pickups[x][i].index] = collection.pickups[x][i]
+					actives[collection.index] = collection.actives
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
 							collection.obj.markers.addLayer(correspond[j].dropoff)
-							collection.actives[collection.pickups[x][i].index].dropoff = correspond[j].dropoff
 						}
-					actives[collection.index] = collection.actives
 					}
 			}
 			console.log(actives)
-<<<<<<< HEAD
 			UpdateChart(actives)
-=======
-			renderBarChart(actives)
-			renderDonutChart(actives);
->>>>>>> origin/master
 			tweenPoints()
 		}
 	}
@@ -126,6 +120,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	}
 
+<<<<<<< HEAD
 	$scope.filterPoints = function(e){
 		filterforCollection(e)
 	}
@@ -213,10 +208,9 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					e.obj.custom = true
 				break;
 			default:
+=======
+>>>>>>> parent of 271872a... merge conflicts
 
-		}
-		return inFilter
-	}
 
 
 	function projectPoint(x, y) {
@@ -244,7 +238,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		"Custom"
 	]
 
-
 	$scope.play = false;
 	var actives = []
 
@@ -259,7 +252,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	    	accessToken: 'pk.eyJ1IjoiY3NjaGF1ZmUiLCJhIjoiMTI1OWU4Y2FjZTgwNzE5MGFmMGRjMjc4MzQxOTRlMDgifQ.KFvjasOmW-nyz90HQktgPg'
 	}).addTo(map);
 
-	defautPolyColor = '#FF0000';
+	defautPolyColor = '#feffa3';
 
 	// Initialise the FeatureGroup to store editable layers
 	var drawnItems = new L.FeatureGroup();
@@ -346,7 +339,6 @@ map.addControl(drawControl);
 				console.log(data);
 				var pickColl = {};
 				var dropColl = {};
-				layer.setStyle({color: '#00FF66'})
 				layer.markers = L.layerGroup([]).addTo(map);
 				for (i = 0, l = data.length; i < l; ++i){
 						var pickIcon = L.icon({
@@ -385,25 +377,16 @@ map.addControl(drawControl);
 						}
 						dropColl[dropLocName].push(dropLoc);
 					}
-<<<<<<< HEAD
 				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}});
 				createBar(actives);
-=======
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null});
-
-
->>>>>>> origin/master
 				updateDateTime()
 				console.log($scope.collections);
 			});
 		});
+
+
 	});
 
-
-
-	$scope.nameChanged = function(e) {
-		e.obj.label= e.name;
-	}
 
 
 	//marker remove function
@@ -570,15 +553,8 @@ map.addControl(drawControl);
 		$scope.timeout = $timeout(rewind, 10);
 	}
 
-	function removeBorough(index){
-	}
-
 	$scope.clearBoroughs = function() {
-		for(x in boroughLayer){
-			//if(x.actives.length > 0)
-				boroughLayer[x].obj.clearLayers();
-		}
-
+		boroughLayer.clearLayers();
 		bron = false;
 		manhatt = false;
 		staten = false;
@@ -617,8 +593,6 @@ map.addControl(drawControl);
 		}
 		bron = true;
 	}
-
-
 	// These are holding all of our borough geoJson data
 	var statenIsland, bronx, queens, brooklyn, manhattan;
 
@@ -640,38 +614,25 @@ map.addControl(drawControl);
   		});
 
 	}
-	var boroughLayer = {};
-			boroughLayer.statenIsland = {}
-			boroughLayer.queens = {}
-			boroughLayer.brooklyn = {}
-			boroughLayer.manhattan = {}
-			boroughLayer.bronx = {}
-			boroughLayer.statenIsland.obj = L.geoJson();
-			boroughLayer.queens.obj = L.geoJson();
-			boroughLayer.brooklyn.obj = L.geoJson();
-			boroughLayer.manhattan.obj = L.geoJson();
-			boroughLayer.bronx.obj = L.geoJson();
-
-	for(x in boroughLayer){
-		boroughLayer[x].obj.addTo(map);
-	}
+	var boroughLayer = L.geoJson();
+	boroughLayer.addTo(map);
 
 	function addBoroughToMap(boroughNumber) {
 		switch(boroughNumber){
 			case 0:
-				boroughLayer.statenIsland.obj.addData(statenIsland);
+				boroughLayer.addData(statenIsland);
 				break;
 			case 1:
-				boroughLayer.queens.obj.addData(queens);
+				boroughLayer.addData(queens);
 				break;
 			case 2:
-				boroughLayer.brooklyn.obj.addData(brooklyn);
+				boroughLayer.addData(brooklyn);
 				break;
 			case 3:
-				boroughLayer.manhattan.obj.addData(manhattan);
+				boroughLayer.addData(manhattan);
 				break;
 			case 4:
-				boroughLayer.bronx.obj.addData(bronx);
+				boroughLayer.addData(bronx);
 				break;
 		}
 	}
