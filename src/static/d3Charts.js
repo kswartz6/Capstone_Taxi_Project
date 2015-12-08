@@ -1,13 +1,19 @@
 //D3 histogram of region passenger count
 
-function createBar(data){
+function createBar(actives){
 	var record = [];
-	console.log(data)
-	var taxiData = data;
-		for (i in data){
-			record[i] = data[i].passenger_count;
-		}
-		console.log("printing record");
+	var i=0;
+	for( var x in actives){
+		for( y in actives[x])
+			for( z in actives[x][y]){
+				console.log(actives[x][y][z].passenger_count)
+				if(actives[x][y][z].passenger_count !=null){
+					record[i] = actives[x][y][z].passenger_count
+					++i
+			}
+			}
+}
+	console.log("printing record");
 	console.log(record);
 	var values = record;
 
@@ -36,7 +42,7 @@ function createBar(data){
 	    .scale(x)
 	    .orient("bottom");
 
-	var svg = d3.select("#barChart").append("svg")
+	var svg = d3.select("#barChart").append("svg").attr("class","barDiv")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
@@ -71,9 +77,21 @@ function createBar(data){
 function createDonutChart(data){
 	var record = [];
 
-		for (i = 0, l = data.length; i < l; ++i){
-			record[i] = data[i].passenger_count;
-		}
+	var record = [];
+	var i=0;
+	for( var x in actives){
+		for( y in actives[x])
+			for( z in actives[x][y]){
+				console.log(actives[x][y][z].passenger_count)
+				if(actives[x][y][z].passenger_count !=null){
+					record[i] = actives[x][y][z].passenger_count
+					++i
+			}
+			}
+}
+	console.log("printing record");
+	console.log(record);
+	var values = record;
 
 		var One = 0;
 		var Two = 0;
@@ -124,7 +142,7 @@ function createDonutChart(data){
 
         var color = d3.scale.category20b();
 
-        var svg = d3.select('#donutChart')
+        var svg = d3.select('#donutChart').attr("class","donutDiv")
           .append('svg')
           .attr('width', width)
           .attr('height', height)
@@ -203,3 +221,10 @@ function createDonutChart(data){
 				.text(function(d) { return d; });
 
       }
+	function UpdateChart(actives)
+	{
+		d3.select("barDiv").remove()
+		d3.select(".bar").remove()
+		d3.select("svg").remove()
+		createBar(actives)
+	}

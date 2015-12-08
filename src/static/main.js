@@ -112,6 +112,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					}
 			}
 			console.log(actives)
+			UpdateChart(actives)
 			tweenPoints()
 		}
 	}
@@ -121,7 +122,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	}
 
 	$scope.filterPoints = function(e){
-
 		filterforCollection(e)
 	}
 
@@ -129,7 +129,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log("Fired filter function")
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
-				if(checkInFilter(e, e.filter, actives[e.index][i])){
+				if(checkInFilter(e, e.filter, actives[e.index][i].dropoff._latlng)){
 					if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
 						e.obj.markers.addLayer(actives[e.index][i].dropoff)
 					}
@@ -381,9 +381,7 @@ map.addControl(drawControl);
 						dropColl[dropLocName].push(dropLoc);
 					}
 				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null});
-
 				createBar(actives);
-				createDonutChart(actives);
 				updateDateTime()
 				console.log($scope.collections);
 			});
