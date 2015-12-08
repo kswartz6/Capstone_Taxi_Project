@@ -1,5 +1,9 @@
 //D3 histogram of region passenger count
+var margin = {top: 10, right: 30, bottom: 30, left: 30},
+		width = 500 - margin.left - margin.right,
+		height = 300 - margin.top - margin.bottom;
 
+<<<<<<< HEAD
 function createBar(actives){
 	var record = [];
 	var i=0;
@@ -13,17 +17,33 @@ function createBar(actives){
 			}
 			}
 }
+=======
+var barSvg = d3.select("#barChart").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+function renderBarChart(data){
+	var svg = d3.select("#barChart").selectAll("svg")
+	var record = [];
+	console.log(data)
+	for (i in data){
+		for (x in data[i]){
+			if(data[i][x] != undefined)
+				record.push(data[i][x].data.passenger_count);
+		}
+	}
+>>>>>>> origin/master
 	console.log("printing record");
 	console.log(record);
 	var values = record;
 
+	svg.selectAll("g").remove()
 
 	// A formatter for counts.
 	var formatCount = d3.format(",.0f");
-
-	var margin = {top: 10, right: 30, bottom: 30, left: 30},
-	    width = 500 - margin.left - margin.right,
-	    height = 500 - margin.top - margin.bottom;
 
 	var x = d3.scale.linear()
 	    .domain([0, 10])
@@ -42,15 +62,18 @@ function createBar(actives){
 	    .scale(x)
 	    .orient("bottom");
 
+<<<<<<< HEAD
 	var svg = d3.select("#barChart").append("svg").attr("class","barDiv")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+=======
+>>>>>>> origin/master
 
 	var bar = svg.selectAll(".bar")
 	    .data(data)
-	  .enter().append("g")
+	  	.enter().append("g")
 	    .attr("class", "bar")
 	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
@@ -74,9 +97,8 @@ function createBar(actives){
 
 //D3 Donut Chart of passenger_count
 
-function createDonutChart(data){
-	var record = [];
 
+<<<<<<< HEAD
 	var record = [];
 	var i=0;
 	for( var x in actives){
@@ -92,6 +114,18 @@ function createDonutChart(data){
 	console.log("printing record");
 	console.log(record);
 	var values = record;
+=======
+
+
+function renderDonutChart(data){
+	var record = [];
+		for (var i = 0, l = data.length; i < l; ++i){
+			for (var j in data[i]){
+				if(data[i][j] != undefined)
+				record.push(data[i][j].data.passenger_count);
+			}
+		}
+>>>>>>> origin/master
 
 		var One = 0;
 		var Two = 0;
@@ -122,6 +156,16 @@ function createDonutChart(data){
 			 		break;
 			}
 		}
+
+
+		var svg = d3.select('#donutChart')
+					 			.append('svg')
+					 			.attr('width', width)
+					 			.attr('height', height)
+					 			.append('g')
+					 			.attr('transform', 'translate(' + (width / 2) +
+					  		',' + (height / 2) + ')');
+
 		console.log(One);
         var dataset = [
 					{ label: 'One', count: One },
@@ -142,6 +186,7 @@ function createDonutChart(data){
 
         var color = d3.scale.category20b();
 
+<<<<<<< HEAD
         var svg = d3.select('#donutChart').attr("class","donutDiv")
           .append('svg')
           .attr('width', width)
@@ -151,24 +196,27 @@ function createDonutChart(data){
             ',' + (height / 2) + ')');
 
         var arc = d3.svg.arc()
+=======
+				var arc = d3.svg.arc()
+>>>>>>> origin/master
 					.innerRadius(radius - donutWidth)
-          .outerRadius(radius);
+					.outerRadius(radius);
 
-        var pie = d3.layout.pie()
-          .value(function(d) { return d.count; })
-          .sort(null);
+				var pie = d3.layout.pie()
+					.value(function(d) { return d.count; })
+					.sort(null);
+
+
+
 
 
         var tooltip = d3.select('#donutChart')
           .append('div')
           .attr('class', 'tooltip');
-
         tooltip.append('div')
           .attr('class', 'label');
-
         tooltip.append('div')
           .attr('class', 'count');
-
         tooltip.append('div')
           .attr('class', 'percent');
 

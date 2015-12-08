@@ -60,7 +60,7 @@ def circleQuery(queryRequest, pickupDropoff):
 	if(pickupDropoff):
 		cursor = db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
 		"pickup_loc.loc":{"$geoWithin": {"$center": queryRequest["bounds"]}}
-		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)	
+		},{"_id":0, "trip_distance":0,"vendor_id":0,"rate_code":0,"hack_license":0}, batch_size=2000)
 	else:
 		cursor = db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
 		"dropoff_loc.loc":{"$geoWithin": {"$center": queryRequest["bounds"]}}
