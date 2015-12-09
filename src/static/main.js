@@ -32,8 +32,8 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 //controller for mapView
 app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
-	$scope.currentDateTime.MM   = 1;
-	$scope.currentDateTime.DD   = 1;
+	$scope.currentDateTime.MM   = 3;
+	$scope.currentDateTime.DD   = 25;
 	$scope.currentDateTime.YYYY = 2013;
 	$scope.currentDateTime.hours = 8;
 	$scope.currentDateTime.minutes = 29;
@@ -127,6 +127,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	function filterforCollection(e){
 		console.log("Fired filter function")
+		e.filterObj.clearLayers()
+		e.filterObj.setStyle({opacity : 0.9})
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
 				if(checkInFilter(e, e.filter, actives[e.index][i].dropoff._latlng)){
@@ -154,10 +156,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		switch (label){
 			case	"None":
 					inFilter = true
-					break
-			case	"Self":
-					leafletPip.pointInLayer(point, e, true)
-						inFilter = true
 					break
 			case  "Manhattan":
 					if(!manhatt) {
@@ -201,14 +199,17 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					if(leafletPip.pointInLayer(point, boroughLayer.statenIsland.obj, true).length > 0)
 						inFilter = true
 					break;
-			case  "Custom":
-					if(!e.obj.custom) {
-						addCustomToMap();
-					}
-					e.obj.custom = true
-				break;
 			default:
-
+				console.log("Custom Filter triggered")
+				console.log(label)
+				inFilter = true
+				for(var i in $scope.collections){
+					if($scope.collections[i].name == label){
+						console.log("Found the filter!")
+						$scope.collections[i].filterObj.addData($scope.collections[i].obj.toGeoJSON());
+						inFilter = (leafletPip.pointInLayer(point, $scope.collections[i].filterObj, true).length > 0)
+					}
+				}
 		}
 		return inFilter
 	}
@@ -235,8 +236,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		"Brooklyn",
 		"Queens",
 		"Bronx",
-		"Staten Island",
-		"Custom"
+		"Staten Island"
 	]
 
 
@@ -380,7 +380,9 @@ map.addControl(drawControl);
 						}
 						dropColl[dropLocName].push(dropLoc);
 					}
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null});
+				var filterObj = L.geoJson().addTo(map)
+
+				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null, filterObj:filterObj});
 				createBar(actives);
 				updateDateTime()
 				console.log($scope.collections);
