@@ -111,6 +111,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					actives[collection.index] = collection.actives
 					}
 			}
+			filterforCollection(collection)
 			console.log(actives)
 			UpdateChart(actives)
 			tweenPoints()
@@ -122,14 +123,18 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	}
 
 	$scope.filterPoints = function(e){
+		changeFilter(e)
 		filterforCollection(e)
+	}
+
+	function changeFilter(e){
+		e.filterObj.clearLayers()
+		e.hasFilter = false;
+		initializeFilter(e, e.filter)
 	}
 
 	function filterforCollection(e){
 		console.log("Fired filter function")
-		e.filterObj.clearLayers()
-		e.hasFilter = false;
-		initializeFilter(e, e.filter)
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
 				if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
@@ -310,7 +315,7 @@ map.addControl(drawControl);
 		layer = e.layer;
 		var polygonRefID = $scope.collections.length;
 		var pointString = "";
-		
+
 		if(type === 'rectangle' || type === 'polygon'){
 			var bounds = (layer.getLatLngs());
 			console.log(bounds);
