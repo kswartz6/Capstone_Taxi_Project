@@ -4,7 +4,7 @@ import ast
 from bson.son import SON
 from datetime import *
 
-MONGO_DB_URI = "mongodb://localhost:27017/csf2015capstone"
+MONGO_DB_URI = "mongodb://localhost:27017"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 
