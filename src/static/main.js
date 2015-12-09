@@ -348,7 +348,8 @@ map.addControl(drawControl);
 				var dropColl = {};
 				layer.setStyle({color: '#00FF66'})
 				layer.markers = L.layerGroup([]).addTo(map);
-				for (i = 0, l = data.length; i < l; ++i){
+				for (i = 0, l = data.pickup.length; i < l; ++i){
+						var data = data.pickup[i]
 						var pickIcon = L.icon({
 								iconUrl: 'static/images/BlueMarker.png',
 								iconSize: [4, 4],
