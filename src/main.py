@@ -37,6 +37,7 @@ def api_structure():
 			bounds.append(i)
 		
 	else:
+		print("CIRCLE")
 		bounds = bounds.split(",")
 		tmp = bounds;
 		bounds = [[float(tmp[0]), float(tmp[1])], float(tmp[2])]

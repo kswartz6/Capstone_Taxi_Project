@@ -1,11 +1,10 @@
 import pymongo
 from bson.json_util import dumps
-import ujson
 import ast
 from bson.son import SON
 from datetime import *
 
-MONGO_DB_URI = "mongodb://localhost:27017/csf2015capstone"
+MONGO_DB_URI = "mongodb://localhost:27017"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 
@@ -38,7 +37,7 @@ def cleanupDate(document):
 
 		pickup_date = datetime.strptime(document["pickup_datetime"]["date"], "%Y-%m-%dT%H:%M:%S:%fZ")
 		dropoff_date = datetime.strptime(document["dropoff_datetime"]["date"], "%Y-%m-%dT%H:%M:%S:%fZ")
-		#cool = atetime.ISODate(cool)
+
 		document["pickup_datetime"]["date"] = pickup_date
 		document["dropoff_datetime"]["date"] = dropoff_date
 
@@ -50,7 +49,7 @@ def cleanupData():
 	cursor = db.taxitest.find()
 	current_doc_number = 1
 	for document in cursor :
-		if(current_doc_number <= 0):
+		if(("pickup_longitude" in document) != True):
 			current_doc_number += 1
 			print("Skipping: " + str(current_doc_number))
 			continue
@@ -83,12 +82,6 @@ def cleanupData():
 		print("done updating: " + str(current_doc_number))
 		current_doc_number += 1
 
-	print("Currently creating geospatial indexing on pickup_loc")
-	#db.taxitest.create_index({"pickup_loc.loc", pymongo.GEO2D})
-
-	print("Currently creating geospatial indexing on dropoff_loc")
-	#db.taxitest.create_index({"dropoff_loc.loc", pymongo.GEO2D})
-
 def clearnupOutOfRangePoints() :
 	cursor = db.taxitest.find()
 	current_doc = 1
@@ -102,6 +95,10 @@ def clearnupOutOfRangePoints() :
 		print("Currently looking at document: " + str(current_doc))
 		current_doc += 1
 		if(pickup == None or dropoff == None) :
+			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
+			db.taxitest.remove(document["_id"])
+			continue
+		if(isinstance(pickup[0], str) or isinstance(pickup[1], str) or isinstance(dropoff[0], str) or isinstance(dropoff[1], str)):
 			print("removing record: " + str(current_doc - 1) + " with _id: " + str(document["_id"]))
 			db.taxitest.remove(document["_id"])
 			continue
@@ -124,11 +121,12 @@ def clearnupOutOfRangePoints() :
 
 
 def buildIndexes() :
-#	#cursor = db.taxitest.find().limit(5)
-#	#for document in cursor :
-#	#	print(document)
 	print("Currently creating geospatial indexing on pickup_loc")
-	db.taxitest.create_index([("pickup_loc.loc",pymongo.GEO2D),("pickup_datetime.date",pymongo.ASCENDING)])
+	db.taxitest.create_index([("pickup_loc.loc",pymongo.GEO2D), ('pickup_datetime.date', pymongo.ASCENDING)])
 
-	print("Currently creating geospatial indexing on dropoff_loc")
-	db.taxitest.create_index([("dropoff_loc.loc",pymongo.GEO2D),("dropoff_datetime.date",pymongo.ASCENDING)])
+	#print("Currently creating geospatial indexing on dropoff_loc")
+	#db.taxitest.create_index([("dropoff_loc.loc",pymongo.GEO2D)])
+
+#cleanupData()
+#clearnupOutOfRangePoints()
+buildIndexes()
