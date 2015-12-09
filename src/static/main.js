@@ -341,54 +341,63 @@ map.addControl(drawControl);
 			params: {"bounds": pointString,
 							 "datetime": $scope.currentDateTime.formatted,
 							 "type": type} })
-			newtestStructure.success(function(data, status, headers, config) {
+			newtestStructure.success(function(dat, status, headers, config) {
 				console.log("success!")
-				console.log(data);
+				console.log(dat);
 				var pickColl = {};
 				var dropColl = {};
 				layer.setStyle({color: '#00FF66'})
 				layer.markers = L.layerGroup([]).addTo(map);
-				for (i = 0, l = data.pickup.length; i < l; ++i){
-						var data = data.pickup[i]
-						var pickIcon = L.icon({
-								iconUrl: 'static/images/BlueMarker.png',
-								iconSize: [4, 4],
-						});
-						var dropIcon = L.icon({
-								iconUrl: 'static/images/RedMarker.png',
-								iconSize: [4, 4],
-						});
-						var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
-						var dropoff = L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropIcon})
-						var dropLocName = data[i].dropoff_datetime.date.$date
-						var pickLocName = data[i].pickup_datetime.date.$date
+				var pickIcon = L.icon({
+						iconUrl: 'static/images/BlueMarker.png',
+						iconSize: [4, 4],
+				});
+				var dropIcon = L.icon({
+						iconUrl: 'static/images/RedMarker.png',
+						iconSize: [4, 4],
+				});
+				for(var x in dat){
+					var subcat = dat[x]
+					console.log(dat[x])
+					for (var i = 0, l = subcat.length; i < l; ++i){
+							var data = subcat
+							var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
+							var dropoff = L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropIcon})
+							var dropLocName = data[i].dropoff_datetime.date.$date
+							var pickLocName = data[i].pickup_datetime.date.$date
+							var dropLoc = {};
+							dropLoc.dropoff = dropoff;
+							dropLoc.removeTime = data[i].pickup_datetime.date.$date
+							//Because pickups are used for determining plotting, we'll
+							//associate data to this object.
+							var pickLoc = {}
+							pickLoc.pickup = pickup
+							pickLoc.removeTime = data[i].dropoff_datetime.date.$date
+							pickLoc.index = i
+							pickLoc.data = data[i]
 
-						var dropLoc = {};
-						dropLoc.dropoff = dropoff;
-						dropLoc.removeTime = data[i].pickup_datetime.date.$date
+							if (pickColl[pickLocName] === undefined){
+								pickColl[pickLocName] = [];
+							}
+							pickColl[pickLocName].push(pickLoc);
 
-						//Because pickups are used for determining plotting, we'll
-						//associate data to this object.
-						var pickLoc = {}
-						pickLoc.pickup = pickup
-						pickLoc.removeTime = data[i].dropoff_datetime.date.$date
-						pickLoc.index = i
-						pickLoc.data = data[i]
-
-
-						if (pickColl[pickLocName] === undefined){
-							pickColl[pickLocName] = [];
+							if (dropColl[dropLocName] === undefined){
+								dropColl[dropLocName] = [];
+							}
+							dropColl[dropLocName].push(dropLoc);
 						}
-						pickColl[pickLocName].push(pickLoc);
-
-						if (dropColl[dropLocName] === undefined){
-							dropColl[dropLocName] = [];
-						}
-						dropColl[dropLocName].push(dropLoc);
 					}
 				var filterObj = L.geoJson().addTo(map)
 
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null, filterObj:filterObj});
+				$scope.collections.push({obj: layer,
+																 index: polygonRefID,
+																 pickups:pickColl,
+																 dropoffs:dropColl,
+																 viewPickups:true,
+																 viewDropoffs:true,
+																 actives:{},
+																 filter:null,
+																 filterObj:filterObj});
 				createBar(actives);
 				updateDateTime()
 				console.log($scope.collections);
