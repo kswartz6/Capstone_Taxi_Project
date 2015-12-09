@@ -129,9 +129,10 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log("Fired filter function")
 		e.filterObj.clearLayers()
 		e.hasFilter = false;
+		initializeFilter(e, e.filter)
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
-				if(checkInFilter(e, e.filter, actives[e.index][i].dropoff._latlng)){
+				if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
 					if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
 						e.obj.markers.addLayer(actives[e.index][i].dropoff)
 					}
@@ -151,12 +152,10 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		e.filterObj.setStyle({fillOpacity : 0.5, opacity:0.5, fillColor: '#fff'})
 	}
 
-//statenIsland, bronx, queens, brooklyn, manhattan;
-	function checkInFilter(e, label, point){
-		var inFilter = false
+	function initializeFilter(e, label){
 		switch (label){
 			case	"None":
-					inFilter = true
+					e.hasFilter = false
 					break
 			case  "Manhattan":
 					console.log(manhattan)
@@ -164,64 +163,56 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						e.filterObj.addData(manhattan)
 						e.hasFilter = true
 					}
-
-					console.log(leafletPip.pointInLayer(point, boroughLayer.manhattan.obj, true).length)
-					if(leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
-						inFilter = true
 					break
 			case	"Brooklyn":
 					if(!e.hasFilter) {
 						e.filterObj.addData(brooklyn);
 						e.hasFilter = true
 					}
-
-					if(leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
-						inFilter = true
 					break;
 			case	"Queens":
 					if(!e.hasFilter) {
 						e.filterObj.addData(queens);
 						e.hasFilter = true
 					}
-					queen = true;
-					if(leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
-						inFilter = true
 					break;
 			case	"Bronx":
 					if(!e.hasFilter) {
 						e.filterObj.addData(bronx)
 						e.hasFilter = true
 					}
-					bron = true;
-					if(leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
-						inFilter = true
 					break;
 			case	"Staten Island":
 					if(!e.hasFilter) {
 						e.filterObj.addData(statenIsland)
-						e.hasFitler = true
+						e.hasFilter = true
 					}
-					if(leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
-						inFilter = true
 					break;
 			default:
 				console.log("Custom Filter triggered")
 				console.log(label)
-				inFilter = true
-				var i = 0;
-				for(i in $scope.collections){
+				for(var i in $scope.collections){
 					if($scope.collections[i].name == label){
 						console.log("Found the filter!")
 						if(!(e.hasFilter)){
 							e.filterObj.addData($scope.collections[i].obj.toGeoJSON());
 							e.hasFilter = true;
 						}
-						inFilter = (leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
 					}
 				}
+			}
 		}
-		return inFilter
-	}
+
+//statenIsland, bronx, queens, brooklyn, manhattan;
+	function checkInFilter(e, point){
+		var inFilter = false
+		if(e.hasFilter){
+			inFilter = (leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
+		} else {
+			inFilter = true
+		}
+			return inFilter;
+		}
 
 
 	function projectPoint(x, y) {
@@ -402,6 +393,7 @@ map.addControl(drawControl);
 
 	$scope.nameChanged = function(e) {
 		e.obj.label= e.name;
+		$scope.collectionFilters[e.index + 6] = e.name
 	}
 
 
@@ -414,6 +406,7 @@ map.addControl(drawControl);
 	$scope.deletePolygon = function(e){
 		actives.splice($scope.collections.indexOf(e), 1);
 		$scope.collections.splice($scope.collections.indexOf(e), 1);
+		window.map.removeLayer(e.filterObj)
 		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
 	}
