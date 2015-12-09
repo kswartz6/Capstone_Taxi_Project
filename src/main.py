@@ -41,9 +41,12 @@ def api_structure():
 	q["p_dt"] = formatDT
 
 	if(geometryType == "rectangle" or geometryType == "polygon"):
-		cursor = polygonQuery(q, True)
+		#cursor = polygonQuery(q, True)
 		print("Received cursor")
-		return cursor
+		polygonReturns = {}
+		polygonReturns["pickup"] = polygonQueryPickup(q)
+		polygonReturns["dropoff"] = polygonQueryDropoff(q)
+		return polygonReturns
 	elif(geometryType == "circle"):
 		cursor = circleQuery(q, True)
 		print("Received cursor")

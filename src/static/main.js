@@ -397,12 +397,24 @@ map.addControl(drawControl);
 
 
 	$scope.nameChanged = function(e) {
+		var isRepeat = false;
+		for(var i = 0; i < $scope.collectionFilters.length; ++i) {
+			if(e.name === $scope.collectionFilters[i]) {
+				isRepeat = true;
+				break;
+			}
+		}
+		if(isRepeat) {
+			window.alert("Cannot have duplicate region names! Please revise the collection name");
+			e.name = e.obj.label;
+			return;
+		}
 		e.obj.label= e.name;
 		$scope.collectionFilters[e.index + 6] = e.name
 	}
 
 
-	//marker remove function
+	//marker remove function + e.index
 	function removeMarker(e){
 		window.map.removeLayer(e);
 	}

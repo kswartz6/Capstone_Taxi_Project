@@ -163,7 +163,7 @@
             <label>Name: </label>
             <input class="collectionLabel"
                    ng-model="collection.name"
-                   ng-init="collection.name = 'Collection ' + (collection.index + 1); collectionFilters.push(collection.name);"
+                   ng-init="collection.name = 'Collection ' + (collection.index + 1); collection.obj.label = collection.name; collectionFilters.push(collection.name);"
                    ng-change="nameChanged(collection)"></input>
           </div>
           <div class="collection-data-container">
