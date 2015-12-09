@@ -29,7 +29,7 @@ def polygonQuery(queryRequest, pickupDropoff):
 	d = datetime(int(d[0]), int(d[1]), int(d[2]), int(d[3]), int(d[4]), int(d[5]))
 	ud = d + timedelta(hours=6)
 	ld = d + timedelta(hours= -6)
-	
+
 	#"pickup_datetime.date":d is the pickup query param
 	# cursor = db.taxitest.find({ 'pickup_loc.loc' : { '$geoNear' : [-73.980072, 40.743137]}}).limit(5)
 	print("Launching find")
@@ -103,4 +103,3 @@ def circleQuery(queryRequest, pickupDropoff):
 	#return 1
 #	below is sample query for a given location
 # 	cursor = db.taxitest.find({"pickup_loc" : { "loc" : {"$near": [-73.980072, 40.743137]}}}).limit(3)
-
