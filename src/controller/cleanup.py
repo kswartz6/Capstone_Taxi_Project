@@ -43,8 +43,6 @@ def cleanupDate(document):
 
 		return document
 
-
-
 def cleanupData():
 	cursor = db.taxitest.find()
 	current_doc_number = 1
@@ -119,14 +117,13 @@ def clearnupOutOfRangePoints() :
 			db.taxitest.remove(document["_id"])
 			continue
 
-
 def buildIndexes() :
 	print("Currently creating geospatial indexing on pickup_loc")
 	db.taxitest.create_index([("pickup_loc.loc",pymongo.GEO2D), ('pickup_datetime.date', pymongo.ASCENDING)])
 
-	#print("Currently creating geospatial indexing on dropoff_loc")
-	#db.taxitest.create_index([("dropoff_loc.loc",pymongo.GEO2D)])
+	print("Currently creating geospatial indexing on dropoff_loc")
+	db.taxitest.create_index([("dropoff_loc.loc",pymongo.GEO2D), ('dropoff_datetime.date', pymongo.ASCENDING)])
 
-#cleanupData()
-#clearnupOutOfRangePoints()
+cleanupData()
+clearnupOutOfRangePoints()
 buildIndexes()
