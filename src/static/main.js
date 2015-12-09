@@ -128,7 +128,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	function filterforCollection(e){
 		console.log("Fired filter function")
 		e.filterObj.clearLayers()
-		e.filterObj.setStyle({opacity : 0.9})
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
 				if(checkInFilter(e, e.filter, actives[e.index][i].dropoff._latlng)){
@@ -148,6 +147,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				}
 			}
 		}
+		e.filterObj.setStyle({fillOpacity : 0.1, opacity:0.1, fillColor: '#fff'})
 	}
 
 //statenIsland, bronx, queens, brooklyn, manhattan;
