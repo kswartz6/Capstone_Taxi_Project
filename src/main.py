@@ -5,11 +5,6 @@ import json
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
 from controller.query import *
 
-#for keys, values in json.items():
- #   print(keys)
-  #  print(values)
-#print(json)
-
 webapp = Flask(__name__)
 @webapp.route("/")
 def root():
@@ -35,7 +30,6 @@ def api_structure():
 				j = float(j)
 				i.append(j)
 			bounds.append(i)
-		
 	else:
 		print("CIRCLE")
 		bounds = bounds.split(",")
@@ -54,10 +48,6 @@ def api_structure():
 		cursor = circleQuery(q, True)
 		print("Received cursor")
 		return cursor
-	
-	# js = json.dumps(cursor.collection)
-	# resp = Response(js, status=200, mimetype='application/json')
-	# return resp
 	
 
 @webapp.route("/api/test")
