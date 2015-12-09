@@ -48,9 +48,11 @@ def api_structure():
 		polygonReturns["dropoff"] = polygonQueryDropoff(q)
 		return dumps(polygonReturns)
 	elif(geometryType == "circle"):
-		cursor = circleQuery(q, True)
+		circleReturns = {}
+		circleReturns["pickup"] = circleQueryPickup(q)
+		circleReturns["dropoff"] = circleQueryDropoff(q)
 		print("Received cursor")
-		return cursor
+		return dumps(circleReturns)
 
 #server initializiation
 if __name__ == "__main__":
