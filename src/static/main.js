@@ -104,7 +104,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
-							if(checkInFilter(e, correspond[j].dropoff)){
+							if(checkInFilter(collection, correspond[j].dropoff)){
 								collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
 								collection.obj.markers.addLayer(correspond[j].dropoff)
 							}
