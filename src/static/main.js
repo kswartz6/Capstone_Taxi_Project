@@ -100,18 +100,19 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			if (typeof collection.pickups[x] == "undefined"){
 			} else {
 				for (i in collection.pickups[x]){
-					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
 					collection.actives[collection.pickups[x][i].index] = collection.pickups[x][i]
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
-							collection.obj.markers.addLayer(correspond[j].dropoff)
+							if(checkInFilter(e, correspond[j].dropoff)){
+								collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
+								collection.obj.markers.addLayer(correspond[j].dropoff)
+							}
 							collection.actives[collection.pickups[x][i].index].dropoff = correspond[j].dropoff
 						}
 					actives[collection.index] = collection.actives
 					}
 			}
-			filterforCollection(collection)
 			console.log(actives)
 			UpdateChart(actives)
 			tweenPoints()
