@@ -311,7 +311,7 @@ map.addControl(drawControl);
 		layer = e.layer;
 		var polygonRefID = $scope.collections.length;
 		var pointString = "";
-
+		
 		if(type === 'rectangle' || type === 'polygon'){
 			var bounds = (layer.getLatLngs());
 			console.log(bounds);

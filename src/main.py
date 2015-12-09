@@ -40,7 +40,7 @@ def api_structure():
 		print("CIRCLE")
 		bounds = bounds.split(",")
 		tmp = bounds;
-		bounds = [[float(tmp[0]), float(tmp[1])], float(tmp[2])]
+		bounds = [[float(tmp[0]), float(tmp[1])], float(tmp[2])/6378100]
 
 	q = {}
 	q["bounds"] = bounds;
@@ -50,7 +50,7 @@ def api_structure():
 		cursor = polygonQuery(q, True)
 		print("Received cursor")
 		return cursor
-	else:
+	elif(geometryType == "circle"):
 		cursor = circleQuery(q, True)
 		print("Received cursor")
 		return cursor
