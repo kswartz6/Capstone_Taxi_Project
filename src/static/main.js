@@ -32,7 +32,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
 	$scope.currentDateTime.MM   = 1;
 	$scope.currentDateTime.DD   = 1;
-	$scope.currentDateTime.YYYY = 2013;
+	$scope.currentDateTime.YYYY = 1;
 	$scope.currentDateTime.hours = 8;
 	$scope.currentDateTime.minutes = 29;
 	$scope.currentDateTime.seconds = 59;
@@ -40,7 +40,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		$scope.currentDateTime.YYYY,
 		$scope.currentDateTime.MM - 1,
 		$scope.currentDateTime.DD,
-		$scope.currentDateTime.hours - 5,
+		$scope.currentDateTime.hours - 4,
 		$scope.currentDateTime.minutes,
 		$scope.currentDateTime.seconds
 	).getTime()
@@ -57,7 +57,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			$scope.currentDateTime.YYYY,
 			$scope.currentDateTime.MM - 1,
 			$scope.currentDateTime.DD,
-			$scope.currentDateTime.hours - 5,
+			$scope.currentDateTime.hours - 4,
 			$scope.currentDateTime.minutes,
 			$scope.currentDateTime.seconds
 		).getTime()
@@ -129,48 +129,23 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log("Fired filter function")
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
-				if(e.viewPickups && e.viewDropoffs){
-					if((checkInFilter(e, actives[e.index][i].dropoff._latlng)) ||
-						 (checkInFilter(e, actives[e.index][i].pickup._latlng))){
-						if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-							e.obj.markers.addLayer(actives[e.index][i].dropoff)
-						}
-						if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-							e.obj.markers.addLayer(actives[e.index][i].pickup)
-						}
-					} else {
-						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-							e.obj.markers.removeLayer(actives[e.index][i].dropoff)
-						}
-						if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-							e.obj.markers.removeLayer(actives[e.index][i].pickup)
-						}
-					}
-				}
-				else if(!e.viewPickups && e.viewDropoffs){
-					if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
-						if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-							e.obj.markers.addLayer(actives[e.index][i].dropoff)
-						}
-						if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-							e.obj.markers.addLayer(actives[e.index][i].pickup)
-						}
-					} else {
-						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-							e.obj.markers.removeLayer(actives[e.index][i].dropoff)
-						}
-						if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-							e.obj.markers.removeLayer(actives[e.index][i].pickup)
-						}
-					}
-				}
-				else if(!e.viewDropoffs && e.viewPickups){
-					if(checkInFilter(e, actives[e.index][i].pickup._latlng)){
-						if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-							e.obj.markers.addLayer(actives[e.index][i].dropoff)
-						}
-						if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-							e.obj.markers.addLayer(actives[e.index][i].pickup)
+				var currentPair = actives[e.index][i]
+				if (currentPair.subcat == "dropoff"){
+					if(e.viewDropoffs){
+						if(checkInFilter(e, actives[e.index][i].pickup._latlng)){
+							if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+								e.obj.markers.addLayer(actives[e.index][i].dropoff)
+							}
+							if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+								e.obj.markers.addLayer(actives[e.index][i].pickup)
+							}
+						} else {
+							if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+								e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+							}
+							if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+								e.obj.markers.removeLayer(actives[e.index][i].pickup)
+							}
 						}
 					} else {
 						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
@@ -181,13 +156,34 @@ app.controller("mapView", function($scope,$http, $timeout) {
 						}
 					}
 				} else {
-					if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-						e.obj.markers.removeLayer(actives[e.index][i].dropoff)
-					}
-					if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-						e.obj.markers.removeLayer(actives[e.index][i].pickup)
+					if(e.viewPickups){
+						if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
+							if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+								e.obj.markers.addLayer(actives[e.index][i].dropoff)
+							}
+							if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+								e.obj.markers.addLayer(actives[e.index][i].pickup)
+							}
+						} else {
+							if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+								e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+							}
+							if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+								e.obj.markers.removeLayer(actives[e.index][i].pickup)
+							}
+						}
+					} else{
+						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+						}
+						if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.removeLayer(actives[e.index][i].pickup)
+						}
 					}
 				}
+
+
+
 			}
 		}
 		e.filterObj.setStyle({fillOpacity : 0.5, opacity:0.5, fillColor: '#fff'})
@@ -274,6 +270,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	$scope.play = false;
 	var actives = []
+	var querySubtypes = {}
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -388,6 +385,7 @@ map.addControl(drawControl);
 							pickLoc.removeTime = data[i].dropoff_datetime.date.$date
 							pickLoc.index = i
 							pickLoc.data = data[i]
+							pickLoc.subcat = x
 
 							if (pickColl[pickLocName] === undefined){
 								pickColl[pickLocName] = [];
@@ -409,9 +407,7 @@ map.addControl(drawControl);
 																 viewDropoffs:true,
 																 actives:{},
 																 filter:null,
-																 filterObj:filterObj});
-				createBar(actives);
-
+																 filterObj:filterObj})
 				updateDateTime()
 				console.log($scope.collections);
 			});
