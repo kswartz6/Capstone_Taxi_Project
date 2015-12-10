@@ -8,7 +8,7 @@ MONGO_DB_URI = "mongodb://localhost:27017"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 
-defaultHour = 5
+defaultHour = 6
 
 def buildDateTime(dateTimeArray):
 	return datetime(int(dateTimeArray[0]),int(dateTimeArray[1]),int(dateTimeArray[2]),int(dateTimeArray[3]),int(dateTimeArray[4]),int(dateTimeArray[5]))
@@ -21,7 +21,7 @@ def polygonQueryPickup(queryRequest):
 	d = buildDateTime(queryRequest["p_dt"])
 
 	ud = setDateBounds(d, defaultHour)
-	ld = setDateBounds(d, -defaultHour)
+	ld = d
 	return db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
 		"pickup_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
 		})
@@ -30,7 +30,7 @@ def polygonQueryDropoff(queryRequest):
 	d = buildDateTime(queryRequest["p_dt"])
 
 	ud = setDateBounds(d, defaultHour)
-	ld = setDateBounds(d, -defaultHour)
+	ld = d
 
 	return db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
 		"dropoff_loc.loc":{"$geoWithin": {"$polygon": queryRequest["bounds"]}}
@@ -40,8 +40,7 @@ def circleQueryPickup(queryRequest):
 	d = buildDateTime(queryRequest["p_dt"])
 
 	ud = setDateBounds(d, defaultHour)
-	ld = setDateBounds(d, -defaultHour)
-
+	ld = d
 	return db.taxitest.find({"pickup_datetime.date":{"$gt":ld,"$lt":ud},
 		"pickup_loc.loc":{"$geoWithin": {"$centerSphere": queryRequest["bounds"]}}
 		})
@@ -50,7 +49,7 @@ def circleQueryDropoff(queryRequest):
 	d = buildDateTime(queryRequest["p_dt"])
 
 	ud = setDateBounds(d, defaultHour)
-	ld = setDateBounds(d, -defaultHour)
+	ld = d
 
 	return db.taxitest.find({"dropoff_datetime.date":{"$gt":ld,"$lt":ud},
 		"dropoff_loc.loc":{"$geoWithin": {"$centerSphere": queryRequest["bounds"]}}
