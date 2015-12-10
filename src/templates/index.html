@@ -176,6 +176,12 @@
                     ng-change="filterPoints(collection)">
             </select>
           </div>
+          <div>
+            <label>Pickups</label>
+            <input type="checkbox" ng-model="collection.viewPickups" ng-change="filterPoints(collection)"></input>
+            <label>Dropoffs</label>
+            <input type="checkbox" ng-model="collection.viewDropoffs" ng-change="filterPoints(collection)">
+          </div>
         </div>
       </div>
 

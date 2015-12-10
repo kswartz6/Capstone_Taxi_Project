@@ -129,12 +129,56 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		console.log("Fired filter function")
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
-				if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
-					if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
-						e.obj.markers.addLayer(actives[e.index][i].dropoff)
+				if(e.viewPickups && e.viewDropoffs){
+					if((checkInFilter(e, actives[e.index][i].dropoff._latlng)) ||
+						 (checkInFilter(e, actives[e.index][i].pickup._latlng))){
+						if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.addLayer(actives[e.index][i].dropoff)
+						}
+						if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.addLayer(actives[e.index][i].pickup)
+						}
+					} else {
+						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+						}
+						if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.removeLayer(actives[e.index][i].pickup)
+						}
 					}
-					if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
-						e.obj.markers.addLayer(actives[e.index][i].pickup)
+				}
+				else if(!e.viewPickups && e.viewDropoffs){
+					if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
+						if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.addLayer(actives[e.index][i].dropoff)
+						}
+						if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.addLayer(actives[e.index][i].pickup)
+						}
+					} else {
+						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+						}
+						if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.removeLayer(actives[e.index][i].pickup)
+						}
+					}
+				}
+				else if(!e.viewDropoffs && e.viewPickups){
+					if(checkInFilter(e, actives[e.index][i].pickup._latlng)){
+						if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.addLayer(actives[e.index][i].dropoff)
+						}
+						if (!e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.addLayer(actives[e.index][i].pickup)
+						}
+					} else {
+						if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
+							e.obj.markers.removeLayer(actives[e.index][i].dropoff)
+						}
+						if (e.obj.markers.hasLayer(actives[e.index][i].pickup)){
+							e.obj.markers.removeLayer(actives[e.index][i].pickup)
+						}
 					}
 				} else {
 					if (e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
@@ -152,7 +196,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	function initializeFilter(e, label){
 		switch (label){
 			case	"None":
-					e.hasFilter = false
+				e.hasFilter = false
 					break
 			case  "Manhattan":
 					console.log(manhattan)
@@ -376,7 +420,7 @@ map.addControl(drawControl);
 
 	$scope.nameChanged = function(e) {
 		var isRepeat = false;
-		for(var i = 0; i < $scope.collectionFilters.length; ++i) {
+		for(var i = 0; i < $scope.collections.length; ++i) {
 			if(e.name === $scope.collectionFilters[i]) {
 				isRepeat = true;
 				break;
