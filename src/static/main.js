@@ -60,7 +60,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			$scope.currentDateTime.YYYY,
 			$scope.currentDateTime.MM - 1,
 			$scope.currentDateTime.DD,
-			$scope.currentDateTime.hours,
+			$scope.currentDateTime.hours - 5,
 			$scope.currentDateTime.minutes,
 			$scope.currentDateTime.seconds
 		).getTime()
@@ -100,12 +100,14 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			if (typeof collection.pickups[x] == "undefined"){
 			} else {
 				for (i in collection.pickups[x]){
-					collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
 					collection.actives[collection.pickups[x][i].index] = collection.pickups[x][i]
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
-							collection.obj.markers.addLayer(correspond[j].dropoff)
+							if(checkInFilter(collection, correspond[j].dropoff)){
+								collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
+								collection.obj.markers.addLayer(correspond[j].dropoff)
+							}
 							collection.actives[collection.pickups[x][i].index].dropoff = correspond[j].dropoff
 						}
 					actives[collection.index] = collection.actives
@@ -122,14 +124,21 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	}
 
 	$scope.filterPoints = function(e){
+		changeFilter(e)
 		filterforCollection(e)
+	}
+
+	function changeFilter(e){
+		e.filterObj.clearLayers()
+		e.hasFilter = false;
+		initializeFilter(e, e.filter)
 	}
 
 	function filterforCollection(e){
 		console.log("Fired filter function")
 		for(i in actives[e.index]){
 			if(actives[e.index][i] != null){
-				if(checkInFilter(e, e.filter, actives[e.index][i].dropoff._latlng)){
+				if(checkInFilter(e, actives[e.index][i].dropoff._latlng)){
 					if (!e.obj.markers.hasLayer(actives[e.index][i].dropoff)){
 						e.obj.markers.addLayer(actives[e.index][i].dropoff)
 					}
@@ -146,72 +155,70 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				}
 			}
 		}
+		e.filterObj.setStyle({fillOpacity : 0.5, opacity:0.5, fillColor: '#fff'})
 	}
 
-//statenIsland, bronx, queens, brooklyn, manhattan;
-	function checkInFilter(e, label, point){
-		var inFilter = false
+	function initializeFilter(e, label){
 		switch (label){
 			case	"None":
-					inFilter = true
-					break
-			case	"Self":
-					leafletPip.pointInLayer(point, e, true)
-						inFilter = true
+					e.hasFilter = false
 					break
 			case  "Manhattan":
-					if(!manhatt) {
-						addBoroughToMap(3);
+					console.log(manhattan)
+					if(!e.hasFilter) {
+						e.filterObj.addData(manhattan)
+						e.hasFilter = true
 					}
-					manhatt = true;
-					console.log(leafletPip.pointInLayer(point, boroughLayer.manhattan.obj, true).length)
-					if(leafletPip.pointInLayer(point, boroughLayer.manhattan.obj, true).length > 0)
-						inFilter = true
 					break
 			case	"Brooklyn":
-					if(!brook) {
-						addBoroughToMap(2);
+					if(!e.hasFilter) {
+						e.filterObj.addData(brooklyn);
+						e.hasFilter = true
 					}
-					brook = true;
-
-					if(leafletPip.pointInLayer(point, boroughLayer.brooklyn.obj, true).length > 0)
-						inFilter = true
 					break;
 			case	"Queens":
-					if(!queen) {
-						addBoroughToMap(1);
+					if(!e.hasFilter) {
+						e.filterObj.addData(queens);
+						e.hasFilter = true
 					}
-					queen = true;
-					if(leafletPip.pointInLayer(point, boroughLayer.queens.obj, true).length > 0)
-						inFilter = true
 					break;
 			case	"Bronx":
-					if(!bron) {
-						addBoroughToMap(4);
+					if(!e.hasFilter) {
+						e.filterObj.addData(bronx)
+						e.hasFilter = true
 					}
-					bron = true;
-					if(leafletPip.pointInLayer(point, boroughLayer.bronx.obj, true).length > 0)
-						inFilter = true
 					break;
 			case	"Staten Island":
-					if(!staten) {
-						addBoroughToMap(0);
+					if(!e.hasFilter) {
+						e.filterObj.addData(statenIsland)
+						e.hasFilter = true
 					}
-					staten = true;
-					if(leafletPip.pointInLayer(point, boroughLayer.statenIsland.obj, true).length > 0)
-						inFilter = true
 					break;
-			case  "Custom":
-					if(!e.obj.custom) {
-						addCustomToMap();
-					}
-					e.obj.custom = true
-				break;
 			default:
-
+				console.log("Custom Filter triggered")
+				console.log(label)
+				for(var i in $scope.collections){
+					if($scope.collections[i].name == label){
+						console.log("Found the filter!")
+						if(!(e.hasFilter)){
+							e.filterObj.addData($scope.collections[i].obj.toGeoJSON());
+							e.hasFilter = true;
+						}
+					}
+				}
+			}
 		}
-		return inFilter
-	}
+
+//statenIsland, bronx, queens, brooklyn, manhattan;
+	function checkInFilter(e, point){
+		var inFilter = false
+		if(e.hasFilter){
+			inFilter = (leafletPip.pointInLayer(point, e.filterObj, true).length > 0)
+		} else {
+			inFilter = true
+		}
+			return inFilter;
+		}
 
 
 	function projectPoint(x, y) {
@@ -230,13 +237,11 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.collections = [];
 	$scope.collectionFilters = [
 		"None",
-		"Self",
 		"Manhattan",
 		"Brooklyn",
 		"Queens",
 		"Bronx",
-		"Staten Island",
-		"Custom"
+		"Staten Island"
 	]
 
 
@@ -336,51 +341,68 @@ map.addControl(drawControl);
 			params: {"bounds": pointString,
 							 "datetime": $scope.currentDateTime.formatted,
 							 "type": type} })
-			newtestStructure.success(function(data, status, headers, config) {
+			newtestStructure.success(function(dat, status, headers, config) {
 				console.log("success!")
-				console.log(data);
+				console.log(dat);
 				var pickColl = {};
 				var dropColl = {};
 				layer.setStyle({color: '#00FF66'})
 				layer.markers = L.layerGroup([]).addTo(map);
-				for (i = 0, l = data.length; i < l; ++i){
-						var pickIcon = L.icon({
-								iconUrl: 'static/images/BlueMarker.png',
-								iconSize: [4, 4],
-						});
-						var dropIcon = L.icon({
-								iconUrl: 'static/images/RedMarker.png',
-								iconSize: [4, 4],
-						});
-						var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
-						var dropoff = L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropIcon})
-						var dropLocName = data[i].dropoff_datetime.date.$date
-						var pickLocName = data[i].pickup_datetime.date.$date
+				var pickIcon = L.icon({
+						iconUrl: 'static/images/BlueMarker.png',
+						iconSize: [4, 4],
+				});
+				var dropIcon = L.icon({
+						iconUrl: 'static/images/RedMarker.png',
+						iconSize: [4, 4],
+				});
+				for(var x in dat){
+					var subcat = dat[x]
+					console.log(dat[x])
+					for (var i = 0, l = subcat.length; i < l; ++i){
+							var data = subcat
+							var pickup = L.marker([data[i].pickup_loc.loc[1], data[i].pickup_loc.loc[0]], {icon: pickIcon})
+							var dropoff = L.marker([data[i].dropoff_loc.loc[1], data[i].dropoff_loc.loc[0]], {icon: dropIcon})
+							var dropLocName = data[i].dropoff_datetime.date.$date
+							var pickLocName = data[i].pickup_datetime.date.$date
+							var dropLoc = {};
+							dropLoc.dropoff = dropoff;
+							dropLoc.removeTime = data[i].pickup_datetime.date.$date
+							//Because pickups are used for determining plotting, we'll
+							//associate data to this object.
+							var pickLoc = {}
+							pickLoc.pickup = pickup
+							pickLoc.removeTime = data[i].dropoff_datetime.date.$date
+							pickLoc.index = i
+							pickLoc.data = data[i]
 
-						var dropLoc = {};
-						dropLoc.dropoff = dropoff;
-						dropLoc.removeTime = data[i].pickup_datetime.date.$date
+							if (pickColl[pickLocName] === undefined){
+								pickColl[pickLocName] = [];
+							}
+							pickColl[pickLocName].push(pickLoc);
 
-						//Because pickups are used for determining plotting, we'll
-						//associate data to this object.
-						var pickLoc = {}
-						pickLoc.pickup = pickup
-						pickLoc.removeTime = data[i].dropoff_datetime.date.$date
-						pickLoc.index = i
-						pickLoc.data = data[i]
-
-
-						if (pickColl[pickLocName] === undefined){
-							pickColl[pickLocName] = [];
+							if (dropColl[dropLocName] === undefined){
+								dropColl[dropLocName] = [];
+							}
+							dropColl[dropLocName].push(dropLoc);
 						}
-						pickColl[pickLocName].push(pickLoc);
-
-						if (dropColl[dropLocName] === undefined){
-							dropColl[dropLocName] = [];
-						}
-						dropColl[dropLocName].push(dropLoc);
 					}
+<<<<<<< HEAD
 				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null});
+=======
+				var filterObj = L.geoJson().addTo(map)
+
+				$scope.collections.push({obj: layer,
+																 index: polygonRefID,
+																 pickups:pickColl,
+																 dropoffs:dropColl,
+																 viewPickups:true,
+																 viewDropoffs:true,
+																 actives:{},
+																 filter:null,
+																 filterObj:filterObj});
+				createBar(actives);
+>>>>>>> origin/master
 				updateDateTime()
 				console.log($scope.collections);
 			});
@@ -390,11 +412,24 @@ map.addControl(drawControl);
 
 
 	$scope.nameChanged = function(e) {
+		var isRepeat = false;
+		for(var i = 0; i < $scope.collectionFilters.length; ++i) {
+			if(e.name === $scope.collectionFilters[i]) {
+				isRepeat = true;
+				break;
+			}
+		}
+		if(isRepeat) {
+			window.alert("Cannot have duplicate region names! Please revise the collection name");
+			e.name = e.obj.label;
+			return;
+		}
 		e.obj.label= e.name;
+		$scope.collectionFilters[e.index + 6] = e.name
 	}
 
 
-	//marker remove function
+	//marker remove function + e.index
 	function removeMarker(e){
 		window.map.removeLayer(e);
 	}
@@ -403,6 +438,7 @@ map.addControl(drawControl);
 	$scope.deletePolygon = function(e){
 		actives.splice($scope.collections.indexOf(e), 1);
 		$scope.collections.splice($scope.collections.indexOf(e), 1);
+		window.map.removeLayer(e.filterObj)
 		window.map.removeLayer(e.obj.markers);
 		window.map.removeLayer(e.obj);
 	}

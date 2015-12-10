@@ -185,6 +185,10 @@ padding:0 25 0 0;
 font-family:"Yanone Kaffeesatz";
 }
 
+.collectionLabel{
+  color: black !important;
+}
+
 input[type="submit"] {
 font-size: 3.0em;
 color: white;
