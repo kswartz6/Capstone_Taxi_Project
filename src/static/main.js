@@ -387,9 +387,6 @@ map.addControl(drawControl);
 							dropColl[dropLocName].push(dropLoc);
 						}
 					}
-<<<<<<< HEAD
-				$scope.collections.push({obj: layer, index: polygonRefID, pickups:pickColl, dropoffs:dropColl, actives:{}, filter:null});
-=======
 				var filterObj = L.geoJson().addTo(map)
 
 				$scope.collections.push({obj: layer,
@@ -402,7 +399,7 @@ map.addControl(drawControl);
 																 filter:null,
 																 filterObj:filterObj});
 				createBar(actives);
->>>>>>> origin/master
+
 				updateDateTime()
 				console.log($scope.collections);
 			});
