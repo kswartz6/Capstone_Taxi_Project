@@ -270,6 +270,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	var drawControl = new L.Control.Draw({
 		position: 'topleft',
 		draw: {
+			polyline: false,
 			polygon: {
 				shapeOptions: {
 					color: defautPolyColor
@@ -283,27 +284,18 @@ app.controller("mapView", function($scope,$http, $timeout) {
 				metric: false,
 				repeatMode: true
 			},
-			polyline: {
-				shapeOptions: {
-					color: defautPolyColor
-				},
-			},
 			rectangle: {
 				shapeOptions: {
 					color: defautPolyColor
-				},
+				}
 			},
 			circle: {
 				shapeOptions: {
 					color: defautPolyColor
-				},
+				}
 			},
-		},
-		edit: {
-			featureGroup: drawnItems
-		}
-	});
-
+			marker:false
+		}});
 
 
 
