@@ -40,11 +40,13 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
+      <h4 class="modal-title">Passenger Count</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Passenger Count</h4>
+
       </div>
       <div class="modal-body">
         <div id = 'barChart'></div>
+          <p class="xdomain">Number of passengers per trip</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -61,7 +63,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Passenger Count</h4>
+        <h4 class="modal-title">Trip Time</h4>
       </div>
       <div class="modal-body">
         <div id = 'donutChart'></div>
@@ -140,8 +142,8 @@
       </table>
     </span>
     <span>
-      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#barModal">passenger bar</button>
-      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#donutModal">passenger donut</button>
+      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#barModal"><span class="glyphicon glyphicon-signal"></span></button>
+      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#donutModal"><span class="glyphicon glyphicon-record"></span></button>
       <button type="button" class="btn btn-info btn-sm" ng-click="clearBoroughs();">Clear Boroughs</button>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapStaten();">Staten Island</button>
       <button type="button" class="btn btn-info btn-sm" ng-click="mapQueens();">Queens</button>

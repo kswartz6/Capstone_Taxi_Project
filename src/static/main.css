@@ -15,7 +15,10 @@ background: black;
 font-family:"Yanone Kaffeesatz";
 color: white;
 }
-
+h4{
+  font-size: 30px;
+  color: black;
+}
 #wrapper{
   min-height:768;
   min-width:1366;
@@ -244,19 +247,28 @@ color:black;
 rect {
   stroke-width: 2;
 }
-
-
 .tooltip {
   background: #eee;
   box-shadow: 0 0 5px #999999;
-  color: #333;
+  color: black;
   display: none;
   font-size: 12px;
   left: 130px;
   padding: 10px;
-  position: absolute;
   text-align: center;
   top: 95px;
   width: 80px;
   z-index: 10;
+}
+#donutChart{
+  position: relative;
+}
+.xdomain{
+  color:black;
+}
+span{
+  font-size: 15px;
+}
+.arcText{
+  color: white;
 }
