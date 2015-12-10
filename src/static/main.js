@@ -32,7 +32,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	$scope.currentDateTime      = {};
 	$scope.currentDateTime.MM   = 1;
 	$scope.currentDateTime.DD   = 1;
-	$scope.currentDateTime.YYYY = 1;
+	$scope.currentDateTime.YYYY = 2013;
 	$scope.currentDateTime.hours = 8;
 	$scope.currentDateTime.minutes = 29;
 	$scope.currentDateTime.seconds = 59;
@@ -100,9 +100,12 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					var correspond = collection.dropoffs[collection.pickups[x][i].removeTime]
 					for (j in correspond)
 						if (correspond[j].removeTime == x){
-							if(checkInFilter(collection, correspond[j].dropoff)){
-								collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
-								collection.obj.markers.addLayer(correspond[j].dropoff)
+							if((collection.pickups[x][i].subcat == "pickup" && collection.viewPickups) ||
+								(collection.pickups[x][i].subcat == "dropoff" && collection.viewDropoffs)){
+								if(checkInFilter(collection, correspond[j].dropoff)){
+									collection.obj.markers.addLayer(collection.pickups[x][i].pickup)
+									collection.obj.markers.addLayer(correspond[j].dropoff)
+								}
 							}
 							collection.actives[collection.pickups[x][i].index].dropoff = correspond[j].dropoff
 						}
