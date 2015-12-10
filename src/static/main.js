@@ -14,7 +14,6 @@ var daysInMonth ={
 	12:31
 }
 
-
 var map = L.map('map', {drawControl: false}).setView([40.727, -73.976], 12);
 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
     g = svg.append("g").attr("class", "leaflet-zoom-hide");
@@ -27,7 +26,6 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
   $interpolateProvider.startSymbol('{[');
   $interpolateProvider.endSymbol(']}');
 }]);
-
 
 //controller for mapView
 app.controller("mapView", function($scope,$http, $timeout) {
@@ -46,7 +44,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		$scope.currentDateTime.minutes,
 		$scope.currentDateTime.seconds
 	).getTime()
-
 
 	updateDateTime();
 
@@ -95,7 +92,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 					}
 				}
 			}
-
 			//Adding locations
 			if (typeof collection.pickups[x] == "undefined"){
 			} else {
@@ -115,12 +111,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			}
 			console.log(actives)
 			UpdateChart(actives)
-			tweenPoints()
 		}
-	}
-
-	function tweenPoints(){
-
 	}
 
 	$scope.filterPoints = function(e){
@@ -209,7 +200,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			}
 		}
 
-//statenIsland, bronx, queens, brooklyn, manhattan;
 	function checkInFilter(e, point){
 		var inFilter = false
 		if(e.hasFilter){
@@ -220,7 +210,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			return inFilter;
 		}
 
-
 	function projectPoint(x, y) {
   	var point = map.latLngToLayerPoint(new L.LatLng(y, x));
   	this.stream.point(point.x, point.y);
@@ -228,11 +217,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 
 	var transform = d3.geo.transform({point: projectPoint}),
     path = d3.geo.path().projection(transform);
-
-	// var feature = g.selectAll("path")
-	//      					 .data()
-	//                .enter().append("path");
-
 
 	$scope.collections = [];
 	$scope.collectionFilters = [
@@ -244,12 +228,8 @@ app.controller("mapView", function($scope,$http, $timeout) {
 		"Staten Island"
 	]
 
-
 	$scope.play = false;
 	var actives = []
-
-
-
 
 	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -264,7 +244,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 	// Initialise the FeatureGroup to store editable layers
 	var drawnItems = new L.FeatureGroup();
 	map.addLayer(drawnItems);
-
 
 	// Initialise the draw control and pass it the FeatureGroup of editable layers
 	var drawControl = new L.Control.Draw({
@@ -296,8 +275,6 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			},
 			marker:false
 		}});
-
-
 
 map.addControl(drawControl);
 
@@ -396,8 +373,6 @@ map.addControl(drawControl);
 			});
 		});
 	});
-
-
 
 	$scope.nameChanged = function(e) {
 		var isRepeat = false;
@@ -629,7 +604,6 @@ map.addControl(drawControl);
 		}
 		bron = true;
 	}
-
 
 	// These are holding all of our borough geoJson data
 	var statenIsland, bronx, queens, brooklyn, manhattan;
