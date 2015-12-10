@@ -189,6 +189,10 @@ font-family:"Yanone Kaffeesatz";
   color: black !important;
 }
 
+select{
+  color:black !important;
+}
+
 input[type="submit"] {
 font-size: 3.0em;
 color: white;

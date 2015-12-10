@@ -235,7 +235,8 @@ var Six = 0;
 	{
 		d3.selectAll(".barDiv").remove()
 		d3.selectAll(".bar").remove()
-		d3.selectAll("svg").remove()
+		d3.selectAll("#barChart svg").remove()
+		d3.selectAll("#donutChart svg").remove()
 
 		d3.selectAll(".donutDiv").remove()
 		d3.selectAll(".legend").remove()
