@@ -3,6 +3,7 @@ import sys
 import logging
 import json
 from flask import Flask, Response, render_template, request, redirect, url_for, send_from_directory, g, session
+from multiprocessing.pool import ThreadPool
 from controller.query import *
 
 webapp = Flask(__name__)
@@ -43,8 +44,12 @@ def api_structure():
 		#cursor = polygonQuery(q, True)
 		print("Received cursor")
 		polygonReturns = {}
-		polygonReturns["pickup"] = polygonQueryPickup(q)
+		# polygonReturns["pickup"] = polygonQueryPickup(q)
+		# polygonReturns["dropoff"] = polygonQueryDropoff(q)
+		pool = ThreadPool(processes = 2)
+		pickUpQuery = pool.apply_async(polygonQueryPickup, (q,))
 		polygonReturns["dropoff"] = polygonQueryDropoff(q)
+		polygonReturns["pickup"] = pickUpQuery.get()
 		return dumps(polygonReturns)
 	elif(geometryType == "circle"):
 		circleReturns = {}

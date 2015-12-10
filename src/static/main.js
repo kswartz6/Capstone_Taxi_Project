@@ -60,7 +60,7 @@ app.controller("mapView", function($scope,$http, $timeout) {
 			$scope.currentDateTime.YYYY,
 			$scope.currentDateTime.MM - 1,
 			$scope.currentDateTime.DD,
-			$scope.currentDateTime.hours,
+			$scope.currentDateTime.hours - 5,
 			$scope.currentDateTime.minutes,
 			$scope.currentDateTime.seconds
 		).getTime()

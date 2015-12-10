@@ -8,7 +8,7 @@ MONGO_DB_URI = "mongodb://localhost:27017"
 client = pymongo.MongoClient(MONGO_DB_URI)
 db = client.csf2015capstone
 
-defaultHour = 3
+defaultHour = 5
 
 def buildDateTime(dateTimeArray):
 	return datetime(int(dateTimeArray[0]),int(dateTimeArray[1]),int(dateTimeArray[2]),int(dateTimeArray[3]),int(dateTimeArray[4]),int(dateTimeArray[5]))
